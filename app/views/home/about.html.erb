@@ -1,0 +1,36 @@
+
+<div id='about_site'>
+  <h1>About This Site</h1>
+
+  <p>
+    <%= link_to 'Kotobyte', root_path %> is a simple online dictionary for 
+    Japanese language learners. This dictionary emphasizes in simplicity and 
+    comfort, while attempting to provide enough materials and features to be 
+    your primary reference for Japanese vocabularies. Some notable features:
+  </p>
+
+  <ul>
+    <li>Accept Romaji as search input. Try &rarr; <%= search_link 'noboru' %>, <%= search_link 'tozan' %></li>
+    <li>Accept compound words as search input. Try &rarr; <%= search_link '国民健康保険' %></li>
+    <li>Accept conjugated words as search input. Try &rarr; <%= search_link '呼んで' %></li>
+    <li>Click on Kanji characters to show character details. Try &rarr; <%= kanji_link '食' %>, <%= kanji_link '残' %></li>
+    <li>Green marker for <span class='common'>common words</span> to help you prioritize your learning.</li>
+  </ul>
+
+  <p>
+    The dictionary entries in this site are derived from JMdict and KANJIDIC2 data compiled by the Electronic Dictionary Research and Development Group (<a href='http://www.edrdg.org/'>EDRDG</a>).
+    The Kanji strokes diagrams are the work of Ulrich Apel and the team in <a href='http://kanjivg.tagaini.net/'>KanjiVG</a>.
+    Please consider to donate and support these respective projects, as this site is not possible without these works.
+  </p>
+</div>
+
+<div id='about_author'>
+  <h1>About the Author</h1>
+
+  <p>
+    I'm Andree, a software developer and a fellow Japanese language learner.
+    I built this dictionary as a portfolio project and personal learning tool.
+    If you're learning Japanese, I hope this site can be helpful for you.
+    Please feel free to reach me for any questions or feedbacks. 
+  </p>
+</div>

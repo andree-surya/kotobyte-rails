@@ -1,0 +1,15 @@
+
+<form id='search_form' action='<%= search_path %>'> 
+  <input
+    name='query'
+    type='search'
+    value='<%= @query %>'
+    placeholder='<%= t('search_placeholder') %>'
+    autocomplete='off' autofocus>
+</form>
+
+<div id='search_results_summary'>
+    <%= search_results_summary_text(@results) %>
+</div>
+
+<%= render partial: 'word', collection: @results %>

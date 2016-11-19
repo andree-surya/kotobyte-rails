@@ -1,0 +1,83 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+@import 'constants';
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
+
+body {
+  font-family: 'PT Sans', sans-serif;
+  font-size: medium;
+
+  background-color: #fafafa;
+  border-top: medium solid $tint-color;
+}
+
+main, footer {
+  margin: 0 auto;
+  max-width: 640px;
+  padding: 16px;
+}
+
+footer {
+  color: $font-color-light;
+  text-align: center;
+
+  padding: 0 16px;
+  margin-bottom: 32px;
+}
+
+footer a:not(:hover):not(.author) {
+  color: inherit;
+}
+
+a, a:hover {
+  color: $tint-color;
+  text-decoration: none;
+}
+
+input[type='search'] {
+  border-color: #e4e4e4;
+}
+
+input[type='search']:focus {
+  border-color: $tint-color-light;
+}
+
+h1 {
+  font-size: 2.4em;
+  margin-bottom: 16px;
+}
+
+ul {
+  list-style: disc inside;
+}
+
+rt {
+  color: $font-color-light;
+  font-size: 0.7em;
+}
+
+.common {
+  border-bottom: 2px solid #2ecc71;
+}
+
+.irregular {
+  border-bottom: 2px dotted #e74c3c;
+}
+
+.outdated {
+  border-bottom: 2px dotted #8e44ad;
+}

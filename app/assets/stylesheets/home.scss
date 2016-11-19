@@ -1,0 +1,25 @@
+// Place all the styles related to the Home controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+#welcome {
+  margin-top: 10%;
+  text-align: center;
+}
+
+#welcome img {
+  margin: 16px auto;
+  height: 160px;
+}
+
+#welcome p {
+  margin-bottom: 16px;
+}
+
+#about_site {
+  margin-top: 32px;
+}
+
+#about_author {
+  margin-top: 32px;
+}

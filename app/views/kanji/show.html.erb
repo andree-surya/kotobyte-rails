@@ -1,0 +1,27 @@
+
+<div class='kanji'>
+  <div class='literal'>
+    <%= kanji_literal_text(@kanji) %>
+  </div>
+  
+  <div class='readings'>
+    <%== kanji_readings_text(@kanji) %>
+  </div>
+  
+  <div class='meanings'>
+    <%== kanji_meanings_text(@kanji) %>
+  
+    <span class='extra_info'>
+      <%= kanji_extras_text(@kanji) %>
+    </span>
+  </div>
+
+  <% if @kanji.strokes.present? %>
+    <div class='strokes'>
+      
+      <% 1.upto(@kanji.strokes.count) do |count| %>
+        <%== kanji_strokes_svg(@kanji, upto_strokes_count: count) %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

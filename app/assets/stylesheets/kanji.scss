@@ -1,0 +1,66 @@
+// Place all the styles related to the kanjis controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import 'constants';
+
+.kanji .literal {
+  float: left;
+  font-size: 4em;
+  margin-right: 16px;
+}
+
+.kanji .readings {
+  display: block;
+  overflow: hidden;
+  padding-top: 24px;
+}
+
+.kanji .meanings {
+  clear: left;
+  margin-top: 8px;
+}
+
+.kanji .meanings em {
+  font-style: normal;
+  font-weight: bold;
+}
+
+.kanji .extra_info {
+  color: $font-color-light;
+  font-style: italic;
+}
+
+.kanji .strokes {
+  margin-top: 24px;
+  line-height: 0;
+}
+
+.kanji .strokes svg {
+  width: 56px;
+  height: 56px;
+  margin: 0 8px 8px 0;
+}
+
+.kanji .strokes path {
+  fill: none;
+  stroke: $font-color-light;
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+
+.kanji .strokes path.current {
+  stroke: #000;
+}
+
+.kanji .strokes line {
+  stroke: #666; 
+  stroke-width: 0.5; 
+  stroke-dasharray: 4, 4;
+}
+
+.kanji .strokes circle {
+  fill: red;
+  fill-opacity: 0.5;
+}
+

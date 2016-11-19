@@ -1,0 +1,72 @@
+// Place all the styles related to the Dictionary controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+@import 'constants';
+
+#search_form {
+  margin-bottom: 8px;
+}
+
+#search_form input {
+  width: 100%;
+  text-align: center;
+}
+
+#search_results_summary {
+  color: $font-color-light;
+  margin-bottom: 8px;
+}
+
+.word {
+  padding: 8px 0;
+  border-top: thin dashed #ddd;
+}
+
+.word .readings, 
+.word .literals {
+  font-size: 1.2em;
+}
+
+.word mark {
+  font-style: normal;
+  background-color: rgba(255, 247, 133, 0.5);
+}
+
+.word rt mark {
+  background-color: transparent;
+}
+
+.word a {
+  text-decoration: none;
+}
+
+.word a:not(:hover) {
+  color: inherit;
+}
+
+.word ul.senses {
+  margin: 4px 0 4px 16px;
+}
+
+.word .senses li {
+  margin-bottom: 0;
+}
+
+.word .senses li:first-child:last-child {
+  list-style: none;
+}
+
+.word .senses .categories {
+  color: $font-color-light;
+}
+
+.word .senses .extra_info {
+  color: $font-color-light;
+  font-style: italic;
+}
+
+#kanji_popup {
+  min-width: 320px;
+  max-width: 640px;
+}

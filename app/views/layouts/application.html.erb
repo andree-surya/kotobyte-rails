@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Kotobyte</title>
+    <meta name='author' content='Andree Surya'>
+    <meta name='description' content="Kotobyte is a Japanese learner's dictionary with vocabulary reminders.">
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    
+    <%= csrf_meta_tags %>
+    <%= favicon_tags %>
+
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+  </head>
+
+  <body>
+    <main>
+      <%= yield %>
+    </main>
+
+    <footer>
+      &copy; <%= link_to 'Kotobyte', root_path %>,
+      2016 by <%= link_to 'Andree Surya', 'http://andree-surya.com', class: 'author' %>
+      &nbsp;|&nbsp; <%= link_to 'About', about_path %>
+    </footer>
+  </body>
+</html>
