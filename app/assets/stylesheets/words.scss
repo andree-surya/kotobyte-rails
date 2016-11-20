@@ -4,18 +4,32 @@
 
 @import 'constants';
 
-#search_form {
-  margin-bottom: 8px;
+body.words header {
+  justify-content: space-between;
+}
+
+body.words header #search_form {
+  flex-grow: 1;
+  max-width: $max-content-width;
+
+  margin: 0 16px;
+}
+
+body.words header #search_form input {
+  height: 100%;
+  padding: 4px 8px;
 }
 
 #search_form input {
+  margin: 0;
   width: 100%;
+  
   text-align: center;
 }
 
 #search_results_summary {
   color: $font-color-light;
-  margin-bottom: 8px;
+  margin: 16px 0;
 }
 
 .word {

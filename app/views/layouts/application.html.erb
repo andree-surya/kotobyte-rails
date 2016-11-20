@@ -13,15 +13,18 @@
     <%= javascript_include_tag 'application' %>
   </head>
 
-  <body>
-    <main>
+  <body class='<%= controller.controller_name %>'>
+    
+    <header class='<%= controller.action_name %>'>
+      <%= yield :header %>
+    </header>
+
+    <main class='<%= controller.action_name %>'>
       <%= yield %>
     </main>
 
     <footer>
-      &copy; <%= link_to 'Kotobyte', root_path %>,
-      2016 by <%= link_to 'Andree Surya', 'http://andree-surya.com', class: 'author' %>
-      &nbsp;|&nbsp; <%= link_to 'About', about_path %>
+      &copy; Kotobyte 2016 &nbsp;|&nbsp; <%= link_to 'About', about_path %>
     </footer>
   </body>
 </html>

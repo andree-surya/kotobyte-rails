@@ -1,16 +1,12 @@
 
-<div id='welcome'>
-  <%= image_tag('logo.svg') %>
+<%= image_tag('logo.svg') %>
 
-  <p>
-    Welcome to Kotobyte, a Japanese learner's dictionary.
-  </p>
+<p>
+  Welcome to Kotobyte, a Japanese learner's dictionary.
+</p>
 
-  <form id='search_form' action='<%= search_path %>' autocomplete='off'>
-    <input
-      name='query'
-      type='search'
-      placeholder='<%= t('search_placeholder') %>'
-      autocomplete='off' autofocus>
-  </form>
-</div>
+<form id='search_form' action='<%= search_path %>' autocomplete='off'>
+  
+  <input name='query' type='search' autocomplete='off' autofocus
+      placeholder='<%= t('search_placeholder') %>' />
+</form>

@@ -17,43 +17,81 @@
 @import 'constants';
 @import url('https://fonts.googleapis.com/css?family=PT+Sans');
 
+$header-height: 48px;
+
 body {
   font-family: 'PT Sans', sans-serif;
   font-size: medium;
 
-  background-color: #fafafa;
+  background-color: white;
+  padding-top: $header-height;
+}
+
+header {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  right: 0;
+  
+  padding: 8px 16px;
+  height: $header-height;
+  background-color: white;
+  box-shadow: 0 1px 3px #aaa;
+  box-sizing: border-box;
   border-top: medium solid $tint-color;
+
+  display: flex;
+  align-items: center;
 }
 
 main, footer {
+  max-width: $max-content-width;
   margin: 0 auto;
-  max-width: 640px;
   padding: 16px;
 }
 
 footer {
   color: $font-color-light;
   text-align: center;
-
-  padding: 0 16px;
-  margin-bottom: 32px;
 }
 
-footer a:not(:hover):not(.author) {
-  color: inherit;
+header a {
+  display: block;
+  width: 32px;
+  height: 32px;
+}
+
+#menu_link {
+  background: image-url('menu.svg') no-repeat center;
+  background-size: contain;
+}
+
+#home_link {
+  background: image-url('home.svg') no-repeat center;
+  background-size: contain;
 }
 
 a, a:hover {
   color: $tint-color;
+}
+
+a {
   text-decoration: none;
 }
 
+a:hover {
+  text-decoration: underline;
+}
+
 input[type='search'] {
-  border-color: #e4e4e4;
+  background-color: #f8f8f8;
+  border-color: #ddd;
 }
 
 input[type='search']:focus {
-  border-color: $tint-color-light;
+  border-color: #ddd;
+  box-shadow: inset 0 0 3px #ddd;
 }
 
 h1 {
