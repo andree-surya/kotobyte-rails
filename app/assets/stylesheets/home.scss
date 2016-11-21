@@ -2,17 +2,17 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import 'constants';
+
 body.home header {
+  flex-direction: row-reverse;
   justify-content: space-between;
 }
 
-body.home header.index {
-  box-shadow: none;
+body.home header {
   background-color: transparent;
-}
-
-body.home header.index #home_link {
-  visibility: hidden;
+  border-top: medium solid $tint-color;
+  box-shadow: none;
 }
 
 body.home main.index {

@@ -17,7 +17,7 @@
 @import 'constants';
 @import url('https://fonts.googleapis.com/css?family=PT+Sans');
 
-$header-height: 48px;
+$header-height: 56px;
 
 body {
   font-family: 'PT Sans', sans-serif;
@@ -39,7 +39,6 @@ header {
   background-color: white;
   box-shadow: 0 1px 3px #aaa;
   box-sizing: border-box;
-  border-top: medium solid $tint-color;
 
   display: flex;
   align-items: center;
@@ -62,13 +61,13 @@ header a {
   height: 32px;
 }
 
-#menu_link {
-  background: image-url('menu.svg') no-repeat center;
+#notification_link {
+  background: image-url('notification.svg') no-repeat center;
   background-size: contain;
 }
 
 #home_link {
-  background: image-url('home.svg') no-repeat center;
+  background: image-url('favicon.svg') no-repeat center;
   background-size: contain;
 }
 

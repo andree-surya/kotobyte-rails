@@ -5,7 +5,7 @@ module ApplicationHelper
   def favicon_tags
     tags = []
 
-    tags << favicon_link_tag('home.ico')
+    tags << favicon_link_tag('favicon.ico')
 
     TOUCH_ICON_SIZES.each do |size|
       TOUCH_ICON_RELS.each do |rel|
