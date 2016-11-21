@@ -2,16 +2,15 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+@import 'constants';
+
 body.home header {
-  justify-content: space-between;
-}
-
-body.home header.index {
-  box-shadow: none;
   background-color: transparent;
+  border-top: medium solid $tint-color;
+  box-shadow: none;
 }
 
-body.home header.index #home_link {
+body.home #home_link {
   visibility: hidden;
 }
 

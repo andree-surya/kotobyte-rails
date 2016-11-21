@@ -4,20 +4,8 @@
 
 @import 'constants';
 
-body.words header {
-  justify-content: space-between;
-}
-
-body.words header #search_form {
-  flex-grow: 1;
-  max-width: $max-content-width;
-
-  margin: 0 16px;
-}
-
-body.words header #search_form input {
-  height: 100%;
-  padding: 4px 8px;
+#search_form {
+  margin: 0;
 }
 
 #search_form input {
