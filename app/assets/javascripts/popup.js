@@ -21,36 +21,53 @@ var Popup = function(anchorElement) {
 
 Popup.activate = function() {
 
-  $('[data-popup-trigger="click"]').click(function() {
+  var hoverableAnchors = $('[data-popup-trigger="hover"]');
+  var clickableAnchors = $('[data-popup-trigger="click"]');
+
+  var handleDismiss = function(event) {
+
+    var nonDismissableRegion = 
+        $(event.target).closest('.popup, [data-popup-trigger="hover"]');
+
+    if (nonDismissableRegion.length == 0) {
+      Popup.hideAll();
+    }
+  };
+
+  var handleClick = function(event) {
     
     var popup = new Popup(this);
 
-    if (! popup.isVisible()) {
-      Popup.hideAll();
+    Popup.hideAll();
+    popup.show();
+
+    return false;
+  };
+
+  var handleHover = function(event) {
+    
+    var popup = new Popup(this);
+
+    if (event.type == 'mouseenter') {
       popup.show();
 
-      return false;
+    } else {
+      popup.hide();
     }
-  });
+  };
 
-  
-  $('[data-popup-trigger="hover"]').hover(function(event) {
-    new Popup(this).show();
+  if ('ontouchstart' in document.body) { // Touch device?
+    document.body.ontouchstart = handleDismiss;
 
-  }, function() {
-    new Popup(this).hide();
-  });
+    clickableAnchors.click(handleClick);
+    hoverableAnchors.click(handleClick);
 
-  $(document).on('click', function(event) {
+  } else {
+    document.body.onclick = handleDismiss;
 
-    var clickWithoutDismissRegion = 
-        $(event.target).closest('.popup, [data-popup-trigger="hover"]');
-    
-    if (clickWithoutDismissRegion.length == 0) {
-      Popup.hideAll();
-    }
-  });
-
+    clickableAnchors.click(handleClick);
+    hoverableAnchors.hover(handleHover);
+  }
 };
 
 Popup.hideAll = function() {
