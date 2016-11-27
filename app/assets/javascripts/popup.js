@@ -1,50 +1,76 @@
 
-var Popup = function(popupNode) {
-  this.popupNode = popupNode;
-  this.pointerNode = popupNode.find('.pointer');
-  this.contentNode = popupNode.find('.content');
-};
+var Popup = function(anchorElement) {
+  
+  var anchorNode = $(anchorElement);
+  var popupId = anchorNode.data('popup-id');
 
-Popup.sharedInstances = new Object;
-
-Popup.getInstance = function(id) {
-  var popup = this.sharedInstances[id];
-
-  if (popup == null) {
-    var popupNode = $('<div>', { id: id, class: 'popup' });
-    var pointerNode = $('<div>', { class: 'pointer' });
-    var contentNode = $('<div>', { class: 'content' });
-
-    popupNode.append(pointerNode);
-    popupNode.append(contentNode);
-    $('main').append(popupNode);
-
-    popup = new Popup(popupNode);
-    this.sharedInstances[id] = popup;
+  if (! popupId) {
+    anchorNode.data('popup-id', 'popup-' + Math.floor(Math.random() * 100000));
   }
 
-  return popup;
-};
+  var popupNode = $('#' + popupId);
 
-Popup.getInstances = function() {
-  var popups = [];
-
-  for (var id in this.sharedInstances) {
-    popups.push(this.sharedInstances[id]);
+  if (popupNode.length == 0) {
+    popupNode = $('<div>', { id: popupId }).hide();
+    popupNode.appendTo(anchorNode.offsetParent());
   }
 
-  return popups;
-};
-
-Popup.prototype.showAt = function(anchorNode) {
+  this.popupNode = popupNode.addClass('popup');
   this.anchorNode = anchorNode;
+};
 
+Popup.activate = function() {
+
+  $('[data-popup-trigger="click"]').click(function() {
+    
+    var popup = new Popup(this);
+
+    if (! popup.isVisible()) {
+      Popup.hideAll();
+      popup.show();
+
+      return false;
+    }
+  });
+
+  
+  $('[data-popup-trigger="hover"]').hover(function(event) {
+    new Popup(this).show();
+
+  }, function() {
+    new Popup(this).hide();
+  });
+
+  $(document).on('click', function(event) {
+
+    var clickWithoutDismissRegion = 
+        $(event.target).closest('.popup, [data-popup-trigger="hover"]');
+    
+    if (clickWithoutDismissRegion.length == 0) {
+      Popup.hideAll();
+    }
+  });
+
+};
+
+Popup.hideAll = function() {
+  $('.popup:visible').hide();
+};
+
+Popup.prototype.show = function() {
+
+  if (this.anchorNode.data('popup-text')) {
+    this.text(this.anchorNode.data('popup-text'));
+
+  } else if (this.anchorNode.data('popup-src')) {
+    this.load(this.anchorNode.data('popup-src'));
+  }
+  
   this.popupNode.show();
   this.updatePosition();
 };
 
 Popup.prototype.hide = function() {
-  this.anchorNode = null;
   this.popupNode.hide();
 };
 
@@ -52,54 +78,54 @@ Popup.prototype.isVisible = function() {
   return this.popupNode.is(':visible');
 };
 
-Popup.prototype.contains = function(node) {
-  return this.popupNode.is(node) || this.popupNode.has(node).length > 0;
+Popup.prototype.load = function(src) {
+  var popupNode = this.popupNode;
+
+  if (popupNode.data('src') != src) {
+    
+    popupNode.data('src', src);
+    popupNode.html('Loading ...');
+
+    $.ajax({
+      url: src,
+      async: true,
+      cache: true,
+
+      success: function(result) {
+        popupNode.html(result);
+      },
+
+      error: function(xhr, textStatus, errorThrown) {
+        popupNode.removeData('src');
+        popupNode.html(errorThrown);
+      }
+    });
+  }
 };
 
-Popup.prototype.anchoredAt = function(anchorNode) {
-  return this.anchorNode && this.anchorNode.is(anchorNode);
-};
-
-Popup.prototype.load = function(url) {
-
-  var contentNode = this.contentNode;
-  contentNode.html('Loading ...');
-
-  $.ajax({
-    url: url,
-    async: true,
-    cache: true,
-
-    success: function(result) {
-      contentNode.html(result);
-    }
-  });
-};
-
-Popup.prototype.content = function(content) {
-  this.contentNode.html(content);
+Popup.prototype.text = function(text) {
+  this.popupNode.html(text);
 };
 
 Popup.prototype.updatePosition = function() {
 
-  var pointerSize = 8;
-  var documentWidth = $(document).width();
-  var documentHeight = $(document).height();
-  var anchorOffset = this.anchorNode.offset();
+  var documentWidth = $(document).innerWidth();
+	var popupWidth = this.popupNode.outerWidth();
+	var anchorWidth = this.anchorNode.outerWidth();
+  
+	var popupOffset = {};
+	var anchorOffset = this.anchorNode.offset();
 
-  var pointerCenterX = anchorOffset.left + this.anchorNode.width() / 2;
-  var pointerOffsetX = pointerCenterX - pointerSize;
+  popupOffset.top = anchorOffset.top + this.anchorNode.height() + 4;
+  popupOffset.left = anchorOffset.left + (anchorWidth - popupWidth) / 2;
 
-  var offsetY = anchorOffset.top + this.anchorNode.height() + pointerSize;
-  var offsetX = pointerCenterX - this.popupNode.width() / 2;
+  if (popupOffset.left < 0) {
+    popupOffset.left = 0;
 
-  if (offsetX < 0) {
-    offsetX = 0;
-
-  } else if (offsetX + this.popupNode.width() > documentWidth) {
-    offsetX = documentWidth - this.popupNode.width();
+  } else if (popupOffset.left + popupWidth > documentWidth) {
+    popupOffset.left = documentWidth - popupWidth;
   }
 
-  this.popupNode.offset({ top: offsetY, left: offsetX });
-  this.pointerNode.offset({ left: pointerOffsetX });
+  this.popupNode.offset(popupOffset);
 };
+

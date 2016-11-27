@@ -21,8 +21,11 @@ $content-width: 640px;
 $header-height: 56px;
 
 body {
+  position: relative;
+
   font-family: 'PT Sans', sans-serif;
   font-size: medium;
+  color: $font-color;
 
   background-color: white;
   padding-top: $header-height;
@@ -35,7 +38,7 @@ header {
   left: 0;
   right: 0;
   
-  padding: 8px 16px;
+  padding: 8px;
   height: $header-height;
   background-color: white;
   box-shadow: 0 1px 3px #aaa;
@@ -43,7 +46,7 @@ header {
 
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 }
 
 main, footer {
@@ -59,18 +62,20 @@ footer {
 
 header > a {
   display: block;
+  margin: 4px;
+
   width: 32px;
   height: 32px;
 }
 
-header > div {
+header > .toolbar {
   flex-grow: 1;
 
   max-width: $content-width;
-  margin: 0 16px;
+  margin: 0 8px;
 }
 
-#notification_link {
+#menu_link {
   background: image-url('notification.svg') no-repeat center;
   background-size: contain;
 }
@@ -78,6 +83,10 @@ header > div {
 #home_link {
   background: image-url('favicon.svg') no-repeat center;
   background-size: contain;
+}
+
+#popup-menu {
+  z-index: 1;
 }
 
 a, a:hover {

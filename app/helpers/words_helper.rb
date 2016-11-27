@@ -86,10 +86,11 @@ module WordsHelper
     sense.categories.each do |category|
 
       options = {
-        class: 'category',
-        onmouseenter: 'showCategoryPopup(event)',
-        onmouseleave: 'dismissCategoryPopup(event)',
-        data: { text: t("labels.#{category}") }
+        data: {
+          'popup-id' => "popup-category-#{category}",
+          'popup-text' => t("labels.#{category}"),
+          'popup-trigger' => 'hover',
+        }
       }
 
       category_texts << link_to(category, 'javascript:', options)
@@ -126,7 +127,17 @@ module WordsHelper
   end
 
   def kanji_link(literal)
-    link_to(literal, kanji_path(literal: literal),
-      class: 'kanji', onclick: 'showKanjiPopup(event)')
+    
+    options = {
+      class: 'kanji',
+      
+      data: {
+        'popup-id' => "popup-kanji-#{literal}",
+        'popup-src' => kanji_path(literal: literal),
+        'popup-trigger' => 'click'
+      }
+    }
+
+    link_to(literal, 'javascript:', options)
   end
 end
