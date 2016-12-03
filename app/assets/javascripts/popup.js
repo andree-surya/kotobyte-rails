@@ -19,7 +19,7 @@ var Popup = function(anchorElement) {
   this.anchorNode = anchorNode;
 };
 
-Popup.activate = function() {
+Popup.attachListeners = function() {
 
   var hoverableAnchors = $('[data-popup-trigger="hover"]');
   var clickableAnchors = $('[data-popup-trigger="click"]');

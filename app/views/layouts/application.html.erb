@@ -3,7 +3,7 @@
   <head>
     <title>Kotobyte</title>
     <meta name='author' content='Andree Surya'>
-    <meta name='description' content='Kotobyte is a Japanese dictionary with vocabulary reminders.'>
+    <meta name='description' content="Kotobyte is a Japanese learner's dictionary">
     <meta name='viewport' content='width=device-width, initial-scale=1'>
 
     <%= csrf_meta_tags %>
@@ -12,8 +12,8 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
-
-    <script src='https://apis.google.com/js/platform.js' async defer></script>
+    
+    <script src="https://apis.google.com/js/api:client.js" defer></script>
   </head>
 
   <body class='<%= controller.controller_name %>'>

@@ -17,5 +17,6 @@
 $(function() {
   $('#search_form input[name=query]').focus().select();
   
-  Popup.activate();
+  Popup.attachListeners();
+  Google.activateSignIn();
 });
