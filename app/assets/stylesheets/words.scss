@@ -70,6 +70,12 @@
 
 *[id^='popup-kanji-'] {
   min-width: 320px;
-  max-width: 640px;
+  max-width: 480px;
+
+  padding: 8px 16px;
+}
+
+*[id^='popup-category-'] {
+  padding: 8px 16px;
 }
 

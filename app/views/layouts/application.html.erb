@@ -3,14 +3,17 @@
   <head>
     <title>Kotobyte</title>
     <meta name='author' content='Andree Surya'>
-    <meta name='description' content="Kotobyte is a Japanese dictionary with vocabulary reminders.">
+    <meta name='description' content='Kotobyte is a Japanese dictionary with vocabulary reminders.'>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
-    
+
     <%= csrf_meta_tags %>
+    <%= google_meta_tags %>
     <%= favicon_tags %>
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
+
+    <script src='https://apis.google.com/js/platform.js' async defer></script>
   </head>
 
   <body class='<%= controller.controller_name %>'>
@@ -22,7 +25,11 @@
         <%= yield :toolbar %>
       </div>
 
-      <a id='menu_link' href='javascript:' data-popup-id='popup-menu' data-popup-text='Howdy' data-popup-trigger='click'></a>
+      <a id='menu_link' href='javascript:' data-popup-id='popup-menu' data-popup-trigger='click'></a>
+      
+      <div id='popup-menu' class='popup'>
+        <%= render partial: 'signin' %>
+      </div>
     </header>
 
     <main class='<%= controller.action_name %>'>

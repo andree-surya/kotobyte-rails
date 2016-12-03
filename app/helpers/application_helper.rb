@@ -17,4 +17,12 @@ module ApplicationHelper
 
     raw tags.join("\n")
   end
+
+  def google_meta_tags
+
+    tag(:meta, {
+        name: 'google-signin-client_id', 
+        content: Rails.configuration.app[:google_client_id]
+    })
+  end
 end

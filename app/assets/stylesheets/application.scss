@@ -85,8 +85,51 @@ header > .toolbar {
   background-size: contain;
 }
 
-#popup-menu {
-  z-index: 1;
+.signin-container {
+  margin: 16px;
+  text-align: center;
+}
+
+.signin-link {
+  display: flex;
+  height: auto;
+  width: 100%;
+  
+  align-items: center;
+  background-color: #5c84f1;
+  
+  color: white;
+  font-size: medium;
+  text-transform: none;
+  text-align: center;
+  overflow: hidden;
+  line-height: initial;
+
+  margin-bottom: 16px;
+  padding: 0;
+  border: 0 none;
+  border-radius: 4px;
+  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2);
+}
+
+.signin-link:hover {
+  color: white;
+
+  text-decoration: none;
+}
+
+.signin-link > img {
+  width: 24px;
+  height: 100%;
+
+  background-color: white;
+  padding: 8px;
+}
+
+.signin-link > div {
+  flex-grow: 1;
+
+  padding: 4px 16px;
 }
 
 a, a:hover {
@@ -135,4 +178,8 @@ rt {
 
 .outdated {
   border-bottom: 2px dotted #8e44ad;
+}
+
+#popup-menu {
+  width: 320px;
 }

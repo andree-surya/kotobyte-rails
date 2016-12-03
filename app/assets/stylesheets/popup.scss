@@ -2,9 +2,9 @@
 @import 'constants';
 
 .popup {
+  display: none;
   position: absolute;
 
-  padding: 8px 16px;
   border-radius: 8px;
   box-sizing: border-box;
 

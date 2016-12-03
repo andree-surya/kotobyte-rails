@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="128"
+   height="128"
+   viewBox="0 0 128 128"
+   version="1.1"
+   id="svg2"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="google.svg">
+  <metadata
+     id="metadata58">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>btn_google_light_normal_ios</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1240"
+     inkscape:window-height="683"
+     id="namedview56"
+     showgrid="false"
+     inkscape:zoom="1.8138826"
+     inkscape:cx="89.310367"
+     inkscape:cy="91.228083"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg2" />
+  <!-- Generator: Sketch 3.3.3 (12081) - http://www.bohemiancoding.com/sketch -->
+  <title
+     id="title4">btn_google_light_normal_ios</title>
+  <desc
+     id="desc6">Created with Sketch.</desc>
+  <defs
+     id="defs8">
+    <filter
+       x="-0.5"
+       y="-0.5"
+       width="2"
+       height="2"
+       filterUnits="objectBoundingBox"
+       id="filter-1">
+      <feOffset
+         dx="0"
+         dy="1"
+         in="SourceAlpha"
+         result="shadowOffsetOuter1"
+         id="feOffset11" />
+      <feGaussianBlur
+         stdDeviation="0.5"
+         in="shadowOffsetOuter1"
+         result="shadowBlurOuter1"
+         id="feGaussianBlur13" />
+      <feColorMatrix
+         values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.168 0"
+         in="shadowBlurOuter1"
+         type="matrix"
+         result="shadowMatrixOuter1"
+         id="feColorMatrix15" />
+      <feOffset
+         dx="0"
+         dy="0"
+         in="SourceAlpha"
+         result="shadowOffsetOuter2"
+         id="feOffset17" />
+      <feGaussianBlur
+         stdDeviation="0.5"
+         in="shadowOffsetOuter2"
+         result="shadowBlurOuter2"
+         id="feGaussianBlur19" />
+      <feColorMatrix
+         values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.084 0"
+         in="shadowBlurOuter2"
+         type="matrix"
+         result="shadowMatrixOuter2"
+         id="feColorMatrix21" />
+      <feMerge
+         id="feMerge23">
+        <feMergeNode
+           in="shadowMatrixOuter1"
+           id="feMergeNode25" />
+        <feMergeNode
+           in="shadowMatrixOuter2"
+           id="feMergeNode27" />
+        <feMergeNode
+           in="SourceGraphic"
+           id="feMergeNode29" />
+      </feMerge>
+    </filter>
+    <rect
+       id="path-2"
+       x="0"
+       y="0"
+       width="40"
+       height="40"
+       rx="2" />
+  </defs>
+  <g
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     transform="translate(-608,-78)"
+     sketch:type="MSArtboardGroup"
+     id="9-PATCH" />
+  <g
+     id="g4194"
+     transform="matrix(1.2339765,0,0,1.2339765,-13.759151,-14.974495)">
+    <path
+       d="m 111.27536,65.119209 c 0,-3.49193 -0.31337,-6.849555 -0.89537,-10.072874 l -46.37999,0 0,19.048924 26.502849,0 c -1.14159,6.155645 -4.611136,11.371156 -9.826648,14.863087 l 0,12.356064 15.915145,0 C 105.90316,92.741266 111.27536,80.116601 111.27536,65.119209 l 0,0 z"
+       id="Shape"
+       sketch:type="MSShapeGroup"
+       inkscape:connector-curvature="0"
+       style="fill:#4285f4;fill-rule:evenodd;stroke:url(#linearGradient4172) none;stroke-width:1" />
+    <path
+       d="m 64,113.24516 c 13.296194,0 24.44351,-4.40968 32.591346,-11.93075 L 80.676201,88.958346 C 76.266522,91.913056 70.625713,93.659021 64,93.659021 c -12.826126,0 -23.682446,-8.662673 -27.554906,-20.30244 l -16.452361,0 0,12.758973 C 28.0958,102.20977 44.749619,113.24516 64,113.24516 l 0,0 z"
+       id="path47"
+       sketch:type="MSShapeGroup"
+       inkscape:connector-curvature="0"
+       style="fill:#34a853;fill-rule:evenodd;stroke:url(#linearGradient4172) none;stroke-width:1" />
+    <path
+       d="M 36.445094,73.356581 C 35.46019,70.401871 34.900586,67.245704 34.900586,64 c 0,-3.245703 0.559604,-6.401871 1.544508,-9.356581 l 0,-12.758974 -16.452361,0 C 16.657492,48.532542 14.754838,56.053622 14.754838,64 c 0,7.94638 1.902654,15.467457 5.237895,22.115554 l 16.452361,-12.758973 0,0 z"
+       id="path49"
+       sketch:type="MSShapeGroup"
+       inkscape:connector-curvature="0"
+       style="fill:#fbbc05;fill-rule:evenodd;stroke:url(#linearGradient4172) none;stroke-width:1" />
+    <path
+       d="m 64,34.340982 c 7.230087,0 13.721492,2.484643 18.825085,7.364391 L 96.94949,27.580964 C 88.421125,19.634586 77.273809,14.754838 64,14.754838 c -19.250381,0 -35.9042,11.035393 -44.007267,27.129607 L 36.445094,54.643419 C 40.317554,43.003654 51.173874,34.340982 64,34.340982 l 0,0 z"
+       id="path51"
+       sketch:type="MSShapeGroup"
+       inkscape:connector-curvature="0"
+       style="fill:#ea4335;fill-rule:evenodd;stroke:url(#linearGradient4172) none;stroke-width:1" />
+  </g>
+  <g
+     style="fill:none;fill-rule:evenodd;stroke:none;stroke-width:1"
+     id="handles_square"
+     sketch:type="MSLayerGroup"
+     transform="translate(-1,81)" />
+</svg>

@@ -11,6 +11,9 @@ default: &default
   words_index_name: kotobyte_words
   kanji_index_name: kotobyte_kanji
 
+  google_client_id: 334858063731-hqk6ophipmu59kluq8npj0qppd1loae4.apps.googleusercontent.com
+  google_client_secret: <%= ENV['GOOGLE_CLIENT_SECRET'] %>
+
 development:
   <<: *default
 
