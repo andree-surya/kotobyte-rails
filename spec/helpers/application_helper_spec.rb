@@ -21,16 +21,4 @@ describe ApplicationHelper, type: :helper do
       expect(matches.count).to eq(ApplicationHelper::TOUCH_ICON_SIZES.count)
     end
   end
-
-  describe '#google_meta_tags' do
-    let(:tags) { google_meta_tags }
-    
-    it 'should contain Google Sign-In meta tag' do
-      expect(tags).to include('google-signin-client_id')
-    end
-
-    it 'should contain Google client ID' do
-      expect(tags).to include (Rails.configuration.app[:google_client_id])
-    end
-  end
 end

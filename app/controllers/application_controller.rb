@@ -4,4 +4,15 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   layout proc { false if request.xhr? }
+
+  protected
+
+    def current_session
+
+      if @current_session.nil? and cookies.has_key? :session_id
+        @current_session = Session.find_by(cookies[:session_id])
+      end
+
+      @current_session
+    end
 end

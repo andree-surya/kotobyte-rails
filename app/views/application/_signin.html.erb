@@ -2,8 +2,10 @@
 <div class='signin-container'>
   Sign in to create and save reminders.
 
-  <a class='signin-link' href='javascript:Google.signIn()'>
+  <%= link_to new_session_path, class: 'signin-link' do %>
+    
     <%= image_tag('google.svg') %>
     <div>Sign In with Google</div>
-  </a>
+
+  <% end %>
 </div>

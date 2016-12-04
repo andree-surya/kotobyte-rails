@@ -14,6 +14,8 @@ gem 'dotenv-rails'
 gem 'sqlite3'
 gem 'nokogiri'
 gem 'mojinizer'
+gem 'googleauth'
+gem 'google-id-token'
 
 group :development, :test do
   gem 'byebug', platform: :mri
