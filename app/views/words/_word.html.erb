@@ -1,5 +1,7 @@
 
 <div class='word'>
+  <%= reminder_link(word) %>
+
   <% if word.readings.present? %>
     <span class='readings'><%== word_readings_text(word) %></span>
   <% end %>

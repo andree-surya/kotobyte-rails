@@ -140,4 +140,19 @@ module WordsHelper
 
     link_to(literal, 'javascript:', options)
   end
+
+  def reminder_link(word)
+
+    data = { 'popup-trigger' => 'click' }
+
+    if signed_in?
+      data['popup-id'] = "popup-reminder-#{word.id}"
+      data['popup-src'] = ''
+    else
+      data['popup-id'] = 'popup-sign-in'
+      data['popup-text'] = render(partial: 'sign_in')
+    end
+
+    link_to '', 'javascript:', class: 'reminder-link', data: data
+  end
 end

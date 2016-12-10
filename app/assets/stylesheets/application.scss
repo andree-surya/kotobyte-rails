@@ -96,7 +96,7 @@ header > .toolbar {
   height: 8px;
   border-radius: 4px;
 
-  background-color: $notice-color;
+  background-color: $alert-color;
 }
 
 .sign-in-container {
@@ -194,10 +194,6 @@ rt {
   border-bottom: 2px dotted #8e44ad;
 }
 
-#popup-menu {
-  width: 320px;
-}
-
 .menu_container ul {
   list-style-type: none;
   margin: 0;
@@ -236,6 +232,6 @@ rt {
   border-radius: 4px;
   padding: 0 8px;
   
-  background-color: $notice-color;
+  background-color: $alert-color;
   color: white;
 }
