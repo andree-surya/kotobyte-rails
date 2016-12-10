@@ -16,17 +16,7 @@
   <body class='<%= controller.controller_name %>'>
 
     <header class='<%= controller.action_name %>'>
-      <a id='home_link' href='<%= root_path %>'></a>
-
-      <div class='toolbar'>
-        <%= yield :toolbar %>
-      </div>
-
-      <a id='menu_link' href='javascript:' data-popup-id='popup-menu' data-popup-trigger='click'></a>
-
-      <div id='popup-menu' class='popup'>
-        <%= render partial: 'signin' %>
-      </div>
+      <%= render partial: 'header' %>
     </header>
 
     <main class='<%= controller.action_name %>'>

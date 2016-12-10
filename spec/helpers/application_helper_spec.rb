@@ -21,4 +21,4 @@ describe ApplicationHelper, type: :helper do
       expect(matches.count).to eq(ApplicationHelper::TOUCH_ICON_SIZES.count)
     end
   end
-end
+end 

@@ -76,6 +76,8 @@ header > .toolbar {
 }
 
 #menu_link {
+  position: relative;
+
   background: image-url('notification.svg') no-repeat center;
   background-size: contain;
 }
@@ -85,12 +87,24 @@ header > .toolbar {
   background-size: contain;
 }
 
-.signin-container {
+#menu_link .badge {
+  position: absolute;
+  right: 0;
+  top: 0;
+  
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+
+  background-color: $notice-color;
+}
+
+.sign-in-container {
   margin: 16px;
   text-align: center;
 }
 
-.signin-link {
+.sign-in-link {
   display: flex;
   height: auto;
   width: 100%;
@@ -112,13 +126,13 @@ header > .toolbar {
   box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2);
 }
 
-.signin-link:hover {
+.sign-in-link:hover {
   color: white;
 
   text-decoration: none;
 }
 
-.signin-link > img {
+.sign-in-link > img {
   width: 24px;
   height: 100%;
 
@@ -126,7 +140,7 @@ header > .toolbar {
   padding: 8px;
 }
 
-.signin-link > div {
+.sign-in-link > div {
   flex-grow: 1;
 
   padding: 4px 16px;
@@ -182,4 +196,46 @@ rt {
 
 #popup-menu {
   width: 320px;
+}
+
+.menu_container ul {
+  list-style-type: none;
+  margin: 0;
+}
+
+.menu_container li {
+  margin: 0;
+}
+
+.menu_container li a {
+  padding: 0 16px;
+  height: 40px;
+
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+
+  border-bottom: thin solid #eee;
+}
+
+.menu_container a {
+  color: inherit;
+}
+
+.menu_container .destructive {
+  color: $alert-color;
+}
+
+.menu_container a:hover {
+  text-decoration: none;
+  background-color: #eee;
+}
+
+.menu_container .badge {
+  border-radius: 4px;
+  padding: 0 8px;
+  
+  background-color: $notice-color;
+  color: white;
 }

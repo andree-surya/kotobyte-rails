@@ -6,6 +6,6 @@ Rails.application.routes.draw do
   get 'search', to: 'words#search', as: :search
   get 'kanji/:literal', to: 'kanji#show', as: :kanji
 
-  get 'session/new', to: 'session#new', as: :new_session
-  get 'session/create', to: 'session#create', as: :session
+  resource :session, only: [:new, :destroy]
+  get 'oauth2_callback', to: 'sessions#oauth2_callback', as: :oauth2_callback
 end

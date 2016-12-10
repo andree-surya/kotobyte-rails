@@ -18,5 +18,4 @@ $(function() {
   $('#search_form input[name=query]').focus().select();
   
   Popup.attachListeners();
-  Google.activateSignIn();
 });
