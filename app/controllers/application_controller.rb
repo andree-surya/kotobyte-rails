@@ -4,22 +4,4 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   layout proc { false if request.xhr? }
-
-  helper_method :current_session
-  helper_method :signed_in?
-  
-  protected
-  
-    def current_session
-
-      if @current_session.nil? && cookies.has_key?(:session_id)
-        @current_session = Session.includes(:user).find_by(cookies[:session_id])
-      end
-
-      @current_session
-    end
-
-    def signed_in?
-      current_session.present?
-    end
 end

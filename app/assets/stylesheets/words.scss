@@ -4,8 +4,52 @@
 
 @import 'constants';
 
+$header-height: 56px;
+
+body.words header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: $header-height;
+  background-color: white;
+
+  box-shadow: 0 1px 3px #aaa;
+  box-sizing: border-box;
+}
+
+body.words main {
+  padding-top: $header-height;
+}
+
+body.words header > div {
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 16px;
+  max-width: $content-width;
+}
+
+body.words header > div > a {
+  height: 32px;
+  width: 32px;
+
+  margin-right: 16px;
+
+  background: image-url('favicon.svg') no-repeat center;
+  background-size: contain;
+}
+
+body.words header > div > form {
+  flex-grow: 1;
+}
+
 #search_form {
   margin: 0;
+  max-width: $content-width;
 }
 
 #search_form input {
@@ -17,7 +61,7 @@
 
 #search_results_summary {
   color: $font-color-light;
-  margin: 16px 0;
+  margin: 16px 0 8px 0;
 }
 
 .word {
@@ -66,15 +110,6 @@
 .word .extra-info {
   color: $font-color-light;
   font-style: italic;
-}
-
-.reminder-link {
-  float: right;
-
-  width: 24px;
-  height: 24px;
-  
-  background: image-url('add.svg') no-repeat center;
 }
 
 *[id^='popup-kanji-'] {

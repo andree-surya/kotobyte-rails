@@ -17,12 +17,4 @@ module ApplicationHelper
 
     raw tags.join("\n")
   end
-
-  def menu_popup_tag
-    content_name = (if signed_in? then 'menu' else 'sign-in' end)
-
-    content_tag 'div', id: "popup-menu", class: 'popup' do
-      render partial: (if signed_in? then 'menu' else 'sign_in' end)
-    end
-  end
 end

@@ -5,17 +5,13 @@
 @import 'constants';
 
 body.home header {
-  background-color: transparent;
   border-top: medium solid $tint-color;
-  box-shadow: none;
-}
-
-body.home #home_link {
-  visibility: hidden;
 }
 
 body.home main.index {
   text-align: center;
+
+  margin-top: 5%;
 }
 
 body.home main.index img {

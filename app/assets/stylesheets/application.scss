@@ -17,9 +17,6 @@
 @import 'constants';
 @import url('https://fonts.googleapis.com/css?family=PT+Sans');
 
-$content-width: 640px;
-$header-height: 56px;
-
 body {
   position: relative;
 
@@ -28,25 +25,6 @@ body {
   color: $font-color;
 
   background-color: white;
-  padding-top: $header-height;
-}
-
-header {
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  right: 0;
-  
-  padding: 8px;
-  height: $header-height;
-  background-color: white;
-  box-shadow: 0 1px 3px #aaa;
-  box-sizing: border-box;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
 }
 
 main, footer {
@@ -66,84 +44,6 @@ header > a {
 
   width: 32px;
   height: 32px;
-}
-
-header > .toolbar {
-  flex-grow: 1;
-
-  max-width: $content-width;
-  margin: 0 8px;
-}
-
-#menu_link {
-  position: relative;
-
-  background: image-url('notification.svg') no-repeat center;
-  background-size: contain;
-}
-
-#home_link {
-  background: image-url('favicon.svg') no-repeat center;
-  background-size: contain;
-}
-
-#menu_link .badge {
-  position: absolute;
-  right: 0;
-  top: 0;
-  
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-
-  background-color: $alert-color;
-}
-
-.sign-in-container {
-  margin: 16px;
-  text-align: center;
-}
-
-.sign-in-link {
-  display: flex;
-  height: auto;
-  width: 100%;
-  
-  align-items: center;
-  background-color: #4285f4;
-  
-  color: white;
-  font-size: medium;
-  text-transform: none;
-  text-align: center;
-  overflow: hidden;
-  line-height: initial;
-
-  margin-top: 8px;
-  padding: 0;
-  border: 0 none;
-  border-radius: 4px;
-  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, .2);
-}
-
-.sign-in-link:hover {
-  color: white;
-
-  text-decoration: none;
-}
-
-.sign-in-link > img {
-  width: 24px;
-  height: 100%;
-
-  background-color: white;
-  padding: 8px;
-}
-
-.sign-in-link > div {
-  flex-grow: 1;
-
-  padding: 4px 16px;
 }
 
 a, a:hover {
@@ -194,44 +94,3 @@ rt {
   border-bottom: 2px dotted #8e44ad;
 }
 
-.menu_container ul {
-  list-style-type: none;
-  margin: 0;
-}
-
-.menu_container li {
-  margin: 0;
-}
-
-.menu_container li a {
-  padding: 0 16px;
-  height: 40px;
-
-  display: flex;
-
-  justify-content: space-between;
-  align-items: center;
-
-  border-bottom: thin solid #eee;
-}
-
-.menu_container a {
-  color: inherit;
-}
-
-.menu_container .destructive {
-  color: $alert-color;
-}
-
-.menu_container a:hover {
-  text-decoration: none;
-  background-color: #eee;
-}
-
-.menu_container .badge {
-  border-radius: 4px;
-  padding: 0 8px;
-  
-  background-color: $alert-color;
-  color: white;
-}

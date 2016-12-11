@@ -1,12 +1,10 @@
 
-<% content_for :toolbar do %>
-  
+<div>
+  <%= link_to '', root_path %>
+
   <form id='search_form' action='<%= search_path %>'> 
     
     <input name='query' type='search' autocomplete='off' autofocus
         value='<%= @query %>' placeholder='<%= t('search_placeholder') %>' />
   </form>
-
-<% end %>
-
-<%= render template: 'layouts/application' %>
+</div>
