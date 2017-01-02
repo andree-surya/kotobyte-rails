@@ -99,13 +99,13 @@ module WordsHelper
     category_texts.join(', ')
   end
 
-  def sense_extras_text(sense)
-    labels = []
+  def sense_extras(sense)
+    extras = []
 
-    labels += sense.labels.map { |code| t("labels.#{code}") }
-    labels += sense.notes.map { |note| note.upcase_first }
+    extras += sense.labels.map { |code| t("labels.#{code}") }
+    extras += sense.notes.map { |note| note.upcase_first }
 
-    labels += sense.sources.map do |source|
+    extras += sense.sources.map do |source|
       code, text = source.split(':')
       language_name = t("iso_639_2.#{code}", default: 'Unknown')
 
@@ -115,8 +115,14 @@ module WordsHelper
       source_label
     end
 
-    if labels.present?
-      'ー' + labels.join('. ')
+    extras
+  end
+
+  def sense_extras_text(sense)
+    extras = sense_extras(sense)
+    
+    if extras.present?
+      'ー' + extras.join('. ')
     else
       ''
     end

@@ -31,7 +31,7 @@ module KanjiHelper
     readings_text.join('、 ')
   end
 
-  def kanji_extras_text(kanji)
+  def kanji_extras(kanji)
     metadata_labels = []
 
     metadata_labels << case kanji.jlpt
@@ -64,7 +64,12 @@ module KanjiHelper
       'Jinmeiyou (used in name)'
     end
 
-    metadata_text = metadata_labels.compact.join('. ')
+    metadata_labels
+  end
+
+  def kanji_extras_text(kanji)
+
+    metadata_text = kanji_extras(kanji).compact.join('. ')
     metadata_text = 'ー' + metadata_text unless metadata_text.empty?
 
     metadata_text
