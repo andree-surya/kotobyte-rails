@@ -141,7 +141,7 @@ describe WordsHelper, type: :helper do
     end
 
     it 'should include link path' do
-      expect(link).to include(search_path(query: query))
+      expect(link).to include(search_words_path(query: query))
     end
   end
 

@@ -1,6 +1,6 @@
 class WordsController < ApplicationController
 
-  def search
+  def index 
     @query = params[:query]
     
     if @query.present?

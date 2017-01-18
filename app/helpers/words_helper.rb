@@ -129,7 +129,7 @@ module WordsHelper
   end
 
   def search_link(query)
-    link_to query, search_path(query: query)
+    link_to query, search_words_path(query: query)
   end
 
   def kanji_link(literal)
