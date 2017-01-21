@@ -32,37 +32,13 @@ module KanjiHelper
   end
 
   def kanji_extras(kanji)
+    jlpt_label = t("kanji.jlpt_#{kanji.jlpt}", default: '')
+    grade_label = t("kanji.grade_#{kanji.grade}", default: '')
+
     metadata_labels = []
-
-    metadata_labels << case kanji.jlpt
-    when 1
-      'JLPT N1'
-    when 2
-      'JLPT N2/N3'
-    when 3
-      'JLPT N4'
-    when 4
-      'JLPT N5'
-    end
-
-    metadata_labels << case kanji.grade
-    when 1
-      'Elementary school, 1st grade'
-    when 2
-      'Elementary school, 2nd grade'
-    when 3
-      'Elementary school, 3rd grade'
-    when 4
-      'Elementary school, 4th grade'
-    when 5
-      'Elementary school, 5th grade'
-    when 6
-      'Elementary school, 6th grade'
-    when 8
-      'High School grade'
-    when 9, 10
-      'Jinmeiyou (used in name)'
-    end
+    
+    metadata_labels << jlpt_label if jlpt_label.present?
+    metadata_labels << grade_label if grade_label.present?
 
     metadata_labels
   end
@@ -70,7 +46,7 @@ module KanjiHelper
   def kanji_extras_text(kanji)
 
     metadata_text = kanji_extras(kanji).compact.join('. ')
-    metadata_text = 'ー' + metadata_text unless metadata_text.empty?
+    metadata_text = 'ー' + metadata_text if metadata_text.present? 
 
     metadata_text
   end
@@ -79,7 +55,7 @@ module KanjiHelper
 
     strokes = kanji.strokes[0...upto_strokes_count]
 
-    marker_location = /^M([\d\.]+),([\d\.]+)/.match(strokes.last)
+    marker_location = /^M\s*([\d\.]+)\s*,\s*([\d\.]+)/.match(strokes.last)
     raise "Invalid path: #{strokes.last}" if marker_location.nil?
 
     marker_cx = marker_location[1].to_f
