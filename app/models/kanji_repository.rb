@@ -37,6 +37,13 @@ class KanjiRepository
     ))
   end
 
+  def search_kanji(query)
+    kanji_list = query.chars.select { |c| c.kanji? }
+    sanitized_query = kanji_list.join
+
+    search(sanitized_query)
+  end
+
   private
 
     def process_response(response)

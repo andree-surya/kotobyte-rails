@@ -23,14 +23,13 @@ describe KanjiRepository do
       kanji_list = []
       kanji_list << Kanji.new({ 'literal' => '茶' })
       kanji_list << Kanji.new({ 'literal' => '水' })
-      kanji_list << Kanji.new({ 'literal' => '天' })
+      kanji_list << Kanji.new({ 'literal' => '飲' })
 
       repository.create_index! force: true
       repository.save_all(kanji_list)
 
-      search_result = repository.search('水')
-      expect(search_result.count).to eq(1)
-      expect(search_result.first.literal).to eq('水')
+      search_result = repository.search_kanji('水を{飲む}')
+      expect(search_result.count).to eq(2)
     end
   end
 end

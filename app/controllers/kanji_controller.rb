@@ -1,11 +1,11 @@
 class KanjiController < ApplicationController
 
   def index
-    @results = KanjiRepository.search(params[:query])
+    @results = KanjiRepository.new.search_kanji(params[:query])
   end
 
   def show
-    @kanji = KanjiRepository.search(params[:literal]).first
+    @kanji = KanjiRepository.new.search_kanji(params[:literal]).first
 
     if @kanji.nil?
       render status: :not_found
