@@ -1,0 +1,12 @@
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - bin
+
+defaults:
+  -
+    scope:
+      path: ''
+      type: 'pages'
+    values:
+      layout: 'default'
