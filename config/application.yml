@@ -1,15 +1,6 @@
 
 default: &default
-  words_source_url: http://ftp.monash.edu.au/pub/nihongo/JMdict_e.gz
-  kanji_source_url: http://nihongo.monash.edu/kanjidic2/kanjidic2.xml.gz
-  kanji_strokes_url: https://github.com/KanjiVG/kanjivg/releases/download/r20160426/kanjivg-20160426.xml.gz
-
-  words_source_file: tmp/JMdict_e.xml
-  kanji_source_file: tmp/kanjidic2.xml
-  kanji_strokes_file: tmp/kanjivg.xml
-
-  words_index_name: kotobyte_words
-  kanji_index_name: kotobyte_kanji
+  database_file: 'db/dictionary.sqlite3'
 
 development:
   <<: *default
@@ -19,11 +10,6 @@ production:
 
 test:
   <<: *default
-  words_source_file: spec/fixtures/JMdict_test.xml
-  kanji_source_file: spec/fixtures/kanjidic2_test.xml
-  kanji_strokes_file: spec/fixtures/kanjivg_test.xml
-
-  words_index_name: kotobyte_words_test
-  kanji_index_name: kotobyte_kanji_test
+  database_file: 'db/dictionary_test.sqlite3'
   
 

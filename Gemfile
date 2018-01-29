@@ -1,19 +1,20 @@
 source 'https://rubygems.org'
 
-ruby '2.3.1'
+ruby '2.4.2'
 
 gem 'rails', '~> 5.0'
 gem 'puma', '~> 3.0'
 gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
-gem 'coffee-rails', '~> 4.1.0'
+gem 'uglifier', '~> 2.0'
 gem 'jbuilder', '~> 2.0'
-gem 'elasticsearch-persistence'
+gem 'nokogiri', '~> 1.8.1'
+gem 'mojinizer', '~> 0.2'
 gem 'jquery-rails'
 gem 'dotenv-rails'
-gem 'sqlite3'
-gem 'nokogiri'
-gem 'mojinizer'
+
+# Make sure you have FTS5 enabled for your SQLite3.
+# e.g. `brew reinstall sqlite3 --with-fts5`
+gem 'sqlite3', '~> 1.3'
 
 group :development, :test do
   gem 'byebug', platform: :mri

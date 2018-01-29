@@ -20,15 +20,13 @@ require 'rspec/rails'
 #
 # Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 
-# Checks for pending migrations before tests are run.
-# If you are not using ActiveRecord, you can remove this line.
-ActiveRecord::Migration.maintain_test_schema!
+WORDS_SOURCE_FILE = File.expand_path('fixtures/jmdict_test.xml', __dir__)
+KANJI_SOURCE_FILE = File.expand_path('fixtures/kanjidic2_test.xml', __dir__)
+KANJI_STROKES_FILE = File.expand_path('fixtures/kanjivg_test.xml', __dir__)
+SENTENCES_SOURCE_FILE = File.expand_path('fixtures/sentences_test.csv', __dir__)
+SENTENCES_INDICES_FILE = File.expand_path('fixtures/sentences_idx_test.csv', __dir__)
 
 RSpec.configure do |config|
-  # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
-
-  config.use_transactional_fixtures = false
 
   # RSpec Rails can automatically mix in different behaviours to your tests
   # based on their file location, for example enabling you to call `get` and
@@ -44,6 +42,5 @@ RSpec.configure do |config|
   # The different available types are documented in the features, such as in
   # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
-
 
 end

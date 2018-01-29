@@ -1,10 +1,7 @@
 
 class KanjiSourceReader
 
-  def initialize(
-      source_xml: IO.read(Rails.configuration.app[:kanji_source_file]),
-      strokes_xml: IO.read(Rails.configuration.app[:kanji_strokes_file]))
-
+  def initialize(source_xml: '<kanjidic2 />', strokes_xml: '<kanjivg />')
     @source_xml = source_xml
     @strokes_xml = strokes_xml
   end
@@ -67,7 +64,7 @@ class KanjiSourceReader
         end
 
       when 'literal'
-        @current_kanji.literal = node.inner_xml
+        @current_kanji.character = node.inner_xml
 
       when 'grade'
         @current_kanji.grade = node.inner_xml.to_i
@@ -79,12 +76,14 @@ class KanjiSourceReader
         type = node.attributes['r_type']
 
         if type == 'ja_on' || type == 'ja_kun'
+          @current_kanji.readings ||= []
           @current_kanji.readings << node.inner_xml
         end
 
       when 'meaning'
 
         if node.attributes['m_lang'].nil?
+          @current_kanji.meanings ||= []
           @current_kanji.meanings << node.inner_xml
         end
       end

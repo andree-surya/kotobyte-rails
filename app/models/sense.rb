@@ -1,18 +1,23 @@
 
 class Sense
-  attr_accessor :text
+  attr_accessor :texts
   attr_accessor :categories # Lexical categories
-  attr_accessor :sources # Source languages
+  attr_accessor :origins # Language origins
   attr_accessor :labels
   attr_accessor :notes
 
-  def initialize(attributes = {})
+  def initialize
+    yield self if block_given?
+  end
 
-    @text = attributes['text'] || ''
-    @categories = attributes['categories'] || []
-    @sources = attributes['sources'] || []
-
-    @labels = attributes['labels'] || []
-    @notes = attributes['notes'] || []
+  def as_hash
+    {
+      t: texts,
+      c: categories,
+      o: origins,
+      l: labels,
+      n: notes
+      
+    }.delete_if { |k, v| v.nil? }
   end
 end

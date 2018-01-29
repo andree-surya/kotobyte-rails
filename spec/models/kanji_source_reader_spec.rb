@@ -2,20 +2,24 @@
 describe KanjiSourceReader do
 
   it 'should parse test data without error' do
-    kanji_list = KanjiSourceReader.new.read_all
+    reader = KanjiSourceReader.new(
+        source_xml: IO.read(KANJI_SOURCE_FILE),
+        strokes_xml: IO.read(KANJI_STROKES_FILE)
+    )
 
+    kanji_list = reader.read_all
     expect(kanji_list.count).to eq(5)
 
     kanji_list.each do |kanji|
-      expect(kanji.id).to be_present
-      expect(kanji.strokes).to be_present
+      expect(kanji.id).not_to be_nil
+      expect(kanji.strokes).not_to be_empty
     end
   end
 
   it 'should parse UCS code point as ID' do
     ID = '4e9c'
 
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <character>
         <codepoint>
           <cp_value cp_type="jis208">16-01</cp_value>
@@ -28,11 +32,11 @@ describe KanjiSourceReader do
     expect(reader.read_one.id).to eq(ID.to_i(16))
   end
 
-  it 'should parse literal' do
+  it 'should parse character' do
     xml = '<character><literal>豚</literal></character>'
 
     reader = KanjiSourceReader.new(source_xml: xml)
-    expect(reader.read_one.literal).to eq('豚')
+    expect(reader.read_one.character).to eq('豚')
   end
 
   it 'should parse grade' do
@@ -50,7 +54,7 @@ describe KanjiSourceReader do
   end
 
   it 'should parse on and kun readings' do
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <character>
         <reading_meaning>
           <rmgroup>
@@ -78,7 +82,7 @@ describe KanjiSourceReader do
   end
 
   it 'should parse meanings' do
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <character>
         <reading_meaning>
           <rmgroup>
@@ -106,7 +110,7 @@ describe KanjiSourceReader do
     kanji_id = kanji_id_hex.to_i(16)
     strokes = ['M15.88,89.23c3', 'M42.12,24c1.09']
 
-    source_xml = <<-EOS.strip_heredoc
+    source_xml = <<-EOS
       <character>
         <codepoint>
           <cp_value cp_type="ucs">#{kanji_id_hex}</cp_value>
@@ -114,7 +118,7 @@ describe KanjiSourceReader do
       </character>
     EOS
 
-    strokes_xml = <<-EOS.strip_heredoc
+    strokes_xml = <<-EOS
       <kanji id="kvg:kanji_#{kanji_id_hex}">
         <path d="#{strokes[0]}"/>
         <path d="#{strokes[1]}"/>

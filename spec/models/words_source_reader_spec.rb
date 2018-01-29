@@ -1,15 +1,15 @@
-require 'rails_helper'
 
 describe WordsSourceReader do
 
   it 'should parse test data without error' do
-    words = WordsSourceReader.new.read_all
+    reader = WordsSourceReader.new(source_xml: IO.read(WORDS_SOURCE_FILE))
 
+    words = reader.read_all
     expect(words.count).to eq(5)
 
     words.each do |word|
-      expect(word.id).to be_present
-      expect(word.literals).to be_present
+      expect(word.id).not_to be_nil
+      expect(word.literals).not_to be_empty
     end
   end
 
@@ -23,45 +23,11 @@ describe WordsSourceReader do
     expect(word.id).to eq(id)
   end
 
-  it 'should parse word priority' do
+  it 'should parse literal texts and assign priority' do
 
-    xml = <<-EOS.strip_heredoc
-      <JMdict>
-        <entry>
-          <k_ele>
-            <ke_pri>ichi2</ke_pri>
-            <ke_pri>news1</ke_pri>
-            <ke_pri>nf12</ke_pri>
-          </k_ele>
-        </entry>
-        <entry>
-          <r_ele>
-            <re_pri>gai2</re_pri>
-            <re_pri>news2</re_pri>
-            <re_pri>nf45</re_pri>
-          </r_ele>
-        </entry>
-        <entry>
-          <k_ele></k_ele>
-          <r_ele></r_ele>
-        </entry>
-      </JMdict>
-    EOS
-
-    words = WordsSourceReader.new(source_xml: xml).read_all
-
-    expect(words[0].priority).to eq(1 + 16 + 32)
-    expect(words[1].priority).to eq(1 + 16 + 16)
-    expect(words[2].priority).to eq(1)
-  end
-
-  it 'should parse literal elements' do
-
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <!DOCTYPE JMdict [
         <!ENTITY iK "Irregular Kanji">
-        <!ENTITY io "Irregular Okurigana">
-        <!ENTITY oK "Outdated Kanji">
       ]>
 
       <JMdict>
@@ -69,61 +35,51 @@ describe WordsSourceReader do
           <k_ele><keb>冗談</keb></k_ele>
           <k_ele><keb>言葉</keb><ke_pri>news2</ke_pri></k_ele>
           <k_ele><keb>匂い</keb><ke_inf>&iK;</ke_inf></k_ele>
-          <k_ele><keb>お茶</keb><ke_inf>&io;</ke_inf></k_ele>
-          <k_ele><keb>電車</keb><ke_inf>&oK;</ke_inf></k_ele>
         </entry>
       </JMdict>
     EOS
 
     literals = WordsSourceReader.new(source_xml: xml).read_one.literals
 
-    expect(literals.size).to eq(5)
+    expect(literals.count).to eq(3)
     expect(literals[0].text).to eq('冗談')
     expect(literals[1].text).to eq('言葉')
     expect(literals[2].text).to eq('匂い')
-    expect(literals[3].text).to eq('お茶')
-    expect(literals[4].text).to eq('電車')
-
-    expect(literals[1]).to be_common
-    expect(literals[2]).to be_irregular
-    expect(literals[3]).to be_irregular
-    expect(literals[4]).to be_outdated
+    expect(literals[0].priority).to eq(1)
+    expect(literals[1].priority).to eq(2)
+    expect(literals[2].priority).to eq(0)
   end
 
-  it 'should parse reading elements' do
+  it 'should parse readings texts and assign priority' do
 
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <!DOCTYPE JMdict [
-        <!ENTITY ik "Irregular Kana">
-        <!ENTITY ok "Outdated Kana">
+        <!ENTITY ok "Outdated Kana usage">
       ]>
 
       <JMdict>
         <entry>
-          <r_ele><reb>ことば</reb></r_ele>
-          <r_ele><reb>じょうだん</reb><re_pri>ichi1</re_pri></r_ele>
-          <r_ele><reb>におい</reb><re_inf>&ik;</re_inf></r_ele>
-          <r_ele><reb>おちゃ</reb><re_inf>&ok;</re_inf></r_ele>
+          <r_ele><reb>ノート</reb></r_ele>
+          <r_ele><reb>バグ</reb><re_pri>gai1</re_pri></r_ele>
+          <r_ele><reb>みず</reb><re_inf>&ok;</re_inf></r_ele>
         </entry>
       </JMdict>
     EOS
 
     readings = WordsSourceReader.new(source_xml: xml).read_one.readings
 
-    expect(readings.size).to eq(4)
-    expect(readings[0].text).to eq('ことば')
-    expect(readings[1].text).to eq('じょうだん')
-    expect(readings[2].text).to eq('におい')
-    expect(readings[3].text).to eq('おちゃ')
-
-    expect(readings[1]).to be_common
-    expect(readings[2]).to be_irregular
-    expect(readings[3]).to be_outdated
+    expect(readings.count).to eq(3)
+    expect(readings[0].text).to eq('ノート')
+    expect(readings[1].text).to eq('バグ')
+    expect(readings[2].text).to eq('みず')
+    expect(readings[0].priority).to eq(1)
+    expect(readings[1].priority).to eq(2)
+    expect(readings[2].priority).to eq(0)
   end
 
   it 'should parse sense and translation texts' do
 
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <entry>
         <sense>
           <gloss>declaration</gloss>
@@ -142,14 +98,14 @@ describe WordsSourceReader do
     senses = WordsSourceReader.new(source_xml: xml).read_one.senses
 
     expect(senses.size).to eq(3)
-    expect(senses[0].text).to eq('declaration; hearsay')
-    expect(senses[1].text).to eq('conduct')
-    expect(senses[2].text).to eq('African National Congress; ANC')
+    expect(senses[0].texts).to eq(['declaration', 'hearsay'])
+    expect(senses[1].texts).to eq(['conduct'])
+    expect(senses[2].texts).to eq(['African National Congress', 'ANC'])
   end
 
   it 'should parse sense categories' do
 
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <!DOCTYPE JMdict [
         <!ENTITY n "noun (common) (futsuumeishi)">
         <!ENTITY adj-i "adjective (keiyoushi)">
@@ -175,13 +131,13 @@ describe WordsSourceReader do
 
     expect(senses.size).to eq(3)
     expect(senses[0].categories).to eq(['n', 'adj-i'])
-    expect(senses[1].categories).to eq(['n', 'adj-i'])
+    expect(senses[1].categories).to eq(nil)
     expect(senses[2].categories).to eq(['v5u'])
   end
 
-  it 'should parse sense sources' do
+  it 'should parse sense origins' do
 
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <entry>
         <sense>
           <lsource xml:lang="ger">Abend</lsource>
@@ -196,13 +152,13 @@ describe WordsSourceReader do
     senses = WordsSourceReader.new(source_xml: xml).read_one.senses
 
     expect(senses.size).to eq(2)
-    expect(senses[0].sources).to eq(['ger:Abend', 'kor'])
-    expect(senses[1].sources).to eq(['eng:Ice'])
+    expect(senses[0].origins).to eq(['ger:Abend', 'kor'])
+    expect(senses[1].origins).to eq(['eng:Ice'])
   end
 
   it 'should parse sense labels' do
 
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <!DOCTYPE JMdict [
         <!ENTITY comp "computer terminology">
         <!ENTITY col "colloquialism">
@@ -235,7 +191,7 @@ describe WordsSourceReader do
 
   it 'should parse sense notes' do
 
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <entry>
         <sense>
           <s_inf>A</s_inf>
@@ -256,7 +212,7 @@ describe WordsSourceReader do
 
   it 'should assign noun category for translation' do
 
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <JMdict>
         <entry>
           <trans>
@@ -272,7 +228,7 @@ describe WordsSourceReader do
 
   it 'should parse translation types' do
 
-    xml = <<-EOS.strip_heredoc
+    xml = <<-EOS
       <!DOCTYPE JMdict [
         <!ENTITY surname "family or surname">
         <!ENTITY place "place name">
@@ -298,7 +254,7 @@ describe WordsSourceReader do
 
     expect(senses.size).to eq(3)
     expect(senses[0].labels).to eq(['surname', 'place'])
-    expect(senses[1].labels).to eq([])
-    expect(senses[2].labels).to eq([])
+    expect(senses[1].labels).to eq(nil)
+    expect(senses[2].labels).to eq(nil)
   end
 end
