@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+message Word {
+  
+  uint32 id = 1;
+  repeated Literal literals = 2;
+  repeated Literal readings = 3;
+  repeated Sense senses = 4;
+}
+
+message Literal {
+  
+  string text = 1;
+  Priority priority = 2;
+
+  enum Priority {
+
+    PRIORITY_LOW = 0;
+    PRIORITY_MEDIUM = 1;
+    PRIORITY_HIGH = 2;
+  }
+}
+
+message Sense {
+
+  repeated string texts = 1;
+  repeated string categories = 2;
+  repeated string labels = 3;
+  repeated string notes = 4;
+  repeated Origin origins = 5;
+}
+
+message Origin {
+
+  string language = 1;
+  string text = 2;
+}
+
+message Kanji {
+
+  uint32 id = 1;
+  string character = 2;
+  repeated string readings = 3;
+  repeated string meanings = 4;
+  repeated string strokes = 5;
+  JLPT jlpt = 6;
+  Grade grade = 7;
+  
+  enum JLPT {
+
+    JLPT_UNKNOWN = 0;
+    JLPT_N1 = 1;
+    JLPT_N2_N3 = 2;
+    JLPT_N4 = 3;
+    JLPT_N5 = 4;
+  }
+
+  enum Grade {
+
+    GRADE_UNKNOWN = 0;
+    GRADE_JOUYOU_1 = 1;
+    GRADE_JOUYOU_2 = 2;
+    GRADE_JOUYOU_3 = 3;
+    GRADE_JOUYOU_4 = 4;
+    GRADE_JOUYOU_5 = 5;
+    GRADE_JOUYOU_6 = 6;
+    GRADE_JOUYOU_S = 8;
+    GRADE_JINMEIYOU_1 = 9;
+    GRADE_JINMEIYOU_2 = 10;
+  }
+}
+
+message Sentence {
+
+  uint32 id = 1;
+  string original = 2;
+  string tokenized = 3;
+  string translated = 4;
+}
+

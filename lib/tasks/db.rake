@@ -5,16 +5,15 @@ kanji_strokes_file = 'tmp/kanjivg.xml'
 sentences_file = 'tmp/sentences.csv'
 sentences_idx_file = 'tmp/sentences_idx.csv'
 
-namespace :data do
+namespace :db do
 
-  desc 'Download dictionary source data and create dictionary file'
-  task reset_all: [
+  desc 'Download all data source files'
+  task download_source_files: [
     :download_words_source,
     :download_kanji_source,
     :download_kanji_strokes,
     :download_sentences_source,
-    :download_sentences_idx,
-    :create_dictionary
+    :download_sentences_idx
   ]
 
   desc 'Download words source file'
@@ -52,7 +51,7 @@ namespace :data do
       | tar -xjO jpn_indices.csv > #{sentences_idx_file}`
   end
 
-  desc 'Create database file'
+  desc 'Create dictionary database file'
   task create_database: :environment do
     
     database_file = Rails.configuration.app[:database_file]
