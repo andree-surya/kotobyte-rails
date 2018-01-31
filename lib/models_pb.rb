@@ -27,7 +27,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     repeated :origins, :message, 5, "Origin"
   end
   add_message "Origin" do
-    optional :language, :string, 1
+    optional :lang, :string, 1
     optional :text, :string, 2
   end
   add_message "Kanji" do

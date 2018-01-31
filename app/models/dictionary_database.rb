@@ -1,62 +1,62 @@
 
-CREATE_TABLES = <<-EOS
-
-  create table words (
-    id integer primary key,
-    json text not null
-  );
-
-  create table kanji (
-    id integer primary key,
-    json text not null
-  );
-
-  create table sentences (
-    id integer primary key,
-    original text not null,
-    tokenized text not null,
-    translated text not null
-  );
-EOS
-
-BUILD_INDEXES = <<-EOS
-  create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed, prefix='1 2 3 4 5');
-  create virtual table senses_fts using fts5(text, word_id unindexed, tokenize='porter');
-  create virtual table kanji_fts using fts5(text, kanji_id unindexed);
-  create virtual table sentences_fts using fts5(text, sentence_id unindexed);
-
-  insert into literals_fts select substr(value, 2), words.id, substr(value, 1, 1) from words, json_each(words.json, '$[0]') where type = 'text';
-  insert into literals_fts select substr(value, 2), words.id, substr(value, 1, 1) from words, json_each(words.json, '$[1]') where type = 'text';
-  insert into senses_fts select json_extract(value, '$[0]'), words.id from words, json_each(words.json, '$[2]');
-  insert into kanji_fts select json_extract(json, '$[0]'), kanji.id from kanji;
-  insert into sentences_fts select tokenized, sentences.id from sentences;
-EOS
-
-SEARCH_LITERALS = <<-EOS
-  select word_id, highlight(literals_fts, 0, '{', '}') highlight, rank * priority score
-    from literals_fts(?) order by score limit ?
-EOS
-
-SEARCH_SENSES = <<-EOS
-  select word_id, highlight(senses_fts, 0, '{', '}') highlight, rank score
-    from senses_fts(?) order by score limit ?
-EOS
-
-SEARCH_WORDS = <<-EOS
-  with search_results as (%s)
-    select id, json, group_concat(highlight, ';') highlights, min(score) score
-    from words join search_results on (id = word_id) group by id order by score;
-EOS
-
-SEARCH_KANJI = <<-EOS
-  select id, json from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
-EOS
-
-SEARCH_SENTENCES = <<-EOS
-  select id, original, tokenized, translated from sentences join sentences_fts(?) on (id = sentence_id) limit ?;
-EOS
-
 class DictionaryDatabase
+
+  @@create_tables_sql = <<-EOS
+
+    create table words (
+      id integer primary key,
+      json text not null
+    );
+
+    create table kanji (
+      id integer primary key,
+      json text not null
+    );
+
+    create table sentences (
+      id integer primary key,
+      original text not null,
+      tokenized text not null,
+      translated text not null
+    );
+  EOS
+
+  @@build_indexes_sql = <<-EOS
+    create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed, prefix='1 2 3 4 5');
+    create virtual table senses_fts using fts5(text, word_id unindexed, tokenize='porter');
+    create virtual table kanji_fts using fts5(text, kanji_id unindexed);
+    create virtual table sentences_fts using fts5(text, sentence_id unindexed);
+
+    insert into literals_fts select substr(value, 2), words.id, substr(value, 1, 1) from words, json_each(words.json, '$[0]') where type = 'text';
+    insert into literals_fts select substr(value, 2), words.id, substr(value, 1, 1) from words, json_each(words.json, '$[1]') where type = 'text';
+    insert into senses_fts select json_extract(value, '$[0]'), words.id from words, json_each(words.json, '$[2]');
+    insert into kanji_fts select json_extract(json, '$[0]'), kanji.id from kanji;
+    insert into sentences_fts select tokenized, sentences.id from sentences;
+  EOS
+
+  @@search_literals_sql = <<-EOS
+    select word_id, highlight(literals_fts, 0, '{', '}') highlight, rank * priority score
+      from literals_fts(?) order by score limit ?
+  EOS
+
+  @@search_senses_sql = <<-EOS
+    select word_id, highlight(senses_fts, 0, '{', '}') highlight, rank score
+      from senses_fts(?) order by score limit ?
+  EOS
+
+  @@search_words_sql = <<-EOS
+    with search_results as (%s)
+      select id, json, group_concat(highlight, ';') highlights, min(score) score
+      from words join search_results on (id = word_id) group by id order by score;
+  EOS
+
+  @@search_kanji_sql = <<-EOS
+    select id, json from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
+  EOS
+
+  @@search_sentences_sql = <<-EOS
+    select id, original, tokenized, translated from sentences join sentences_fts(?) on (id = sentence_id) limit ?;
+  EOS
 
   def initialize(database_path, reset: false)
     should_reset_structures = true
@@ -72,7 +72,7 @@ class DictionaryDatabase
     @database = SQLite3::Database.new(database_path)
     @database.results_as_hash = true
 
-    @database.execute_batch CREATE_TABLES if should_reset_structures
+    @database.execute_batch @@create_tables_sql if should_reset_structures
   end
 
   def transaction
@@ -80,7 +80,7 @@ class DictionaryDatabase
   end
 
   def build_indexes
-    @database.execute_batch BUILD_INDEXES
+    @database.execute_batch @@build_indexes_sql
   end
 
   def optimize
@@ -131,7 +131,7 @@ class DictionaryDatabase
     tokens = query.chars.select { |c| c.kanji? }
 
     unless query.empty?
-      @search_kanji ||= @database.prepare(SEARCH_KANJI)
+      @search_kanji ||= @database.prepare(@@search_kanji_sql)
       @search_kanji.execute(tokens.join(' OR '), limit).each { |h| results << h }
     end
 
@@ -141,7 +141,7 @@ class DictionaryDatabase
   def search_sentences(query, limit = 100) 
     results = []
 
-    @search_sentences ||= @database.prepare(SEARCH_SENTENCES)
+    @search_sentences ||= @database.prepare(@@search_sentences_sql)
     @search_sentences.execute(query, limit).each { |h| results << h }
   
     results
@@ -155,7 +155,7 @@ class DictionaryDatabase
       query = query.chars.select { |c| c.kanji? || c.kana? }.join
       tokens = 1.upto(query.size).map { |l| query[0...l] << '*' } << query
 
-      @search_literals ||= @database.prepare(SEARCH_WORDS % SEARCH_LITERALS)
+      @search_literals ||= @database.prepare(@@search_words_sql % @@search_literals_sql)
       @search_literals.execute(tokens.join(' OR '), limit).each { |h| results << h }
 
       results
@@ -164,7 +164,7 @@ class DictionaryDatabase
     def search_words_by_senses(query, limit)
       results = []
 
-      @search_senses ||= @database.prepare(SEARCH_WORDS % SEARCH_SENSES)
+      @search_senses ||= @database.prepare(@@search_words_sql % @@search_senses_sql)
       @search_senses.execute(query, limit).each { |h| results << h }
 
       results

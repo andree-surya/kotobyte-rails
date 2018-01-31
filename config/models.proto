@@ -32,7 +32,7 @@ message Sense {
 
 message Origin {
 
-  string language = 1;
+  string lang = 1;
   string text = 2;
 }
 
@@ -77,4 +77,3 @@ message Sentence {
   string tokenized = 3;
   string translated = 4;
 }
-

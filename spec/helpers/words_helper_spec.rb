@@ -5,6 +5,7 @@ describe WordsHelper, type: :helper do
   describe '#search_results_summary_text' do
 
     context 'when we got no search results' do
+      
       it 'should return a message of apology' do
 
         results = double('search_results')
@@ -32,6 +33,7 @@ describe WordsHelper, type: :helper do
   end
 
   describe '#markup_highlight' do
+    
     it 'should replace highlight tags with markup' do
 
       markup = markup_highlight('one {two} three')
@@ -48,12 +50,9 @@ describe WordsHelper, type: :helper do
   end
 
   describe '#word_literals_text' do
+    
     let(:word) do
-      word = Word.new
-      word.literals << Literal.new({ 'text' => '食べる' })
-      word.literals << Literal.new({ 'text' => 'お花見' })
-
-      word
+      Word.new(literals: [{ text: '食べる' }, { text: 'お花見' }])
     end
 
     it 'should tag Kanji characters with link' do
@@ -64,7 +63,7 @@ describe WordsHelper, type: :helper do
     end
 
     it 'should include literal status' do
-      word.literals.first.status = 'irregular'
+      word.literals.first.priority = :PRIORITY_LOW
 
       string = word_literals_text(word)
       expect(string).to include('irregular')
@@ -72,12 +71,9 @@ describe WordsHelper, type: :helper do
   end
 
   describe '#word_readings_text' do
+    
     let(:word) do
-      word = Word.new
-      word.readings << Literal.new({ 'text' => 'ことば' })
-      word.readings << Literal.new({ 'text' => 'げんご' })
-
-      word
+      Word.new(readings: [{ text: 'ことば' }, { text: 'げんご' }])
     end
 
     it 'should list up all texts with Romaji readings' do
@@ -90,7 +86,7 @@ describe WordsHelper, type: :helper do
     end
 
     it 'should include reading status' do
-      word.readings.first.status = 'common'
+      word.readings.first.priority = :PRIORITY_HIGH
 
       string = word_readings_text(word)
       expect(string).to include('common')
@@ -99,7 +95,7 @@ describe WordsHelper, type: :helper do
 
   describe '#sense_categories_text' do
     it 'should return lexical categories for each sense' do
-      sense = Sense.new({ 'categories' => ['n', 'adj-i', 'adv'] })
+      sense = Sense.new(categories: ['n', 'adj-i', 'adv'])
       string = sense_categories_text(sense)
 
       sense.categories.each do |category|
@@ -110,11 +106,14 @@ describe WordsHelper, type: :helper do
   end
 
   describe '#sense_extras_text' do
+    
     before(:each) do
-      sense = Sense.new
-      sense.labels = ['abbr', 'uk']
-      sense.notes = ['note 1', 'note 2']
-      sense.sources = ['eng', 'ger:Eis', 'unk']
+
+      sense = Sense.new(
+        labels: ['abbr', 'uk'],
+        notes: ['note 1', 'note 2'],
+        origins: [{ lang: 'eng' }, { lang: 'ger', text: 'Eis' }, { lang: 'unk' }]
+      )
 
       @extras_text = sense_extras_text(sense)
     end
@@ -123,7 +122,7 @@ describe WordsHelper, type: :helper do
       expect(@extras_text).to include('Abbreviation', 'Kana')
     end
 
-    it 'should include sources info' do
+    it 'should include origins info' do
       expect(@extras_text).to include('English', 'German', 'Eis', 'Unknown')
     end
 
@@ -133,6 +132,7 @@ describe WordsHelper, type: :helper do
   end
 
   describe '#search_link' do
+    
     let(:query) { '自由' }
     let(:link) { search_link(query) }
 
@@ -146,6 +146,7 @@ describe WordsHelper, type: :helper do
   end
 
   describe '#kanji_link' do
+    
     let(:literal) { '漢' }
     let(:link) { kanji_link(literal) }
 

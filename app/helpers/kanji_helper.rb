@@ -1,14 +1,34 @@
-module KanjiHelper 
 
-  def kanji_literal_text(kanji)
+module KanjiHelper
+
+  @@common_grades = [
+    :GRADE_JOUYOU_1,
+    :GRADE_JOUYOU_2,
+    :GRADE_JOUYOU_3,
+    :GRADE_JOUYOU_4,
+    :GRADE_JOUYOU_5,
+    :GRADE_JOUYOU_6
+  ]
+  
+  @@common_jlpt = [
+    :JLPT_N1,
+    :JLPT_N2_N3,
+    :JLPT_N4,
+    :JLPT_N5
+  ]
+
+  def kanji_character_text(kanji)
     tag_classes = []
-    tag_classes << 'common' if kanji.common?
+    
+    if @@common_grades.include?(kanji.grade) || @@common_jlpt.include?(kanji.jlpt)
+      tag_classes << 'common'
+    end
 
-    content_tag :span, kanji.literal, class: tag_classes
+    content_tag :span, kanji.character, class: tag_classes
   end
 
   def kanji_meanings_text(kanji)
-    meanings = kanji.meanings.clone
+    meanings = kanji.meanings.to_a
 
     meanings[0] = content_tag :em, meanings[0]
 
@@ -32,8 +52,8 @@ module KanjiHelper
   end
 
   def kanji_extras(kanji)
-    jlpt_label = t("kanji.jlpt_#{kanji.jlpt}", default: '')
-    grade_label = t("kanji.grade_#{kanji.grade}", default: '')
+    jlpt_label = t("kanji.jlpt_#{Kanji::JLPT.resolve kanji.jlpt}", default: '')
+    grade_label = t("kanji.grade_#{Kanji::Grade.resolve kanji.grade}", default: '')
 
     metadata_labels = []
     

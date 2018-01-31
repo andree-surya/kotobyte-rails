@@ -45,9 +45,9 @@ describe WordsSourceReader do
     expect(literals[0].text).to eq('冗談')
     expect(literals[1].text).to eq('言葉')
     expect(literals[2].text).to eq('匂い')
-    expect(literals[0].priority).to eq(1)
-    expect(literals[1].priority).to eq(2)
-    expect(literals[2].priority).to eq(0)
+    expect(literals[0].priority).to eq(:PRIORITY_MEDIUM)
+    expect(literals[1].priority).to eq(:PRIORITY_HIGH)
+    expect(literals[2].priority).to eq(:PRIORITY_LOW)
   end
 
   it 'should parse readings texts and assign priority' do
@@ -72,9 +72,9 @@ describe WordsSourceReader do
     expect(readings[0].text).to eq('ノート')
     expect(readings[1].text).to eq('バグ')
     expect(readings[2].text).to eq('みず')
-    expect(readings[0].priority).to eq(1)
-    expect(readings[1].priority).to eq(2)
-    expect(readings[2].priority).to eq(0)
+    expect(readings[0].priority).to eq(:PRIORITY_MEDIUM)
+    expect(readings[1].priority).to eq(:PRIORITY_HIGH)
+    expect(readings[2].priority).to eq(:PRIORITY_LOW)
   end
 
   it 'should parse sense and translation texts' do
@@ -131,7 +131,7 @@ describe WordsSourceReader do
 
     expect(senses.size).to eq(3)
     expect(senses[0].categories).to eq(['n', 'adj-i'])
-    expect(senses[1].categories).to eq(nil)
+    expect(senses[1].categories).to eq(['n', 'adj-i'])
     expect(senses[2].categories).to eq(['v5u'])
   end
 
@@ -152,8 +152,9 @@ describe WordsSourceReader do
     senses = WordsSourceReader.new(source_xml: xml).read_one.senses
 
     expect(senses.size).to eq(2)
-    expect(senses[0].origins).to eq(['ger:Abend', 'kor'])
-    expect(senses[1].origins).to eq(['eng:Ice'])
+    expect(senses[0].origins[0]).to eq(Origin.new(lang: 'ger', text: 'Abend'))
+    expect(senses[0].origins[1]).to eq(Origin.new(lang: 'kor'))
+    expect(senses[1].origins[0]).to eq(Origin.new(lang: 'eng', text: 'Ice'))
   end
 
   it 'should parse sense labels' do
@@ -254,7 +255,7 @@ describe WordsSourceReader do
 
     expect(senses.size).to eq(3)
     expect(senses[0].labels).to eq(['surname', 'place'])
-    expect(senses[1].labels).to eq(nil)
-    expect(senses[2].labels).to eq(nil)
+    expect(senses[1].labels).to be_empty
+    expect(senses[2].labels).to be_empty
   end
 end

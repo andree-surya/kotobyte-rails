@@ -18,7 +18,7 @@ class KanjiSourceReader
     end
 
     read_each_from_strokes_xml do |kanji_id, strokes|
-      kanji_hash[kanji_id]&.strokes = strokes
+      kanji_hash[kanji_id]&.strokes += strokes
     end
 
     kanji_hash.values
@@ -76,14 +76,12 @@ class KanjiSourceReader
         type = node.attributes['r_type']
 
         if type == 'ja_on' || type == 'ja_kun'
-          @current_kanji.readings ||= []
           @current_kanji.readings << node.inner_xml
         end
 
       when 'meaning'
 
         if node.attributes['m_lang'].nil?
-          @current_kanji.meanings ||= []
           @current_kanji.meanings << node.inner_xml
         end
       end

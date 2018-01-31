@@ -21,8 +21,8 @@ module WordsHelper
   def markup_highlight(text)
     markup = text.dup
 
-    markup.gsub!(WordsRepository::HIGHLIGHT_START_TAG, '<mark>')
-    markup.gsub!(WordsRepository::HIGHLIGHT_END_TAG, '</mark>')
+    markup.gsub!('{', '<mark>')
+    markup.gsub!('}', '</mark>')
 
     raw markup
   end
@@ -30,8 +30,8 @@ module WordsHelper
   def remove_highlight(text)
     sanitized_text = text.dup
 
-    sanitized_text.gsub!(WordsRepository::HIGHLIGHT_START_TAG, '')
-    sanitized_text.gsub!(WordsRepository::HIGHLIGHT_END_TAG, '')
+    sanitized_text.gsub!('{', '')
+    sanitized_text.gsub!('}', '')
 
     sanitized_text
   end
@@ -42,7 +42,6 @@ module WordsHelper
     word.literals.each do |literal|
 
       text = ''
-      status = literal.status
 
       literal.text.split('').each do |character|
 
@@ -55,7 +54,7 @@ module WordsHelper
 
       text = markup_highlight(text)
 
-      strings << content_tag(:span, text, class: status)
+      strings << content_tag(:span, text, class: priority_class(literal.priority))
     end
 
     strings.join('、 ')
@@ -65,12 +64,12 @@ module WordsHelper
     strings = []
 
     word.readings.each do |reading|
-      status = reading.status
+
       text = markup_highlight(reading.text)
       romaji = remove_highlight(reading.text).romaji
 
       strings << content_tag(:ruby) do
-        concat content_tag(:rb, text, class: status)
+        concat content_tag(:rb, text, class: priority_class(reading.priority))
         concat content_tag(:rp, '/')
         concat content_tag(:rt, romaji)
         concat content_tag(:rp, '/')
@@ -102,17 +101,16 @@ module WordsHelper
   def sense_extras(sense)
     extras = []
 
-    extras += sense.labels.map { |code| t("labels.#{code}") }
+    extras += sense.labels.map { |code| t("labels.#{code}").upcase_first }
     extras += sense.notes.map { |note| note.upcase_first }
 
-    extras += sense.sources.map do |source|
-      code, text = source.split(':')
-      language_name = t("iso_639_2.#{code}", default: 'Unknown')
+    extras += sense.origins.map do |origin|
+      language_name = t("languages.#{origin.lang}", default: 'Unknown')
 
-      source_label = "From #{language_name}"
-      source_label += " \"#{text}\"" if text.present?
+      origin_label = "From #{language_name}"
+      origin_label += " \"#{origin.text}\"" if origin.text.present?
 
-      source_label
+      origin_label
     end
 
     extras
@@ -145,5 +143,13 @@ module WordsHelper
     }
 
     link_to(literal, 'javascript:', options)
+  end
+
+  private def priority_class(priority)
+
+    return 'irregular' if priority == :PRIORITY_LOW
+    return 'common' if priority == :PRIORITY_HIGH
+
+    return nil
   end
 end

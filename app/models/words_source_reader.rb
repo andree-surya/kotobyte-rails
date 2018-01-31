@@ -3,8 +3,6 @@ class WordsSourceReader
   PRIORITY_CODES = ['ichi', 'news', 'spec', 'gai']
   IRREGULAR_CODES = ['iK', 'ik', 'oK', 'ok', 'io']
 
-  PRIORITY = { low: 0, default: 1, high: 2 }
-
   def initialize(source_xml: '<JMdict />')
     @xml = source_xml
   end
@@ -50,14 +48,12 @@ class WordsSourceReader
         @current_word.id = node.inner_xml.to_i
 
       when 'k_ele'
-        @current_word.literals ||= []
         @current_word.literals << Literal.new
-        @current_word.literals.last.priority = PRIORITY[:default]
+        @current_word.literals.last.priority = :PRIORITY_MEDIUM
 
       when 'r_ele'
-        @current_word.readings ||= []
         @current_word.readings << Literal.new
-        @current_word.readings.last.priority = PRIORITY[:default]
+        @current_word.readings.last.priority = :PRIORITY_MEDIUM
 
       when 'keb'
         @current_word.literals.last.text = node.inner_xml
@@ -78,41 +74,33 @@ class WordsSourceReader
         handle_literal_irregularity(@current_word.readings.last, node)
 
       when 'sense'
-        @current_word.senses ||= []
         @current_word.senses << Sense.new
 
       when 'trans'
-        @current_word.senses ||= []
         @current_word.senses << Sense.new
-        @current_word.senses.last.categories = ['n']
+        @current_word.senses.last.categories << 'n'
 
       when 'pos'
         category = clean_xml_entity(node.inner_xml)
 
-        @current_word.senses.last.categories ||= []
         @current_word.senses.last.categories << category
 
       when 'field', 'dial', 'misc', 'name_type'
         entity = clean_xml_entity(node.inner_xml)
 
         if entity != 'unclass'
-          @current_word.senses.last.labels ||= []
           @current_word.senses.last.labels << entity
         end
 
       when 's_inf'
-        @current_word.senses.last.notes ||= []
         @current_word.senses.last.notes << node.inner_xml
 
       when 'lsource'
-        origin = node.attributes['lang'] || 'eng'
-        origin += ":#{node.inner_xml}" unless node.inner_xml.empty?
+        origin = Origin.new(lang: node.attributes['lang'] || 'eng', text: node.inner_xml)
 
-        @current_word.senses.last.origins ||= []
         @current_word.senses.last.origins << origin
 
       when 'gloss', 'trans_det'
-        @current_word.senses.last.texts ||= []
         @current_word.senses.last.texts << node.inner_xml
       end
     end
@@ -125,11 +113,11 @@ class WordsSourceReader
         @current_word = nil
 
       when 'sense'
-        current_sense = @current_word.senses[-1]
+        current_sense = @current_word.senses.last
         preceeding_sense = @current_word.senses[-2]
 
-        if current_sense.categories&.empty?
-          current_sense.categories = preceeding_sense.categories
+        if current_sense.categories&.empty? && preceeding_sense.present?
+          current_sense.categories += preceeding_sense.categories
         end
       end
     end
@@ -138,7 +126,7 @@ class WordsSourceReader
       priority_code = clean_xml_entity(node.inner_xml).gsub(/\d/, '')
 
       if PRIORITY_CODES.include? priority_code
-        literal.priority = PRIORITY[:high]
+        literal.priority = :PRIORITY_HIGH
       end
     end
 
@@ -146,7 +134,7 @@ class WordsSourceReader
       irregular_code = clean_xml_entity(node.inner_xml)
 
       if IRREGULAR_CODES.include? irregular_code
-        literal.priority = PRIORITY[:low]
+        literal.priority = :PRIORITY_LOW
       end
     end
 

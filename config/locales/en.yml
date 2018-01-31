@@ -31,22 +31,20 @@ en:
     one: "Found a match (%{time} seconds)."
     other: "Showing top %{count} matches (%{time} seconds)."
 
-  jlpt:
-    1: "JLPT N1"
-    2: "JLPT N2/N3"
-    3: "JLPT N4"
-    4: "JLPT N5"
-
-  grades:
-    1: "elementary school, 1st grade"
-    2: "elementary school, 2nd grade"
-    3: "elementary school, 3rd grade"
-    4: "elementary school, 4th grade"
-    5: "elementary school, 5th grade"
-    6: "elementary school, 6th grade"
-    8: "high school grade"
-    9: "Jinmeiyou (used in name)"
-    10: "Jinmeiyou (used in name)"
+  kanji:
+    jlpt_1: "JLPT N1"
+    jlpt_2: "JLPT N2/N3"
+    jlpt_3: "JLPT N4"
+    jlpt_4: "JLPT N5"
+    grade_1: "elementary school, 1st grade"
+    grade_2: "elementary school, 2nd grade"
+    grade_3: "elementary school, 3rd grade"
+    grade_4: "elementary school, 4th grade"
+    grade_5: "elementary school, 5th grade"
+    grade_6: "elementary school, 6th grade"
+    grade_8: "high school grade"
+    grade_9: "Jinmeiyou (used in name)"
+    grade_10: "Jinmeiyou (used in name)"
 
   labels:
     MA: "martial arts term"

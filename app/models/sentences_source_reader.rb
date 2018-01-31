@@ -37,12 +37,12 @@ class SentencesSourceReader
 
       next if original_text.nil? || translated_text.nil?
 
-      sentences << Sentence.new do |sentence|
-        sentence.id = original_id
-        sentence.original = original_text
-        sentence.translated = translated_text
-        sentence.tokenized = tokenized_text
-      end
+      sentences << Sentence.new(
+        id: original_id,
+        original: original_text,
+        tokenized: tokenized_text,
+        translated: translated_text
+      )
     end
 
     sentences

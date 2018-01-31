@@ -43,14 +43,14 @@ describe KanjiSourceReader do
     xml = '<character><misc><grade>5</grade></misc></character>'
 
     reader = KanjiSourceReader.new(source_xml: xml)
-    expect(reader.read_one.grade).to eq(5)
+    expect(reader.read_one.grade).to eq(:GRADE_JOUYOU_5)
   end
 
   it 'should parse JLPT' do
     xml = '<character><misc><jlpt>3</jlpt></misc></character>'
 
     reader = KanjiSourceReader.new(source_xml: xml)
-    expect(reader.read_one.jlpt).to eq(3)
+    expect(reader.read_one.jlpt).to eq(:JLPT_N4)
   end
 
   it 'should parse on and kun readings' do

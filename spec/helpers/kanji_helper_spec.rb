@@ -2,28 +2,26 @@ require 'rails_helper'
 
 describe KanjiHelper, :type => :helper do
   
-  describe '#kanji_literal_text' do
-    let(:kanji) { Kanji.new({ 'literal' => '試' }) }
+  describe '#kanji_character_text' do
+    let(:kanji) { Kanji.new(character: '試') }
 
-    it 'should contain literal text' do
-      text = kanji_literal_text(kanji)
+    it 'should contain character text' do
+      text = kanji_character_text(kanji)
 
-      expect(text).to include(kanji.literal)
+      expect(text).to include(kanji.character)
     end
 
     it 'should assign common class for common kanji' do
-      kanji.grade = 1
-      text = kanji_literal_text(kanji)
+      kanji.grade = :GRADE_JOUYOU_1
+      text = kanji_character_text(kanji)
       
-      expect(kanji).to be_common
       expect(text).to include('common')
     end
 
     it 'should not assign common class for uncommon kanji' do
-      kanji.grade = nil
-      text = kanji_literal_text(kanji)
+      kanji.grade = :GRADE_UNKNOWN
+      text = kanji_character_text(kanji)
 
-      expect(kanji).not_to be_common
       expect(text).not_to include('common')
     end
   end
@@ -104,7 +102,7 @@ describe KanjiHelper, :type => :helper do
   describe '#kanji_strokes_svg' do
     it 'should draw strokes up to the specified count' do
       
-      kanji = Kanji.new({ 'strokes' => [] })
+      kanji = Kanji.new
       kanji.strokes << 'M33.99,15.39c0.14,1.18,0.24,2.67-0.12,4.12'
       kanji.strokes << 'M64.31,13.52c0.96,0.43,2.32,2.53,2.3,3.76'
       kanji.strokes << 'M42.46,29.75c0,3.93-2.06,12.02-3.25,14.64'
