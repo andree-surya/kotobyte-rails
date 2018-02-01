@@ -63,7 +63,7 @@ describe WordsHelper, type: :helper do
     end
 
     it 'should include literal status' do
-      word.literals.first.priority = :PRIORITY_LOW
+      word.literals.first.priority = -1
 
       string = word_literals_text(word)
       expect(string).to include('irregular')
@@ -86,7 +86,7 @@ describe WordsHelper, type: :helper do
     end
 
     it 'should include reading status' do
-      word.readings.first.priority = :PRIORITY_HIGH
+      word.readings.first.priority = 1
 
       string = word_readings_text(word)
       expect(string).to include('common')

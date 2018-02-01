@@ -1,5 +1,11 @@
 syntax = "proto3";
 
+message SearchWordsResponse {
+
+  repeated Word words = 1;
+  float time = 2;
+}
+
 message Word {
   
   uint32 id = 1;
@@ -11,14 +17,7 @@ message Word {
 message Literal {
   
   string text = 1;
-  Priority priority = 2;
-
-  enum Priority {
-
-    PRIORITY_LOW = 0;
-    PRIORITY_MEDIUM = 1;
-    PRIORITY_HIGH = 2;
-  }
+  sint32 priority = 2;
 }
 
 message Sense {
@@ -43,37 +42,13 @@ message Kanji {
   repeated string readings = 3;
   repeated string meanings = 4;
   repeated string strokes = 5;
-  JLPT jlpt = 6;
-  Grade grade = 7;
-  
-  enum JLPT {
-
-    JLPT_UNKNOWN = 0;
-    JLPT_N1 = 1;
-    JLPT_N2_N3 = 2;
-    JLPT_N4 = 3;
-    JLPT_N5 = 4;
-  }
-
-  enum Grade {
-
-    GRADE_UNKNOWN = 0;
-    GRADE_JOUYOU_1 = 1;
-    GRADE_JOUYOU_2 = 2;
-    GRADE_JOUYOU_3 = 3;
-    GRADE_JOUYOU_4 = 4;
-    GRADE_JOUYOU_5 = 5;
-    GRADE_JOUYOU_6 = 6;
-    GRADE_JOUYOU_S = 8;
-    GRADE_JINMEIYOU_1 = 9;
-    GRADE_JINMEIYOU_2 = 10;
-  }
+  uint32 jlpt = 6;
+  uint32 grade = 7;
 }
 
 message Sentence {
 
   uint32 id = 1;
   string original = 2;
-  string tokenized = 3;
-  string translated = 4;
+  string translated = 3;
 }

@@ -54,8 +54,7 @@ namespace :db do
   desc 'Create dictionary database file'
   task create_database: :environment do
     
-    database_file = Rails.configuration.app[:database_file]
-    database = DictionaryDatabase.new(database_file, reset: true)
+    database = DictionaryDatabase.new(reset: true)
     
     words_source_reader = WordsSourceReader.new(
         source_xml: IO.read(words_source_file)
@@ -76,8 +75,6 @@ namespace :db do
       words_source_reader.read_each { |w| db.insert_word(w) }
       kanji_source_reader.read_all.each { |k| db.insert_kanji(k) }
       sentences_source_reader.read_all.each { |s| db.insert_sentence(s) }
-    
-      database.build_indexes
     end
     
     database.optimize

@@ -5,37 +5,27 @@ class DictionaryDatabase
 
     create table words (
       id integer primary key,
-      json text not null
+      serialized blob not null
     );
 
     create table kanji (
       id integer primary key,
-      json text not null
+      serialized blob not null
     );
 
     create table sentences (
       id integer primary key,
-      original text not null,
-      tokenized text not null,
-      translated text not null
+      serialized blob not null
     );
-  EOS
 
-  @@build_indexes_sql = <<-EOS
     create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed, prefix='1 2 3 4 5');
     create virtual table senses_fts using fts5(text, word_id unindexed, tokenize='porter');
-    create virtual table kanji_fts using fts5(text, kanji_id unindexed);
+    create virtual table kanji_fts using fts5(text, kanji_id unindexed, tokenize='porter');
     create virtual table sentences_fts using fts5(text, sentence_id unindexed);
-
-    insert into literals_fts select substr(value, 2), words.id, substr(value, 1, 1) from words, json_each(words.json, '$[0]') where type = 'text';
-    insert into literals_fts select substr(value, 2), words.id, substr(value, 1, 1) from words, json_each(words.json, '$[1]') where type = 'text';
-    insert into senses_fts select json_extract(value, '$[0]'), words.id from words, json_each(words.json, '$[2]');
-    insert into kanji_fts select json_extract(json, '$[0]'), kanji.id from kanji;
-    insert into sentences_fts select tokenized, sentences.id from sentences;
   EOS
 
   @@search_literals_sql = <<-EOS
-    select word_id, highlight(literals_fts, 0, '{', '}') highlight, rank * priority score
+    select word_id, highlight(literals_fts, 0, '{', '}') highlight, rank * (priority + 1) score
       from literals_fts(?) order by score limit ?
   EOS
 
@@ -46,30 +36,31 @@ class DictionaryDatabase
 
   @@search_words_sql = <<-EOS
     with search_results as (%s)
-      select id, json, group_concat(highlight, ';') highlights, min(score) score
+      select id, serialized, group_concat(highlight, ';') highlights, min(score) score
       from words join search_results on (id = word_id) group by id order by score;
   EOS
 
   @@search_kanji_sql = <<-EOS
-    select id, json from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
+    select id, serialized from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
   EOS
 
   @@search_sentences_sql = <<-EOS
-    select id, original, tokenized, translated from sentences join sentences_fts(?) on (id = sentence_id) limit ?;
+    select id, serialized from sentences join sentences_fts(?) on (id = sentence_id) limit ?;
   EOS
 
-  def initialize(database_path, reset: false)
+  def initialize(file: Rails.configuration.app[:database_file], reset: false)
+
     should_reset_structures = true
 
-    if File.exists? database_path
+    if File.exists? file
       if reset
-        File.delete database_path
+        File.delete file
       else
         should_reset_structures = false
       end
     end
 
-    @database = SQLite3::Database.new(database_path)
+    @database = SQLite3::Database.new(file)
     @database.results_as_hash = true
 
     @database.execute_batch @@create_tables_sql if should_reset_structures
@@ -79,30 +70,38 @@ class DictionaryDatabase
     @database.transaction { yield self }
   end
 
-  def build_indexes
-    @database.execute_batch @@build_indexes_sql
-  end
-
   def optimize
     @database.execute 'VACUUM'
   end
 
   def insert_word(word)
     @insert_word ||= @database.prepare('insert into words values (?, ?)')
-    @insert_word.execute(word.id, json_from_word(word))
+    @index_sense ||= @database.prepare('insert into senses_fts values (?, ?)')
+    @index_literal ||= @database.prepare('insert into literals_fts values (?, ?, ?)')
+
+    @insert_word.execute(word.id, Word.encode(word))
+    
+    word.literals.each { |l| @index_literal.execute(l.text, word.id, l.priority) }
+    word.senses.each { |s| @index_sense.execute(s.texts.join(' '), word.id) }
   end
 
   def insert_kanji(kanji)
     @insert_kanji ||= @database.prepare('insert into kanji values (?, ?)')
-    @insert_kanji.execute(kanji.id, json_from_kanji(kanji))
+
+    @insert_kanji.execute(kanji.id, Kanji.encode(kanji))
   end
 
   def insert_sentence(sentence)
-    @insert_sentence ||= @database.prepare('insert into sentences values (?, ?, ?, ?)')
-    @insert_sentence.execute(sentence.id, sentence.original, sentence.tokenized, sentence.translated)
+    @insert_sentence ||= @database.prepare('insert into sentences values (?, ?)')
+    @index_sentence ||= @database.prepare('insert into sentences_fts values (?, ?)')
+
+    @insert_sentence.execute(sentence.id, Sentence.encode(sentence))
+    @index_sentence.execute(sentence.tokenized, sentence.id)
   end
 
   def search_words(query)
+
+    start_time = Time.now
 
     if query.contains_japanese?
       results = search_words_by_literals(query, 50)
@@ -121,82 +120,49 @@ class DictionaryDatabase
       end
     end
 
-    results.each { |r| r['json'] = r['json'][0...32] }
-    results
+    finish_time = Time.now
+
+    SearchWordsResponse.new(
+      words: results.map { |r| Word.decode(r['serialized']) },
+      time: finish_time - start_time
+    )
   end
 
   def search_kanji(query, limit = 10)
-    results = []
+    return nil if query.empty?
 
     tokens = query.chars.select { |c| c.kanji? }
 
-    unless query.empty?
-      @search_kanji ||= @database.prepare(@@search_kanji_sql)
-      @search_kanji.execute(tokens.join(' OR '), limit).each { |h| results << h }
-    end
+    @search_kanji ||= @database.prepare(@@search_kanji_sql)
+    @search_kanji.execute(tokens.join(' OR '), limit).map do |h|
 
-    results
+      Kanji.decode(h['serialized'])
+    end
   end
 
-  def search_sentences(query, limit = 100) 
-    results = []
+  def search_sentences(query, limit = 20) 
 
     @search_sentences ||= @database.prepare(@@search_sentences_sql)
-    @search_sentences.execute(query, limit).each { |h| results << h }
-  
-    results
+    @search_sentences.execute(query, limit).map do |h| 
+
+      Sentence.decode(h['serialized'])
+    end
   end
 
   private
 
     def search_words_by_literals(query, limit)
-      results = []
 
       query = query.chars.select { |c| c.kanji? || c.kana? }.join
       tokens = 1.upto(query.size).map { |l| query[0...l] << '*' } << query
 
       @search_literals ||= @database.prepare(@@search_words_sql % @@search_literals_sql)
-      @search_literals.execute(tokens.join(' OR '), limit).each { |h| results << h }
-
-      results
+      @search_literals.execute(tokens.join(' OR '), limit).to_a
     end
 
     def search_words_by_senses(query, limit)
-      results = []
 
       @search_senses ||= @database.prepare(@@search_words_sql % @@search_senses_sql)
-      @search_senses.execute(query, limit).each { |h| results << h }
-
-      results
-    end
-
-    def json_from_word(word)
-      [
-        word.literals&.map { |l| "#{l.priority}#{l.text}" } || 0,
-        word.readings.map { |r| "#{r.priority}#{r.text}" },
-
-        word.senses.map do |s|
-          [
-            s.texts.join(', '),
-            s.categories&.join(';') || 0,
-            s.origins&.join(';') || 0,
-            s.labels&.join(';') || 0,
-            s.notes&.join(';') || 0
-          ]
-        end
-
-      ].to_json
-    end
-
-    def json_from_kanji(kanji)
-      [
-        kanji.character,
-        kanji.readings&.join(';') || 0,
-        kanji.meanings&.join(';') || 0,
-        kanji.jlpt || 0,
-        kanji.grade || 0,
-        kanji.strokes&.join(';') || 0
-
-      ].to_json
+      @search_senses.execute(query, limit).to_a
     end
 end

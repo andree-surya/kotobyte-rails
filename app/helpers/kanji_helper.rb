@@ -1,26 +1,10 @@
 
 module KanjiHelper
 
-  @@common_grades = [
-    :GRADE_JOUYOU_1,
-    :GRADE_JOUYOU_2,
-    :GRADE_JOUYOU_3,
-    :GRADE_JOUYOU_4,
-    :GRADE_JOUYOU_5,
-    :GRADE_JOUYOU_6
-  ]
-  
-  @@common_jlpt = [
-    :JLPT_N1,
-    :JLPT_N2_N3,
-    :JLPT_N4,
-    :JLPT_N5
-  ]
-
   def kanji_character_text(kanji)
     tag_classes = []
     
-    if @@common_grades.include?(kanji.grade) || @@common_jlpt.include?(kanji.jlpt)
+    if kanji.jlpt&.between?(1, 4) || kanji.grade&.between?(1, 6) || kanji.grade == 8
       tag_classes << 'common'
     end
 
@@ -52,8 +36,8 @@ module KanjiHelper
   end
 
   def kanji_extras(kanji)
-    jlpt_label = t("kanji.jlpt_#{Kanji::JLPT.resolve kanji.jlpt}", default: '')
-    grade_label = t("kanji.grade_#{Kanji::Grade.resolve kanji.grade}", default: '')
+    jlpt_label = t("kanji.jlpt_#{kanji.jlpt}", default: '')
+    grade_label = t("kanji.grade_#{kanji.grade}", default: '')
 
     metadata_labels = []
     

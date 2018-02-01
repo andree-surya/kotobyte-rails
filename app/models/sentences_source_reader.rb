@@ -33,16 +33,15 @@ class SentencesSourceReader
 
       original_text = raw_texts[original_id]&.strip
       translated_text = raw_texts[translation_id]&.strip
-      tokenized_text = clean_tokenized_text(columns[2])
-
+      
       next if original_text.nil? || translated_text.nil?
 
       sentences << Sentence.new(
         id: original_id,
         original: original_text,
-        tokenized: tokenized_text,
         translated: translated_text
-      )
+        
+      ).tokens(clean_tokenized_text(columns[2]))
     end
 
     sentences

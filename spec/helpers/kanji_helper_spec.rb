@@ -12,14 +12,14 @@ describe KanjiHelper, :type => :helper do
     end
 
     it 'should assign common class for common kanji' do
-      kanji.grade = :GRADE_JOUYOU_1
+      kanji.grade = 1
       text = kanji_character_text(kanji)
       
       expect(text).to include('common')
     end
 
     it 'should not assign common class for uncommon kanji' do
-      kanji.grade = :GRADE_UNKNOWN
+      kanji.grade = 9
       text = kanji_character_text(kanji)
 
       expect(text).not_to include('common')

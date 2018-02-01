@@ -45,9 +45,9 @@ describe WordsSourceReader do
     expect(literals[0].text).to eq('冗談')
     expect(literals[1].text).to eq('言葉')
     expect(literals[2].text).to eq('匂い')
-    expect(literals[0].priority).to eq(:PRIORITY_MEDIUM)
-    expect(literals[1].priority).to eq(:PRIORITY_HIGH)
-    expect(literals[2].priority).to eq(:PRIORITY_LOW)
+    expect(literals[0].priority).to eq(0)
+    expect(literals[1].priority).to eq(1)
+    expect(literals[2].priority).to eq(-1)
   end
 
   it 'should parse readings texts and assign priority' do
@@ -72,9 +72,9 @@ describe WordsSourceReader do
     expect(readings[0].text).to eq('ノート')
     expect(readings[1].text).to eq('バグ')
     expect(readings[2].text).to eq('みず')
-    expect(readings[0].priority).to eq(:PRIORITY_MEDIUM)
-    expect(readings[1].priority).to eq(:PRIORITY_HIGH)
-    expect(readings[2].priority).to eq(:PRIORITY_LOW)
+    expect(readings[0].priority).to eq(0)
+    expect(readings[1].priority).to eq(1)
+    expect(readings[2].priority).to eq(-1)
   end
 
   it 'should parse sense and translation texts' do

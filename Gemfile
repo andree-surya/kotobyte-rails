@@ -21,6 +21,7 @@ group :development, :test do
   gem 'byebug', platform: :mri
   gem 'awesome_print'
   gem 'rspec-rails'
+  gem 'rb-readline'
 end
 
 group :development do

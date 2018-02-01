@@ -147,8 +147,8 @@ module WordsHelper
 
   private def priority_class(priority)
 
-    return 'irregular' if priority == :PRIORITY_LOW
-    return 'common' if priority == :PRIORITY_HIGH
+    return 'irregular' if priority < 0
+    return 'common' if priority > 0
 
     return nil
   end

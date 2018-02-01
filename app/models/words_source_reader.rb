@@ -49,11 +49,9 @@ class WordsSourceReader
 
       when 'k_ele'
         @current_word.literals << Literal.new
-        @current_word.literals.last.priority = :PRIORITY_MEDIUM
 
       when 'r_ele'
         @current_word.readings << Literal.new
-        @current_word.readings.last.priority = :PRIORITY_MEDIUM
 
       when 'keb'
         @current_word.literals.last.text = node.inner_xml
@@ -126,7 +124,7 @@ class WordsSourceReader
       priority_code = clean_xml_entity(node.inner_xml).gsub(/\d/, '')
 
       if PRIORITY_CODES.include? priority_code
-        literal.priority = :PRIORITY_HIGH
+        literal.priority = 1
       end
     end
 
@@ -134,7 +132,7 @@ class WordsSourceReader
       irregular_code = clean_xml_entity(node.inner_xml)
 
       if IRREGULAR_CODES.include? irregular_code
-        literal.priority = :PRIORITY_LOW
+        literal.priority = -1
       end
     end
 

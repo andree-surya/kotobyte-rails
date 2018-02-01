@@ -4,6 +4,10 @@
 require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
+  add_message "SearchWordsResponse" do
+    repeated :words, :message, 1, "Word"
+    optional :time, :float, 2
+  end
   add_message "Word" do
     optional :id, :uint32, 1
     repeated :literals, :message, 2, "Literal"
@@ -12,12 +16,7 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
   add_message "Literal" do
     optional :text, :string, 1
-    optional :priority, :enum, 2, "Literal.Priority"
-  end
-  add_enum "Literal.Priority" do
-    value :PRIORITY_LOW, 0
-    value :PRIORITY_MEDIUM, 1
-    value :PRIORITY_HIGH, 2
+    optional :priority, :sint32, 2
   end
   add_message "Sense" do
     repeated :texts, :string, 1
@@ -36,42 +35,20 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
     repeated :readings, :string, 3
     repeated :meanings, :string, 4
     repeated :strokes, :string, 5
-    optional :jlpt, :enum, 6, "Kanji.JLPT"
-    optional :grade, :enum, 7, "Kanji.Grade"
-  end
-  add_enum "Kanji.JLPT" do
-    value :JLPT_UNKNOWN, 0
-    value :JLPT_N1, 1
-    value :JLPT_N2_N3, 2
-    value :JLPT_N4, 3
-    value :JLPT_N5, 4
-  end
-  add_enum "Kanji.Grade" do
-    value :GRADE_UNKNOWN, 0
-    value :GRADE_JOUYOU_1, 1
-    value :GRADE_JOUYOU_2, 2
-    value :GRADE_JOUYOU_3, 3
-    value :GRADE_JOUYOU_4, 4
-    value :GRADE_JOUYOU_5, 5
-    value :GRADE_JOUYOU_6, 6
-    value :GRADE_JOUYOU_S, 8
-    value :GRADE_JINMEIYOU_1, 9
-    value :GRADE_JINMEIYOU_2, 10
+    optional :jlpt, :uint32, 6
+    optional :grade, :uint32, 7
   end
   add_message "Sentence" do
     optional :id, :uint32, 1
     optional :original, :string, 2
-    optional :tokenized, :string, 3
-    optional :translated, :string, 4
+    optional :translated, :string, 3
   end
 end
 
+SearchWordsResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("SearchWordsResponse").msgclass
 Word = Google::Protobuf::DescriptorPool.generated_pool.lookup("Word").msgclass
 Literal = Google::Protobuf::DescriptorPool.generated_pool.lookup("Literal").msgclass
-Literal::Priority = Google::Protobuf::DescriptorPool.generated_pool.lookup("Literal.Priority").enummodule
 Sense = Google::Protobuf::DescriptorPool.generated_pool.lookup("Sense").msgclass
 Origin = Google::Protobuf::DescriptorPool.generated_pool.lookup("Origin").msgclass
 Kanji = Google::Protobuf::DescriptorPool.generated_pool.lookup("Kanji").msgclass
-Kanji::JLPT = Google::Protobuf::DescriptorPool.generated_pool.lookup("Kanji.JLPT").enummodule
-Kanji::Grade = Google::Protobuf::DescriptorPool.generated_pool.lookup("Kanji.Grade").enummodule
 Sentence = Google::Protobuf::DescriptorPool.generated_pool.lookup("Sentence").msgclass
