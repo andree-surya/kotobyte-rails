@@ -71,6 +71,7 @@ class DictionaryDatabase
     @insert_word ||= @database.prepare('insert into words values (?, ?)')
 
     word.literals.each { |l| @index_literal.execute(l.text, word_id, l.priority) }
+    word.readings.each { |r| @index_literal.execute(r.text, word_id, r.priority) }
     word.senses.each { |s| @index_sense.execute(s.texts.join(';'), word_id) }
 
     # We can derive ID from table ID.
@@ -112,6 +113,7 @@ class DictionaryDatabase
   end
 
   def search_words(query)
+    query = query.downcase
 
     if query.contains_japanese?
       words = search_words_by_literals(query, 50)
@@ -184,7 +186,15 @@ class DictionaryDatabase
         word = decode_word_from(row: row)
   
         row['highlights'].split(';').each do |highlight|
+          raw_text = highlight.gsub(/[{}]/, '')
           
+          word.literals.each do |literal|
+            literal.text = highlight if literal.text == raw_text
+          end
+
+          word.readings.each do |reading|
+            reading.text = highlight if reading.text == raw_text
+          end
         end
 
         word

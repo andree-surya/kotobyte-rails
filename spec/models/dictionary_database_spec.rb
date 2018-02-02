@@ -87,7 +87,7 @@ describe DictionaryDatabase do
       expect(words[1].literals.first.text).to eq('{片付く}')
     end
 
-    it 'should look-up words by Romaji readings' do
+    it 'should look-up words by readings' do
 
       database.insert_word(Word.new(id: 100, readings: [{ text: 'ことわり' }]))
       database.insert_word(Word.new(id: 200, readings: [{ text: 'バリ' }]))
@@ -95,8 +95,27 @@ describe DictionaryDatabase do
       words = database.search_words('ことわります')
 
       expect(words.count).to eq(1)
-      expect(words[0].id).to eq(200)
+      expect(words[0].id).to eq(100)
       expect(words[0].readings.first.text).to eq('{ことわり}')
+    end
+
+    it 'should look-up words by Romaji' do
+
+      database.insert_word(Word.new(id: 100, readings: [{ text: 'にぶい' }]))
+      database.insert_word(Word.new(id: 200, readings: [{ text: 'わるい' }]))
+      database.insert_word(Word.new(id: 300, readings: [{ text: 'ネタバレ' }]))
+      database.insert_word(Word.new(id: 400, readings: [{ text: 'デグレ' }]))
+
+      hiragana_words = database.search_words('warukunai')
+      katakana_words = database.search_words('Netabare')
+
+      expect(hiragana_words.count).to eq(1)
+      expect(hiragana_words[0].id).to eq(200)
+      expect(hiragana_words[0].readings.first.text).to eq('{わるい}')
+      
+      expect(katakana_words.count).to eq(1)
+      expect(katakana_words[0].id).to eq(300)
+      expect(katakana_words[0].readings.first.text).to eq('{ネタバレ}')
     end
 
     it 'should look-up words by English senses' do
