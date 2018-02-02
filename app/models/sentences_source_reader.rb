@@ -49,8 +49,9 @@ class SentencesSourceReader
 
     def tokenize(text, tokens_pattern)
 
-      tokens_pattern.gsub!(/\|\d+/, '') # Remove number markers |1 in は|1
-      tokens_pattern.gsub!(/\[\d+\]/, '') # Remove number markers [01] in から[01]
+      tokens_pattern.gsub!(/\|[[:digit:]]+/, '') # Remove number markers |1 in は|1
+      tokens_pattern.gsub!(/\[[[:digit:]]+\]/, '') # Remove number markers [01] in から[01]
+      tokens_pattern.gsub!(/\([[:word:]]+\)/, '') # Remove reading markers (かれら) in 彼ら(かれら)
       tokens_pattern.gsub!('~', '')
 
       offset = 0
@@ -58,20 +59,20 @@ class SentencesSourceReader
       tokens_pattern.split.each do |raw_token|
 
         token_variations = [
-          raw_token[/{(.+)}/, 1], # Match original form した in 為る(する){した}
-          raw_token[/([^\({]+)/, 1], # Match formal form 為る in 為る(する){した}
-          raw_token[/\((.+)\)/, 1] # Match common form する in 為る(する){した}
+          raw_token[/{(.+)}/, 1], # Match original form した in 為る{した}
+          raw_token[/([^{]+)/, 1] # Match lemma form 為る in 為る{した}
           
         ].compact
 
-        original_token = token_variations.first
+        representative_token = token_variations.first
 
-        start_index = text.index(original_token, offset)
+        start_index = text.index(representative_token, offset)
 
         if start_index.present?
+          
           token_replacement = " #{token_variations.join('|')} "
+          end_index = start_index + representative_token.length
 
-          end_index = start_index + original_token.length
           text[start_index...end_index] = token_replacement
 
           offset += token_replacement.length

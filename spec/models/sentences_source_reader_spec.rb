@@ -75,8 +75,8 @@ describe SentencesSourceReader do
     sentences = reader.read_all
 
     expect(sentences.count).to eq(3)
-    expect(sentences[0].tokenized).to eq('「 道|みち 」 という|と言う 漢字 の 総画数 は 何 画|かく ですか 。')
+    expect(sentences[0].tokenized).to eq('「 道 」 という|と言う 漢字 の 総画数 は 何 画 ですか 。')
     expect(sentences[1].tokenized).to eq('老齢 人口 は 、 健康管理 に ますます|益々 多く の 出費 が 必要 となる だろう 。')
-    expect(sentences[2].tokenized).to eq('彼ら|かれら は おおいに|大いに 努力 した|為る|する が 結局 失敗 した|為る|する 。')
+    expect(sentences[2].tokenized).to eq('彼ら は おおいに|大いに 努力 した|為る が 結局 失敗 した|為る 。')
   end
 end
