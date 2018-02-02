@@ -73,10 +73,10 @@ describe DictionaryDatabase do
   describe '#search_words' do
 
     it 'should look-up words by literals' do
-      
-      database.insert_word(Word.new(id: 100, literals: { text: '片付ける' }))
-      database.insert_word(Word.new(id: 200, literals: { text: '片付く' }))
-      database.insert_word(Word.new(id: 300, literals: { text: '関係ない事' }))
+
+      database.insert_word(Word.new(id: 100, literals: [{ text: '片付ける' }]))
+      database.insert_word(Word.new(id: 200, literals: [{ text: '片付く' }]))
+      database.insert_word(Word.new(id: 300, literals: [{ text: '関係ない事' }]))
 
       response = database.search_words('片付けますよ')
       
@@ -89,8 +89,8 @@ describe DictionaryDatabase do
 
     it 'should look-up words by Romaji readings' do
 
-      database.insert_word(Word.new(id: 100, readings: { text: 'ことわり' }))
-      database.insert_word(Word.new(id: 200, readings: { text: 'バリ' }))
+      database.insert_word(Word.new(id: 100, readings: [{ text: 'ことわり' }]))
+      database.insert_word(Word.new(id: 200, readings: [{ text: 'バリ' }]))
 
       response = database.search_words('ことわります')
 
@@ -101,8 +101,8 @@ describe DictionaryDatabase do
 
     it 'should look-up words by English senses' do
 
-      database.insert_word(Word.new(id: 100, senses: { texts: ['serendipity'] }))
-      database.insert_word(Word.new(id: 200, senses: { texts: ['fortunate stroke'] }))
+      database.insert_word(Word.new(id: 100, senses: [{ texts: ['serendipity'] }]))
+      database.insert_word(Word.new(id: 200, senses: [{ texts: ['fortunate stroke'] }]))
 
       response = database.search_words('fortunate event')
 
@@ -131,7 +131,7 @@ describe DictionaryDatabase do
   describe '#search_sentences' do
 
     it 'should look-up sentences' do
-      
+
     end
   end
 end

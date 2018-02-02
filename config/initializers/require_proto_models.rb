@@ -2,9 +2,9 @@
 require Rails.root.join('lib', 'models_pb.rb').to_s
 
 class Sentence
-  attr_accessor :tokenized
+  attr_accessor :tokens
 
-  def tokens(value)
-    tokenized = value
+  def with(tokens:)
+    self.tokens = tokens
   end
 end

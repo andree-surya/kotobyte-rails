@@ -14,7 +14,7 @@ gem 'jquery-rails'
 gem 'dotenv-rails'
 
 # Make sure you have FTS5 enabled for your SQLite3.
-# e.g. `brew reinstall sqlite3 --with-fts5`
+# `brew reinstall sqlite3 --with-fts5`
 gem 'sqlite3', '~> 1.3'
 
 group :development, :test do

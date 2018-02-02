@@ -145,11 +145,13 @@ module WordsHelper
     link_to(literal, 'javascript:', options)
   end
 
-  private def priority_class(priority)
+  private
+  
+    def priority_class(priority)
 
-    return 'irregular' if priority < 0
-    return 'common' if priority > 0
+      return 'irregular' if priority < 0
+      return 'common' if priority > 0
 
-    return nil
-  end
+      return nil
+    end
 end

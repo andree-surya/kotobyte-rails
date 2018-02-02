@@ -20,9 +20,7 @@ class SentencesSourceReader
       columns = row.split("\t")
       language = columns[1]
 
-      if language == 'jpn' || language == 'eng'
-        raw_texts[columns[0].to_i] = columns[2] 
-      end
+      raw_texts[columns[0].to_i] = columns[2]
     end
 
     @indices_csv.each_line do |row|
@@ -33,15 +31,15 @@ class SentencesSourceReader
 
       original_text = raw_texts[original_id]&.strip
       translated_text = raw_texts[translation_id]&.strip
+      tokens_pattern = columns[2]
       
       next if original_text.nil? || translated_text.nil?
 
       sentences << Sentence.new(
         id: original_id,
-        original: original_text,
-        translated: translated_text
-        
-      ).tokens(clean_tokenized_text(columns[2]))
+        tokenized: tokenize(original_text, tokens_pattern),
+        translated: translated_text 
+      )
     end
 
     sentences
@@ -49,15 +47,39 @@ class SentencesSourceReader
 
   private
 
-    def clean_tokenized_text(text)
-      text.gsub!(/([[:graph:]]+\|\d+)/, '') # Remove particles, e.g. は|1
-      text.gsub!(/\[\d+\]/, '') # Remove number marksers, e.g. から[01]
-      text.gsub!(/\b(#{STOP_WORDS})\b/, '') # Remove Japanese stop words.
-      text.gsub!(/\s+/, ' ') # Replace consecutive white spaces to a single space.
-      text.gsub!('{', '[')
-      text.gsub!('}', ']')
-      text.gsub!('~', '')
+    def tokenize(text, tokens_pattern)
+
+      tokens_pattern.gsub!(/\|\d+/, '') # Remove number markers |1 in は|1
+      tokens_pattern.gsub!(/\[\d+\]/, '') # Remove number markers [01] in から[01]
+      tokens_pattern.gsub!('~', '')
+
+      offset = 0
+
+      tokens_pattern.split.each do |raw_token|
+
+        token_variations = [
+          raw_token[/{(.+)}/, 1], # Match original form した in 為る(する){した}
+          raw_token[/([^\({]+)/, 1], # Match formal form 為る in 為る(する){した}
+          raw_token[/\((.+)\)/, 1] # Match common form する in 為る(する){した}
+          
+        ].compact
+
+        original_token = token_variations.first
+
+        start_index = text.index(original_token, offset)
+
+        if start_index.present?
+          token_replacement = " #{token_variations.join('|')} "
+
+          end_index = start_index + original_token.length
+          text[start_index...end_index] = token_replacement
+
+          offset += token_replacement.length
+        end
+      end
+
       text.strip!
+      text.squeeze!(' ')
 
       text
     end
