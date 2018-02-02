@@ -1,7 +1,7 @@
 
 class SentencesSourceReader
 
-  STOP_WORDS = 'へ|か|が|の|に|と|で|や|も|わ|は|さ|よ|ね|を'
+  STOP_WORDS = 'へ|か|が|の|に|と|で|や|も|わ|は|さ|よ|ね|を|「|」|！|。|、'
 
   def initialize(source_csv: '', indices_csv: '')
     @source_csv = source_csv
@@ -31,13 +31,13 @@ class SentencesSourceReader
 
       original_text = raw_texts[original_id]&.strip
       translated_text = raw_texts[translation_id]&.strip
-      tokens_pattern = columns[2]
       
       next if original_text.nil? || translated_text.nil?
 
       sentences << Sentence.new(
         id: original_id,
-        tokenized: tokenize(original_text, tokens_pattern),
+        original: original_text,
+        tokenized: tokenize(columns[2]),
         translated: translated_text 
       )
     end
@@ -47,41 +47,26 @@ class SentencesSourceReader
 
   private
 
-    def tokenize(text, tokens_pattern)
+    def tokenize(tokens_pattern)
 
       tokens_pattern.gsub!(/\|[[:digit:]]+/, '') # Remove number markers |1 in は|1
       tokens_pattern.gsub!(/\[[[:digit:]]+\]/, '') # Remove number markers [01] in から[01]
       tokens_pattern.gsub!(/\([[:word:]]+\)/, '') # Remove reading markers (かれら) in 彼ら(かれら)
+      tokens_pattern.gsub!(/\b[#{STOP_WORDS}]\b/, '') # Remove punctuations and stop words
       tokens_pattern.gsub!('~', '')
 
-      offset = 0
+      tokens = tokens_pattern.split.map do |raw_token|
 
-      tokens_pattern.split.each do |raw_token|
-
-        token_variations = [
-          raw_token[/{(.+)}/, 1], # Match original form した in 為る{した}
-          raw_token[/([^{]+)/, 1] # Match lemma form 為る in 為る{した}
-          
-        ].compact
-
-        representative_token = token_variations.first
-
-        start_index = text.index(representative_token, offset)
-
-        if start_index.present?
-          
-          token_replacement = " #{token_variations.join('|')} "
-          end_index = start_index + representative_token.length
-
-          text[start_index...end_index] = token_replacement
-
-          offset += token_replacement.length
-        end
+        lemma_form = raw_token[/([^{]+)/, 1] # Match 為る in 為る{した}
+        original_form = raw_token[/{(.+)}/, 1] # Match した in 為る{した}
+        
+        if original_form.present?
+          "#{original_form}|#{lemma_form}"
+        else
+          lemma_form
+        end        
       end
 
-      text.strip!
-      text.squeeze!(' ')
-
-      text
+      tokens.join(' ')
     end
 end

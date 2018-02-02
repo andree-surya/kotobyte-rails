@@ -2,26 +2,14 @@
 class DictionaryDatabase
 
   @@create_tables_sql = <<-EOS
+    create table words (id integer primary key, serialized blob not null);
+    create table kanji (id integer primary key, serialized blob not null);
+    create table sentences (id integer primary key, serialized blob not null);
 
-    create table words (
-      id integer primary key,
-      serialized blob not null
-    );
-
-    create table kanji (
-      id integer primary key,
-      serialized blob not null
-    );
-
-    create table sentences (
-      id integer primary key,
-      serialized blob not null
-    );
-
-    create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed, prefix='1 2 3 4 5');
+    create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed, prefix='1 2 3 4');
     create virtual table senses_fts using fts5(text, word_id unindexed, tokenize='porter');
-    create virtual table kanji_fts using fts5(text, kanji_id unindexed, tokenize='porter');
-    create virtual table sentences_fts using fts5(text, sentence_id unindexed);
+    create virtual table kanji_fts using fts5(character, kanji_id unindexed);
+    create virtual table sentences_fts using fts5(tokenized, sentence_id unindexed);
   EOS
 
   @@search_literals_sql = <<-EOS
@@ -41,11 +29,11 @@ class DictionaryDatabase
   EOS
 
   @@search_kanji_sql = <<-EOS
-    select id, serialized from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
+    select id, character, serialized from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
   EOS
 
   @@search_sentences_sql = <<-EOS
-    select id, serialized from sentences join sentences_fts(?) on (id = sentence_id) limit ?;
+    select id, tokenized, serialized from sentences join sentences_fts(?) on (id = sentence_id) limit ?;
   EOS
 
   def initialize(file: Rails.configuration.app[:database_file], reset: false)
@@ -75,28 +63,52 @@ class DictionaryDatabase
   end
 
   def insert_word(word)
-    @insert_word ||= @database.prepare('insert into words values (?, ?)')
+    word = word.clone
+    word_id = word.id
+
     @index_sense ||= @database.prepare('insert into senses_fts values (?, ?)')
     @index_literal ||= @database.prepare('insert into literals_fts values (?, ?, ?)')
+    @insert_word ||= @database.prepare('insert into words values (?, ?)')
 
-    @insert_word.execute(word.id, Word.encode(word))
-    
-    word.literals.each { |l| @index_literal.execute(l.text, word.id, l.priority) }
-    word.senses.each { |s| @index_sense.execute(s.texts.join(' '), word.id) }
+    word.literals.each { |l| @index_literal.execute(l.text, word_id, l.priority) }
+    word.senses.each { |s| @index_sense.execute(s.texts.join('|'), word_id) }
+
+    # We can derive ID from table ID.
+    word.id = 0
+
+    @insert_word.execute(word_id, Word.encode(word))
   end
 
   def insert_kanji(kanji)
-    @insert_kanji ||= @database.prepare('insert into kanji values (?, ?)')
+    kanji = kanji.clone
+    kanji_id = kanji.id
 
-    @insert_kanji.execute(kanji.id, Kanji.encode(kanji))
+    @index_kanji ||= @database.prepare('insert into kanji_fts values (?, ?)')
+    @insert_kanji ||= @database.prepare('insert into kanji values (?, ?)')
+    
+    @index_kanji.execute(kanji.character, kanji_id)
+
+    # We can derive these data from FTS table.
+    kanji.id = 0
+    kanji.character = ''
+
+    @insert_kanji.execute(kanji_id, Kanji.encode(kanji))
   end
 
   def insert_sentence(sentence)
-    @insert_sentence ||= @database.prepare('insert into sentences values (?, ?)')
-    @index_sentence ||= @database.prepare('insert into sentences_fts values (?, ?)')
+    sentence = sentence.clone
+    sentence_id = sentence.id
 
-    @insert_sentence.execute(sentence.id, Sentence.encode(sentence))
-    @index_sentence.execute(sentence.tokenized, sentence.id)
+    @index_sentence ||= @database.prepare('insert into sentences_fts values (?, ?)')
+    @insert_sentence ||= @database.prepare('insert into sentences values (?, ?)')
+
+    @index_sentence.execute(sentence.tokenized, sentence_id)
+
+    # We can derive these data from FTS table.
+    sentence.id = 0
+    sentence.tokenized = ''
+
+    @insert_sentence.execute(sentence_id, Sentence.encode(sentence))
   end
 
   def search_words(query)

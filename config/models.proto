@@ -49,6 +49,7 @@ message Kanji {
 message Sentence {
 
   uint32 id = 1;
-  string tokenized = 2;
-  string translated = 3;
+  string original = 2;
+  string tokenized = 3;
+  string translated = 4;
 }

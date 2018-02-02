@@ -40,8 +40,9 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
   add_message "Sentence" do
     optional :id, :uint32, 1
-    optional :tokenized, :string, 2
-    optional :translated, :string, 3
+    optional :original, :string, 2
+    optional :tokenized, :string, 3
+    optional :translated, :string, 4
   end
 end
 
