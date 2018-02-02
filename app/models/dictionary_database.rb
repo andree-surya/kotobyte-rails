@@ -71,7 +71,7 @@ class DictionaryDatabase
     @insert_word ||= @database.prepare('insert into words values (?, ?)')
 
     word.literals.each { |l| @index_literal.execute(l.text, word_id, l.priority) }
-    word.senses.each { |s| @index_sense.execute(s.texts.join('|'), word_id) }
+    word.senses.each { |s| @index_sense.execute(s.texts.join(';'), word_id) }
 
     # We can derive ID from table ID.
     word.id = 0
@@ -113,51 +113,60 @@ class DictionaryDatabase
 
   def search_words(query)
 
-    start_time = Time.now
-
     if query.contains_japanese?
-      results = search_words_by_literals(query, 50)
+      words = search_words_by_literals(query, 50)
 
     else
-      results = search_words_by_senses(query, 50)
+      words = search_words_by_senses(query, 50)
 
-      if results.size <= 10
-        literal_results = []
+      if words.size <= 10
+        extra_words = []
 
-        literal_results += search_words_by_literals(query.hiragana, 20)
-        literal_results += search_words_by_literals(query.katakana, 20)
-        literal_results.sort! { |r1, r2| r1['score'] <=> r2['score'] }
+        extra_words += search_words_by_literals(query.hiragana, 20)
+        extra_words += search_words_by_literals(query.katakana, 20)
+        extra_words.sort! { |w1, w2| w1.score <=> w2.score }
 
-        results += literal_results
+        words += extra_words
       end
     end
 
-    finish_time = Time.now
-
-    SearchWordsResponse.new(
-      words: results.map { |r| Word.decode(r['serialized']) },
-      time: finish_time - start_time
-    )
+    words
   end
 
   def search_kanji(query, limit = 10)
-    return nil if query.empty?
-
+    
     tokens = query.chars.select { |c| c.kanji? }
+    results = []
 
-    @search_kanji ||= @database.prepare(@@search_kanji_sql)
-    @search_kanji.execute(tokens.join(' OR '), limit).map do |h|
+    if tokens.present?
+      @search_kanji ||= @database.prepare(@@search_kanji_sql)
 
-      Kanji.decode(h['serialized'])
+      rows = @search_kanji.execute(tokens.join(' OR '), limit).to_a
+    end
+
+    rows.map do |row|
+      kanji = Kanji.decode(row['serialized'])
+
+      kanji.character = row['character']
+      kanji.id = row['id'].to_i
+
+      kanji
     end
   end
 
   def search_sentences(query, limit = 20) 
 
     @search_sentences ||= @database.prepare(@@search_sentences_sql)
-    @search_sentences.execute(query, limit).map do |h| 
+    
+    rows = @search_sentences.execute(query, limit).to_a
 
-      Sentence.decode(h['serialized'])
+    rows.map do |row| 
+      sentence = Sentence.decode(row['serialized'])
+
+      sentence.tokenized = row['tokenized']
+      sentence.id = row['id'].to_id
+
+      sentence
     end
   end
 
@@ -169,12 +178,52 @@ class DictionaryDatabase
       tokens = 1.upto(query.size).map { |l| query[0...l] << '*' } << query
 
       @search_literals ||= @database.prepare(@@search_words_sql % @@search_literals_sql)
-      @search_literals.execute(tokens.join(' OR '), limit).to_a
+      rows = @search_literals.execute(tokens.join(' OR '), limit).to_a
+
+      rows.map do |row|
+        word = decode_word_from(row: row)
+  
+        row['highlights'].split(';').each do |highlight|
+          
+        end
+
+        word
+      end
     end
 
     def search_words_by_senses(query, limit)
 
       @search_senses ||= @database.prepare(@@search_words_sql % @@search_senses_sql)
-      @search_senses.execute(query, limit).to_a
+      rows = @search_senses.execute(query, limit).to_a
+
+      rows.map do |row|
+        word = decode_word_from(row: row)
+  
+        row['highlights'].split(';').each do |highlight|
+          raw_text = highlight.gsub(/[{}]/, '')
+
+          word.senses.each do |sense|
+
+            for i in 0...sense.texts.count
+              sense.texts[i] = highlight if sense.texts[i] == raw_text
+            end
+          end
+        end
+
+        word
+      end
     end
+
+    def decode_word_from(row:)
+
+      word = Word.decode(row['serialized'])
+      word.score = row['score'].to_f
+      word.id = row['id'].to_i
+
+      word
+    end
+end
+
+class Word
+  attr_accessor :score
 end

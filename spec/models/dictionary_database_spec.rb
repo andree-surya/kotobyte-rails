@@ -78,13 +78,13 @@ describe DictionaryDatabase do
       database.insert_word(Word.new(id: 200, literals: [{ text: '片付く' }]))
       database.insert_word(Word.new(id: 300, literals: [{ text: '関係ない事' }]))
 
-      response = database.search_words('片付けますよ')
+      words = database.search_words('片付けますよ')
       
-      expect(response.words.count).to eq(2)
-      expect(response.words[0].id).to eq(100)
-      expect(response.words[1].id).to eq(200)
-      expect(response.words[0].literals.first.text).to eq('{片付ける}')
-      expect(response.words[1].literals.first.text).to eq('{片付く}')
+      expect(words.count).to eq(2)
+      expect(words[0].id).to eq(100)
+      expect(words[1].id).to eq(200)
+      expect(words[0].literals.first.text).to eq('{片付ける}')
+      expect(words[1].literals.first.text).to eq('{片付く}')
     end
 
     it 'should look-up words by Romaji readings' do
@@ -92,23 +92,23 @@ describe DictionaryDatabase do
       database.insert_word(Word.new(id: 100, readings: [{ text: 'ことわり' }]))
       database.insert_word(Word.new(id: 200, readings: [{ text: 'バリ' }]))
 
-      response = database.search_words('ことわります')
+      words = database.search_words('ことわります')
 
-      expect(response.words.count).to eq(1)
-      expect(response.words[0].id).to eq(200)
-      expect(response.words[0].readings.first.text).to eq('{ことわり}')
+      expect(words.count).to eq(1)
+      expect(words[0].id).to eq(200)
+      expect(words[0].readings.first.text).to eq('{ことわり}')
     end
 
     it 'should look-up words by English senses' do
 
       database.insert_word(Word.new(id: 100, senses: [{ texts: ['serendipity'] }]))
-      database.insert_word(Word.new(id: 200, senses: [{ texts: ['fortunate stroke'] }]))
+      database.insert_word(Word.new(id: 200, senses: [{ texts: ['a fortunate stroke'] }]))
 
-      response = database.search_words('fortunate event')
+      words = database.search_words('fortunate')
 
-      expect(response.words.count).to eq(1)
-      expect(response.words[0].id).to eq(200)
-      expect(response.words[0].senses.first.texts[0]).to eq('{fortunate} stroke')
+      expect(words.count).to eq(1)
+      expect(words[0].id).to eq(200)
+      expect(words[0].senses.first.texts[0]).to eq('a {fortunate} stroke')
     end
   end
 
@@ -123,8 +123,10 @@ describe DictionaryDatabase do
       kanji_list = database.search_kanji('青空に飛んで')
 
       expect(kanji_list.count).to eq(2)
-      expect(kanji_list[0].id).to eq('空')
-      expect(kanji_list[1].id).to eq('飛')
+      expect(kanji_list[0].id).to eq(100)
+      expect(kanji_list[1].id).to eq(200)
+      expect(kanji_list[0].character).to eq('空')
+      expect(kanji_list[1].character).to eq('飛')
     end
   end
 
