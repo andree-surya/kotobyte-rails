@@ -1,23 +1,5 @@
 module WordsHelper
 
-  def search_results_summary_text(search_results)
-    count = search_results.count
-
-    if count > 0
-      time = search_results.response['took'] / 1000.0
-
-      if search_results.total > count
-        message = t('showing_top_results', count: count)
-      else
-        message = t('found_search_results', count: count)
-      end
-
-      return message + " (#{time} seconds)"
-    else
-      return t('no_search_results')
-    end
-  end
-
   def markup_highlight(text)
     markup = text.dup
 
@@ -87,7 +69,7 @@ module WordsHelper
       options = {
         data: {
           'popup-id' => "popup-category-#{category}",
-          'popup-text' => t("labels.#{category}"),
+          'popup-text' => t("labels.#{category}").upcase_first,
           'popup-trigger' => 'hover',
         }
       }
@@ -120,7 +102,7 @@ module WordsHelper
     extras = sense_extras(sense)
     
     if extras.present?
-      'ー' + extras.join('. ')
+      'ー' + extras.join(', ')
     else
       ''
     end

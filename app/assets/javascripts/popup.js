@@ -137,11 +137,11 @@ Popup.prototype.text = function(text) {
 Popup.prototype.updatePosition = function() {
 
   var documentWidth = $(document).innerWidth();
-	var popupWidth = this.popupNode.outerWidth();
-	var anchorWidth = this.anchorNode.outerWidth();
+  var popupWidth = this.popupNode.outerWidth();
+  var anchorWidth = this.anchorNode.outerWidth();
   
-	var popupOffset = {};
-	var anchorOffset = this.anchorNode.offset();
+  var popupOffset = {};
+  var anchorOffset = this.anchorNode.offset();
 
   popupOffset.top = anchorOffset.top + this.anchorNode.height() + 4;
   popupOffset.left = anchorOffset.left + (anchorWidth - popupWidth) / 2;

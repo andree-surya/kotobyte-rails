@@ -5,10 +5,10 @@ kanji_strokes_file = 'tmp/kanjivg.xml'
 sentences_file = 'tmp/sentences.csv'
 sentences_idx_file = 'tmp/sentences_idx.csv'
 
-namespace :db do
+namespace :dict do
 
   desc 'Download all data source files'
-  task download_source_files: [
+  task prepare: [
     :download_words_source,
     :download_kanji_source,
     :download_kanji_strokes,
@@ -52,7 +52,7 @@ namespace :db do
   end
 
   desc 'Create dictionary database file'
-  task create_database: :environment do
+  task create: :environment do
     
     database = DictionaryDatabase.new(reset: true)
     

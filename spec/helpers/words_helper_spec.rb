@@ -2,36 +2,6 @@ require 'rails_helper'
 
 describe WordsHelper, type: :helper do
 
-  describe '#search_results_summary_text' do
-
-    context 'when we got no search results' do
-      
-      it 'should return a message of apology' do
-
-        results = double('search_results')
-        expect(results).to receive(:count).and_return(0)
-
-        string = search_results_summary_text(results)
-        expect(string).to include('Sorry')
-      end
-    end
-
-    context 'when there are 1 or more search results' do
-
-      it 'should include a match count information' do
-        count = 38
-        results = double('search_results')
-
-        expect(results).to receive(:count).and_return(count)
-        expect(results).to receive(:total).and_return(100)
-        expect(results).to receive(:response).and_return({ 'took' => 100 })
-
-        string = search_results_summary_text(results)
-        expect(string).to include("#{count}")
-      end
-    end
-  end
-
   describe '#markup_highlight' do
     
     it 'should replace highlight tags with markup' do

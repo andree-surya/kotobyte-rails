@@ -11,6 +11,7 @@ This is the Ruby on Rails source code for
 - Run the following commands as needed:
   * `bundle install --path vendor/bundle`
   * `bin/rake assets:precompile`
-  * `bin/rake data:reset_all`
+  * `bin/rake dict:prepare`
+  * `bin/rake dict:create`
 - Make sure Nginx is running with a proper reverse proxy configuration.
 

@@ -6,7 +6,7 @@ describe DictionaryDatabase do
     let(:database_file) { Rails.configuration.app[:database_file] }
 
     before(:each) do
-        File.delete(database_file) if File.exists? database_file
+      File.delete(database_file) if File.exists? database_file
     end
 
     it 'should open database file without modification by default' do

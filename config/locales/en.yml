@@ -21,15 +21,11 @@
 
 en:
   search_placeholder: "Search with English or Japanese."
-  no_search_results: "Sorry, no search results. Please try a different search query."
-  showing_top_results: "Showing top %{count} matches."
-  found_search_results:
+  
+  search_results_summary:
+    zero: "Sorry, no search results. Please try a different search query."
     one: "Found a match."
     other: "Found %{count} matches."
-  
-  search_results_statistics:
-    one: "Found a match (%{time} seconds)."
-    other: "Showing top %{count} matches (%{time} seconds)."
 
   kanji:
     jlpt_1: "JLPT N1"

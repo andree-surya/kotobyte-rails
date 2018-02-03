@@ -4,7 +4,7 @@ class WordsController < ApplicationController
     @query = params[:query]
     
     if @query.present?
-      @results = WordsRepository.new.search_words(@query)
+      @words = DictionaryDatabase.new.search_words(@query)
 
     else
       redirect_to root_path

@@ -1,6 +1,6 @@
 
 <div id='search_results_summary'>
-    <%= search_results_summary_text(@results) %>
+    <%= t('search_results_summary', count: @words.count) %>
 </div>
 
-<%= render partial: 'word', collection: @results %>
+<%= render partial: 'word', collection: @words %>

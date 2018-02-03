@@ -3,7 +3,6 @@ syntax = "proto3";
 message SearchWordsResponse {
 
   repeated Word words = 1;
-  float time = 2;
 }
 
 message Word {
