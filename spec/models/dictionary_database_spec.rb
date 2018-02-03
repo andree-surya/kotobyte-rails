@@ -106,16 +106,16 @@ describe DictionaryDatabase do
       database.insert_word(Word.new(id: 300, readings: [{ text: 'ネタバレ' }]))
       database.insert_word(Word.new(id: 400, readings: [{ text: 'デグレ' }]))
 
-      hiragana_words = database.search_words('warukunai')
-      katakana_words = database.search_words('Netabare')
+      words1 = database.search_words('warukunai')
+      words2 = database.search_words('Netabare')
 
-      expect(hiragana_words.count).to eq(1)
-      expect(hiragana_words[0].id).to eq(200)
-      expect(hiragana_words[0].readings.first.text).to eq('{わるい}')
-      
-      expect(katakana_words.count).to eq(1)
-      expect(katakana_words[0].id).to eq(300)
-      expect(katakana_words[0].readings.first.text).to eq('{ネタバレ}')
+      expect(words1.count).to eq(1)
+      expect(words1[0].id).to eq(200)
+      expect(words1[0].readings.first.text).to eq('{わるい}')
+
+      expect(words2.count).to eq(1)
+      expect(words2[0].id).to eq(300)
+      expect(words2[0].readings.first.text).to eq('{ネタバレ}')
     end
 
     it 'should look-up words by English senses' do
@@ -151,8 +151,41 @@ describe DictionaryDatabase do
 
   describe '#search_sentences' do
 
-    it 'should look-up sentences' do
+    it 'should look-up and highlight sentences' do
+      
+      database.insert_sentence(Sentence.new(
+        id: 100, 
+        original: '「道」という漢字の総画数は何画ですか。',
+        tokenized: '道 という|と言う 漢字 総画数 何 画 ですか')
+      )
 
+      database.insert_sentence(Sentence.new(
+        id: 200, 
+        original: '老齢人口は、健康管理にますます多くの出費が必要となるだろう。',
+        tokenized: '老齢 人口 健康管理 ますます|益々 多く 出費 必要 となる だろう')
+      )
+
+      database.insert_sentence(Sentence.new(
+        id: 300, 
+        original: '彼らはおおいに努力したが結局失敗した。',
+        tokenized: '彼ら おおいに|大いに 努力 した|為る 結局 失敗 した|為る')
+      )
+
+      sentences1 = database.search_sentences('大いに')
+      sentences2 = database.search_sentences('道')
+      sentences3 = database.search_sentences('ますます')
+
+      expect(sentences1.count).to eq(1)
+      expect(sentences1.first.id).to eq(300)
+      expect(sentences1.first.original).to eq('彼らは{おおいに}努力したが結局失敗した。')
+
+      expect(sentences2.count).to eq(1)
+      expect(sentences2.first.id).to eq(100)
+      expect(sentences2.first.original).to eq('「{道}」という漢字の総画数は何画ですか。')
+
+      expect(sentences3.count).to eq(1)
+      expect(sentences3.first.id).to eq(200)
+      expect(sentences3.first.original).to eq('老齢人口は、健康管理に{ますます}多くの出費が必要となるだろう。')
     end
   end
 end

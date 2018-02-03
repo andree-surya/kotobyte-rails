@@ -33,7 +33,8 @@ class DictionaryDatabase
   EOS
 
   @@search_sentences_sql = <<-EOS
-    select id, tokenized, serialized from sentences join sentences_fts(?) on (id = sentence_id) limit ?;
+    select id, serialized, highlight(sentences_fts, 0, '{', '}') highlight 
+      from sentences join sentences_fts(?) on (id = sentence_id) limit ?;
   EOS
 
   def initialize(file: Rails.configuration.app[:database_file], reset: false)
@@ -165,8 +166,33 @@ class DictionaryDatabase
     rows.map do |row| 
       sentence = Sentence.decode(row['serialized'])
 
-      sentence.tokenized = row['tokenized']
-      sentence.id = row['id'].to_id
+      sentence.tokenized = row['highlight']
+      sentence.id = row['id'].to_i
+
+      token_lookup_offset = 0
+      text = sentence.original.dup
+
+      sentence.tokenized.split.each do |token|
+
+        is_highlighted = token.include? '{'
+
+        token.gsub!(/[{}]/, '') # Remove highlight markers {, }
+        token.gsub!(/\|.*$/, '') # Remove lemma form 為る in する|為る
+
+        token_start_index = text.index(token, token_lookup_offset)
+
+        if token_start_index.present?
+          token_end_index = token_start_index + token.length
+
+          if is_highlighted
+            text[token_start_index...token_end_index] = "{#{token}}"
+          end
+
+          token_lookup_offset = token_end_index
+        end
+      end
+
+      sentence.original = text
 
       sentence
     end
@@ -186,7 +212,7 @@ class DictionaryDatabase
         word = decode_word_from(row: row)
   
         row['highlights'].split(';').each do |highlight|
-          raw_text = highlight.gsub(/[{}]/, '')
+          raw_text = highlight.gsub(/[{}]/, '') # Remove highlights
           
           word.literals.each do |literal|
             literal.text = highlight if literal.text == raw_text
