@@ -25,7 +25,7 @@ en:
   search_results_summary:
     zero: "Sorry, no search results. Please try a different search query."
     one: "Found a match."
-    other: "Found %{count} matches."
+    other: "Found %{count} possible matches."
 
   kanji:
     jlpt_1: "JLPT N1"

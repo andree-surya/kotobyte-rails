@@ -71,9 +71,19 @@ class DictionaryDatabase
     @index_literal ||= @database.prepare('insert into literals_fts values (?, ?, ?)')
     @insert_word ||= @database.prepare('insert into words values (?, ?)')
 
-    word.literals.each { |l| @index_literal.execute(l.text, word_id, l.priority) }
-    word.readings.each { |r| @index_literal.execute(r.text, word_id, r.priority) }
-    word.senses.each { |s| @index_sense.execute(s.texts.join(';'), word_id) }
+    word.literals.each do |literal| 
+      @index_literal.execute(literal.text, word_id, literal.priority)
+    end
+
+    word.readings.each do |reading| 
+      @index_literal.execute(reading.text, word_id, reading.priority) 
+    end
+
+    word.senses.each do |sense|
+      sense.texts.each do |text|
+        @index_sense.execute(text, word_id) 
+      end
+    end
 
     # We can derive ID from table ID.
     word.id = 0
