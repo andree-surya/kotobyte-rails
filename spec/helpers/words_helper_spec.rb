@@ -68,10 +68,12 @@ describe WordsHelper, type: :helper do
       sense = Sense.new(categories: ['n', 'adj-i', 'adv'])
       string = sense_categories_text(sense)
 
-      sense.categories.each do |category|
-        expect(string).to include(category)
-        expect(string).to include(t("labels.#{category}"))
-      end
+      expect(string).to include('n')
+      expect(string).to include('Common noun')
+      expect(string).to include('adj-i')
+      expect(string).to include('Adjective')
+      expect(string).to include('adv')
+      expect(string).to include('Adverb')
     end
   end
 

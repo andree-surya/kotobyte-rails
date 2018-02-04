@@ -49,7 +49,7 @@ module KanjiHelper
 
   def kanji_extras_text(kanji)
 
-    metadata_text = kanji_extras(kanji).compact.join('. ')
+    metadata_text = kanji_extras(kanji).compact.join(', ')
     metadata_text = 'ー' + metadata_text if metadata_text.present? 
 
     metadata_text

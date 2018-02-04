@@ -13,7 +13,7 @@ class DictionaryDatabase
   EOS
 
   @@search_literals_sql = <<-EOS
-    select word_id, highlight(literals_fts, 0, '{', '}') highlight, rank * (priority + 1) score
+    select word_id, highlight(literals_fts, 0, '{', '}') highlight, rank * priority score
       from literals_fts(?) order by score limit ?
   EOS
 

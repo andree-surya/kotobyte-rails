@@ -1,7 +1,8 @@
 
 class WordsSourceReader
-  PRIORITY_CODES = ['ichi', 'news', 'spec', 'gai']
-  IRREGULAR_CODES = ['iK', 'ik', 'oK', 'ok', 'io']
+  HIGH_PRIORITY_CODES = %w(ichi1 news1 spec1 gai1)
+  MEDIUM_PRIORITY_CODES = %w(ichi2 news2 spec2 gai2)
+  IRREGULAR_CODES = %w(iK ik oK ok io)
 
   def initialize(source_xml: '<JMdict />')
     @xml = source_xml
@@ -121,17 +122,21 @@ class WordsSourceReader
     end
 
     def handle_literal_priority(literal, node)
-      priority_code = clean_xml_entity(node.inner_xml).gsub(/\d/, '')
+      priority_code = clean_xml_entity(node.inner_xml)
 
-      if PRIORITY_CODES.include? priority_code
+      if literal.priority < 1 && MEDIUM_PRIORITY_CODES.include?(priority_code)
         literal.priority = 1
+      end
+
+      if literal.priority < 2 && HIGH_PRIORITY_CODES.include?(priority_code)
+        literal.priority = 2
       end
     end
 
     def handle_literal_irregularity(literal, node)
       irregular_code = clean_xml_entity(node.inner_xml)
 
-      if IRREGULAR_CODES.include? irregular_code
+      if literal.priority == 0 && IRREGULAR_CODES.include?(irregular_code)
         literal.priority = -1
       end
     end

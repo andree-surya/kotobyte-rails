@@ -73,7 +73,7 @@ describe WordsSourceReader do
     expect(readings[1].text).to eq('バグ')
     expect(readings[2].text).to eq('みず')
     expect(readings[0].priority).to eq(0)
-    expect(readings[1].priority).to eq(1)
+    expect(readings[1].priority).to eq(2)
     expect(readings[2].priority).to eq(-1)
   end
 
