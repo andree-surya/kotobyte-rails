@@ -1,0 +1,217 @@
+require 'rails_helper'
+
+describe TokenStemmer do
+  let(:stemmer) { TokenStemmer.new }
+
+  it 'keep verbs in present plain form' do
+    expect(stem('くう')).to include('くう')
+    expect(stem('解く')).to include('解く')
+    expect(stem('たつ')).to include('たつ')
+    expect(stem('飛ぶ')).to include('飛ぶ')
+    expect(stem('とる')).to include('とる')
+    expect(stem('頼む')).to include('頼む')
+    expect(stem('しぬ')).to include('しぬ')
+    expect(stem('出す')).to include('出す')
+    expect(stem('ねる')).to include('ねる')
+    expect(stem('着る')).to include('着る')
+  end
+
+  it 'stem verbs in present formal form' do
+    expect(stem('洗います')).to include('洗う')
+    expect(stem('かきます')).to include('かく')
+    expect(stem('立ちます')).to include('立つ')
+    expect(stem('よびます')).to include('よぶ')
+    expect(stem('のります')).to include('のる')
+    expect(stem('飲みます')).to include('飲む')
+    expect(stem('しにます')).to include('しぬ')
+    expect(stem('汚します')).to include('汚す')
+    expect(stem('たべます')).to include('たべる')
+    expect(stem('出来ます')).to include('出来る')
+  end
+
+  it 'stem negative verbs in present plain form' do
+    expect(stem('洗わない')).to include('洗う')
+    expect(stem('かかない')).to include('かく')
+    expect(stem('立たない')).to include('立つ')
+    expect(stem('よばない')).to include('よぶ')
+    expect(stem('のらない')).to include('のる')
+    expect(stem('飲まない')).to include('飲む')
+    expect(stem('しなない')).to include('しぬ')
+    expect(stem('汚さない')).to include('汚す')
+    expect(stem('たべない')).to include('たべる')
+    expect(stem('出来ない')).to include('出来る')
+  end
+
+  it 'stem negative verbs in present formal form' do
+    expect(stem('くいません')).to include('くう')
+    expect(stem('解きません')).to include('解く')
+    expect(stem('たちません')).to include('たつ')
+    expect(stem('飛びません')).to include('飛ぶ')
+    expect(stem('とりません')).to include('とる')
+    expect(stem('頼みません')).to include('頼む')
+    expect(stem('しにません')).to include('しぬ')
+    expect(stem('出しません')).to include('出す')
+    expect(stem('ねませんです')).to include('ねる')
+    expect(stem('着ませんです')).to include('着る')
+  end
+
+  it 'stem verbs in past plain form' do
+    expect(stem('くった')).to include('くう')
+    expect(stem('解いた')).to include('解く')
+    expect(stem('たった')).to include('たつ')
+    expect(stem('飛んだ')).to include('飛ぶ')
+    expect(stem('とった')).to include('とる')
+    expect(stem('頼んだ')).to include('頼む')
+    expect(stem('しんだ')).to include('しぬ')
+    expect(stem('出した')).to include('出す')
+    expect(stem('ねた')).to include('ねる')
+    expect(stem('着た')).to include('着る')
+  end
+
+  it 'stem verbs in past formal form' do
+    expect(stem('洗いました')).to include('洗う')
+    expect(stem('かきました')).to include('かく')
+    expect(stem('立ちました')).to include('立つ')
+    expect(stem('よびました')).to include('よぶ')
+    expect(stem('のりました')).to include('のる')
+    expect(stem('飲みました')).to include('飲む')
+    expect(stem('しにました')).to include('しぬ')
+    expect(stem('汚しました')).to include('汚す')
+    expect(stem('たべました')).to include('たべる')
+    expect(stem('出来ました')).to include('出来る')
+  end
+
+  it 'stem negative verbs in past plain form' do
+    expect(stem('洗わなかった')).to include('洗う')
+    expect(stem('かかなかった')).to include('かく')
+    expect(stem('立たなかった')).to include('立つ')
+    expect(stem('よばなかった')).to include('よぶ')
+    expect(stem('のらなかった')).to include('のる')
+    expect(stem('飲まなかった')).to include('飲む')
+    expect(stem('しななかった')).to include('しぬ')
+    expect(stem('汚さなかった')).to include('汚す')
+    expect(stem('たべなかった')).to include('たべる')
+    expect(stem('出来なかった')).to include('出来る')
+  end
+
+  it 'stem -te verbs in plain form' do
+    expect(stem('くって')).to include('くう')
+    expect(stem('解いて')).to include('解く')
+    expect(stem('たって')).to include('たつ')
+    expect(stem('飛んで')).to include('飛ぶ')
+    expect(stem('とって')).to include('とる')
+    expect(stem('頼んで')).to include('頼む')
+    expect(stem('しんで')).to include('しぬ')
+    expect(stem('出して')).to include('出す')
+    expect(stem('ねて')).to include('ねる')
+    expect(stem('着て')).to include('着る')
+  end
+
+  it 'stem -te verbs in formal form' do
+    expect(stem('洗いまして')).to include('洗う')
+    expect(stem('かきまして')).to include('かく')
+    expect(stem('立ちまして')).to include('立つ')
+    expect(stem('よびまして')).to include('よぶ')
+    expect(stem('のりまして')).to include('のる')
+    expect(stem('飲みまして')).to include('飲む')
+    expect(stem('しにまして')).to include('しぬ')
+    expect(stem('汚しまして')).to include('汚す')
+    expect(stem('たべまして')).to include('たべる')
+    expect(stem('出来まして')).to include('出来る')
+  end
+
+  it 'stem negative -te verbs in plain form' do
+    expect(stem('洗わなくって')).to include('洗う')
+    expect(stem('かかなくって')).to include('かく')
+    expect(stem('立たなくって')).to include('立つ')
+    expect(stem('よばなくって')).to include('よぶ')
+    expect(stem('のらなくって')).to include('のる')
+    expect(stem('飲まなくって')).to include('飲む')
+    expect(stem('しななくって')).to include('しぬ')
+    expect(stem('汚さなくって')).to include('汚す')
+    expect(stem('たべなくて')).to include('たべる')
+    expect(stem('出来なくて')).to include('出来る')
+  end
+
+  it 'stem conditional verbs in plain form' do
+    expect(stem('くったら')).to include('くう')
+    expect(stem('解いたら')).to include('解く')
+    expect(stem('たったら')).to include('たつ')
+    expect(stem('飛んだら')).to include('飛ぶ')
+    expect(stem('とったら')).to include('とる')
+    expect(stem('頼んだら')).to include('頼む')
+    expect(stem('しんだら')).to include('しぬ')
+    expect(stem('出したら')).to include('出す')
+    expect(stem('ねたら')).to include('ねる')
+    expect(stem('着たら')).to include('着る')
+  end
+
+  it 'stem conditional verbs in formal form' do
+    expect(stem('洗いましたら')).to include('洗う')
+    expect(stem('かきましたら')).to include('かく')
+    expect(stem('立ちましたら')).to include('立つ')
+    expect(stem('よびましたら')).to include('よぶ')
+    expect(stem('のりましたら')).to include('のる')
+    expect(stem('飲みましたら')).to include('飲む')
+    expect(stem('しにましたら')).to include('しぬ')
+    expect(stem('汚しましたら')).to include('汚す')
+    expect(stem('たべましたら')).to include('たべる')
+    expect(stem('出来ましたら')).to include('出来る')
+  end
+
+  it 'stem negative conditional verbs in plain form' do
+    expect(stem('洗わなかったら')).to include('洗う')
+    expect(stem('かかなかったら')).to include('かく')
+    expect(stem('立たなかったら')).to include('立つ')
+    expect(stem('よばなかったら')).to include('よぶ')
+    expect(stem('のらなかったら')).to include('のる')
+    expect(stem('飲まなかったら')).to include('飲む')
+    expect(stem('しななかったら')).to include('しぬ')
+    expect(stem('汚さなかったら')).to include('汚す')
+    expect(stem('たべなかったら')).to include('たべる')
+    expect(stem('出来なかったら')).to include('出来る')
+  end
+
+  it 'stem provisional verbs in plain form' do
+    expect(stem('くえば')).to include('くう')
+    expect(stem('解けば')).to include('解く')
+    expect(stem('たてば')).to include('たつ')
+    expect(stem('飛べば')).to include('飛ぶ')
+    expect(stem('とれば')).to include('とる')
+    expect(stem('頼めば')).to include('頼む')
+    expect(stem('しねば')).to include('しぬ')
+    expect(stem('出せば')).to include('出す')
+    expect(stem('ねれば')).to include('ねる')
+    expect(stem('着れば')).to include('着る')
+  end
+
+  it 'stem provisional verbs in formal form' do
+    expect(stem('洗いませば')).to include('洗う')
+    expect(stem('かきませば')).to include('かく')
+    expect(stem('立ちませば')).to include('立つ')
+    expect(stem('よびませば')).to include('よぶ')
+    expect(stem('のりませば')).to include('のる')
+    expect(stem('飲みませば')).to include('飲む')
+    expect(stem('しにませば')).to include('しぬ')
+    expect(stem('汚しませば')).to include('汚す')
+    expect(stem('たべませば')).to include('たべる')
+    expect(stem('出来ませば')).to include('出来る')
+  end
+
+  it 'stem negative provisional verbs in plain form' do
+    expect(stem('洗わなければ')).to include('洗う')
+    expect(stem('かかなければ')).to include('かく')
+    expect(stem('立たなければ')).to include('立つ')
+    expect(stem('よばなくちゃ')).to include('よぶ')
+    expect(stem('のらなくちゃ')).to include('のる')
+    expect(stem('飲まなくちゃ')).to include('飲む')
+    expect(stem('しななきゃ')).to include('しぬ')
+    expect(stem('汚さなきゃ')).to include('汚す')
+    expect(stem('たべなければ')).to include('たべる')
+    expect(stem('出来なくちゃ')).to include('出来る')
+  end
+
+  private def stem(token)
+    stemmer.stem(token)
+  end
+end
