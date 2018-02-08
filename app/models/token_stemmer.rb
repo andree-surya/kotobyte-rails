@@ -10,6 +10,9 @@ class TokenStemmer
       when token.end_with?('なくて', 'なきゃ')
         stem(token[0...-3] + 'ない', output)
 
+      when token.end_with?('ましょう')
+        stem(token[0...-4] + 'ます', output)
+
       when token.end_with?('ません', 'ました', 'まして', 'ませば')
         stem(token[0...-3] + 'ます', output)
 
@@ -19,17 +22,9 @@ class TokenStemmer
       when token.end_with?('です')
         stem(token[0...-2], output)
 
-      when token.end_with?('ます')
+      when token.end_with?('ます', 'れる', 'ない')
         stem(token[0...-2], output)
-        
-        # Handle Ichidan verb, 着ます → 着る
-        output << token[0...-2] + 'る' 
-
-      when token.end_with?('ない')
-        stem(token[0...-2], output)
-
-        # Handle Ichidan verb, 食べない → 食べる
-        output << token[0...-2] + 'る' 
+        stem(token[0...-2] + 'る', output)
 
       when token.end_with?('った', 'って')
         output << token[0...-2] + 'う'
@@ -47,56 +42,29 @@ class TokenStemmer
       when token.end_with?('した', 'して')
         output << token[0...-2] + 'す'
 
-      when token.end_with?('おう')
+      when token.end_with?('おう', 'えば', 'える')
         output << token[0...-2] + 'う'
 
-      when token.end_with?('こう')
+      when token.end_with?('こう', 'けば', 'ける')
         output << token[0...-2] + 'く'
 
-      when token.end_with?('ろう')
+      when token.end_with?('ろう', 'れば', 'よう')
         output << token[0...-2] + 'る'
 
-      when token.end_with?('ぼう')
+      when token.end_with?('ぼう', 'べば', 'べる')
         output << token[0...-2] + 'ぶ'
 
-      when token.end_with?('とう')
+      when token.end_with?('とう', 'てば', 'てる')
         output << token[0...-2] + 'つ'
 
-      when token.end_with?('もう')
+      when token.end_with?('もう', 'めば', 'める')
         output << token[0...-2] + 'む'
 
-      when token.end_with?('のう')
+      when token.end_with?('のう', 'ねば', 'ねる')
         output << token[0...-2] + 'ぬ'
 
-      when token.end_with?('そう')
+      when token.end_with?('そう', 'せば', 'せる')
         output << token[0...-2] + 'す'
-
-      when token.end_with?('えば')
-        output << token[0...-2] + 'う'
-      
-      when token.end_with?('けば')
-        output << token[0...-2] + 'く'
-
-      when token.end_with?('れば')
-        output << token[0...-2] + 'る'
-
-      when token.end_with?('べば')
-        output << token[0...-2] + 'ぶ'
-
-      when token.end_with?('てば')
-        output << token[0...-2] + 'つ'
-
-      when token.end_with?('めば')
-        output << token[0...-2] + 'む'
-
-      when token.end_with?('ねば')
-        output << token[0...-2] + 'ぬ'
-
-      when token.end_with?('せば')
-        output << token[0...-2] + 'す'
-
-      when token.end_with?('で')
-        stem(token[0...-1], output)
 
       when token.end_with?('わ', 'い', 'え')
         output << token[0...-1] + 'う'

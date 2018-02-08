@@ -211,6 +211,71 @@ describe TokenStemmer do
     expect(stem('出来なくちゃ')).to include('出来る')
   end
 
+  it 'stem potential verbs in plain form' do
+    expect(stem('くえる')).to include('くう')
+    expect(stem('解ける')).to include('解く')
+    expect(stem('たてる')).to include('たつ')
+    expect(stem('飛べる')).to include('飛ぶ')
+    expect(stem('とれる')).to include('とる')
+    expect(stem('頼める')).to include('頼む')
+    expect(stem('しねる')).to include('しぬ')
+    expect(stem('出せる')).to include('出す')
+    expect(stem('ねられる')).to include('ねる')
+    expect(stem('着られる')).to include('着る')
+  end
+
+  it 'stem potential verbs in formal form' do
+    expect(stem('洗えます')).to include('洗う')
+    expect(stem('かけます')).to include('かく')
+    expect(stem('立てます')).to include('立つ')
+    expect(stem('よべます')).to include('よぶ')
+    expect(stem('のれます')).to include('のる')
+    expect(stem('飲めます')).to include('飲む')
+    expect(stem('しねます')).to include('しぬ')
+    expect(stem('汚せます')).to include('汚す')
+    expect(stem('たべられます')).to include('たべる')
+    expect(stem('出来られます')).to include('出来る')
+  end
+
+  it 'stem volitional verbs in plain form' do
+    expect(stem('洗おう')).to include('洗う')
+    expect(stem('かこう')).to include('かく')
+    expect(stem('立とう')).to include('立つ')
+    expect(stem('よぼう')).to include('よぶ')
+    expect(stem('のろう')).to include('のる')
+    expect(stem('飲もう')).to include('飲む')
+    expect(stem('しのう')).to include('しぬ')
+    expect(stem('汚そう')).to include('汚す')
+    expect(stem('たべよう')).to include('たべる')
+    expect(stem('着よう')).to include('着る')
+  end
+  
+  it 'stem volitional verbs in formal form' do
+    expect(stem('くいましょう')).to include('くう')
+    expect(stem('解きましょう')).to include('解く')
+    expect(stem('たちましょう')).to include('たつ')
+    expect(stem('飛びましょう')).to include('飛ぶ')
+    expect(stem('とりましょう')).to include('とる')
+    expect(stem('頼みましょう')).to include('頼む')
+    expect(stem('しにましょう')).to include('しぬ')
+    expect(stem('出しましょう')).to include('出す')
+    expect(stem('ねましょう')).to include('ねる')
+    expect(stem('着ましょう')).to include('着る')
+  end
+
+  it 'stem passive verbs in plain form' do
+    expect(stem('くわれる')).to include('くう')
+    expect(stem('解かれる')).to include('解く')
+    expect(stem('たたれる')).to include('たつ')
+    expect(stem('飛ばれる')).to include('飛ぶ')
+    expect(stem('とられる')).to include('とる')
+    expect(stem('頼まれる')).to include('頼む')
+    expect(stem('しなれる')).to include('しぬ')
+    expect(stem('出される')).to include('出す')
+    expect(stem('ねられる')).to include('ねる')
+    expect(stem('着られる')).to include('着る')
+  end
+
   private def stem(token)
     stemmer.stem(token)
   end
