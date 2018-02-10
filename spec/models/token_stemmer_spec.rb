@@ -276,6 +276,45 @@ describe TokenStemmer do
     expect(stem('着られる')).to include('着る')
   end
 
+  it 'stem causative verbs in plain form' do
+    expect(stem('くわせる')).to include('くう')
+    expect(stem('解かす')).to include('解く')
+    expect(stem('たたす')).to include('たつ')
+    expect(stem('飛ばせる')).to include('飛ぶ')
+    expect(stem('とらす')).to include('とる')
+    expect(stem('頼ます')).to include('頼む')
+    expect(stem('しなせる')).to include('しぬ')
+    expect(stem('出させる')).to include('出す')
+    expect(stem('ねさせる')).to include('ねる')
+    expect(stem('着さす')).to include('着る')
+  end
+
+  it 'stem causative verbs in formal form' do
+    expect(stem('洗わせます')).to include('洗う')
+    expect(stem('かかします')).to include('かく')
+    expect(stem('立たします')).to include('立つ')
+    expect(stem('よばせます')).to include('よぶ')
+    expect(stem('のらせます')).to include('のる')
+    expect(stem('飲まします')).to include('飲む')
+    expect(stem('しなします')).to include('しぬ')
+    expect(stem('汚させます')).to include('汚す')
+    expect(stem('たべさせます')).to include('たべる')
+    expect(stem('着さします')).to include('着る')
+  end
+
+  it 'stem negative causative verbs in plain form' do
+    expect(stem('洗わせない')).to include('洗う')
+    expect(stem('かかさない')).to include('かく')
+    expect(stem('立たさない')).to include('立つ')
+    expect(stem('よばせない')).to include('よぶ')
+    expect(stem('のらせない')).to include('のる')
+    expect(stem('飲まさない')).to include('飲む')
+    expect(stem('しなさない')).to include('しぬ')
+    expect(stem('汚させない')).to include('汚す')
+    expect(stem('たべさせない')).to include('たべる')
+    expect(stem('出来ささない')).to include('出来る')
+  end
+
   private def stem(token)
     stemmer.stem(token)
   end
