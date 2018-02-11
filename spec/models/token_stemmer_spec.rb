@@ -315,6 +315,67 @@ describe TokenStemmer do
     expect(stem('出来ささない')).to include('出来る')
   end
 
+  it 'stem alternative provision verbs in plain form' do
+    expect(stem('くったり')).to include('くう')
+    expect(stem('解いたり')).to include('解く')
+    expect(stem('たったり')).to include('たつ')
+    expect(stem('飛んだり')).to include('飛ぶ')
+    expect(stem('とったり')).to include('とる')
+    expect(stem('頼んだり')).to include('頼む')
+    expect(stem('しんだり')).to include('しぬ')
+    expect(stem('出したり')).to include('出す')
+    expect(stem('ねたり')).to include('ねる')
+    expect(stem('着たり')).to include('着る')
+  end
+
+  it 'stem imperative verbs in plain form' do
+    expect(stem('くえ')).to include('くう')
+    expect(stem('解け')).to include('解く')
+    expect(stem('たて')).to include('たつ')
+    expect(stem('飛べ')).to include('飛ぶ')
+    expect(stem('とれ')).to include('とる')
+    expect(stem('頼め')).to include('頼む')
+    expect(stem('しね')).to include('しぬ')
+    expect(stem('出せ')).to include('出す')
+    expect(stem('ねろ')).to include('ねる')
+    expect(stem('着よ')).to include('着る')
+  end
+
+  it 'stem imperative verbs in formal form' do
+    expect(stem('洗いなさい')).to include('洗う')
+    expect(stem('かきなさい')).to include('かく')
+    expect(stem('立ちなさい')).to include('立つ')
+    expect(stem('よびなさい')).to include('よぶ')
+    expect(stem('のりなさい')).to include('のる')
+    expect(stem('飲みなさい')).to include('飲む')
+    expect(stem('しになさい')).to include('しぬ')
+    expect(stem('汚しなさい')).to include('汚す')
+    expect(stem('たべなさい')).to include('たべる')
+    expect(stem('着なさい')).to include('着る')
+  end
+
+  it 'stem irregular verb する and くる' do
+    expect(stem('します')).to include('する')
+    expect(stem('しない')).to include('する')
+    expect(stem('した')).to include('する')
+    expect(stem('して')).to include('する')
+    expect(stem('しろ')).to include('する')
+    expect(stem('せよ')).to include('する')
+    expect(stem('しよう')).to include('する')
+    expect(stem('させる')).to include('する')
+    expect(stem('さす')).to include('する')
+    expect(stem('される')).to include('する')
+
+    expect(stem('きます')).to include('くる')
+    expect(stem('こない')).to include('くる')
+    expect(stem('きた')).to include('くる')
+    expect(stem('きて')).to include('くる')
+    expect(stem('こい')).to include('くる')
+    expect(stem('こよう')).to include('くる')
+    expect(stem('これない')).to include('くる')
+    expect(stem('こさせられる')).to include('くる')
+  end
+
   private def stem(token)
     stemmer.stem(token)
   end

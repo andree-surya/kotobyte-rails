@@ -1,6 +1,9 @@
 
 class TokenStemmer
 
+  IRREGULAR_する_BASES = %w(します しない しよう させる される した して しろ せよ さす)
+  IRREGULAR_くる_BASES = %w(こさせる きます こない こさす こよう きた きて こい こる)
+
   def stem(token, output = SortedSet.new)
 
     case
@@ -19,7 +22,11 @@ class TokenStemmer
       when token.end_with?('します', 'さない')
         stem(token[0...-3] + 'す', output)
 
-      when token.end_with?('たら', 'だら')
+      when token.end_with?('なさい')
+        stem(token[0...-3], output)
+        stem(token[0...-3] + 'る', output)
+
+      when token.end_with?('たら', 'だら', 'たり', 'だり')
         stem(token[0...-1], output)
 
       when token.end_with?('です')
@@ -28,8 +35,7 @@ class TokenStemmer
       when token.end_with?('ます')
         stem(token[0...-2], output)
         stem(token[0...-2] + 'る', output)
-
-        output << token[0...-2] + 'む'
+        stem(token[0...-2] + 'む', output)
 
       when token.end_with?('れる', 'ない')
         stem(token[0...-2], output)
@@ -39,74 +45,78 @@ class TokenStemmer
         stem(token[0...-2] + 'す', output)
 
       when token.end_with?('った', 'って')
-        output << token[0...-2] + 'う'
-        output << token[0...-2] + 'つ'
-        output << token[0...-2] + 'る'
+        stem(token[0...-2] + 'う', output)
+        stem(token[0...-2] + 'つ', output)
+        stem(token[0...-2] + 'る', output)
 
       when token.end_with?('んだ', 'んで')
-        output << token[0...-2] + 'ぶ'
-        output << token[0...-2] + 'む'
-        output << token[0...-2] + 'ぬ'
+        stem(token[0...-2] + 'ぶ', output)
+        stem(token[0...-2] + 'む', output)
+        stem(token[0...-2] + 'ぬ', output)
 
       when token.end_with?('こう', 'けば', 'ける', 'かす', 'いた', 'いて')
-        output << token[0...-2] + 'く'
+        stem(token[0...-2] + 'く', output)
 
       when token.end_with?('そう', 'せば', 'した', 'して')
-        output << token[0...-2] + 'す'
+        stem(token[0...-2] + 'す', output)
 
       when token.end_with?('おう', 'えば', 'える', 'わす')
-        output << token[0...-2] + 'う'
+        stem(token[0...-2] + 'う', output)
 
       when token.end_with?('ろう', 'れば', 'よう', 'らす')
-        output << token[0...-2] + 'る'
+        stem(token[0...-2] + 'る', output)
 
       when token.end_with?('ぼう', 'べば', 'べる', 'ばす')
-        output << token[0...-2] + 'ぶ'
+        stem(token[0...-2] + 'ぶ', output)
 
       when token.end_with?('とう', 'てば', 'てる', 'たす')
-        output << token[0...-2] + 'つ'
+        stem(token[0...-2] + 'つ', output)
 
       when token.end_with?('のう', 'ねば', 'ねる', 'なす')
-        output << token[0...-2] + 'ぬ'
+        stem(token[0...-2] + 'ぬ', output)
 
       when token.end_with?('もう', 'めば', 'める')
-        output << token[0...-2] + 'む'
+        stem(token[0...-2] + 'む', output)
 
       when token.end_with?('さす')
-        output << token[0...-2] + 'す'
-
-        # Handle Ichidan verb, 寝さす → 寝る
-        output << token[0...-2] + 'る'
+        stem(token[0...-2] + 'す', output)
+        stem(token[0...-2] + 'る', output)
 
       when token.end_with?('わ', 'い', 'え')
-        output << token[0...-1] + 'う'
+        stem(token[0...-1] + 'う', output)
 
       when token.end_with?('か', 'き', 'け')
-        output << token[0...-1] + 'く'
+        stem(token[0...-1] + 'く', output)
 
-      when token.end_with?('ら', 'り', 'れ')
-        output << token[0...-1] + 'る'
+      when token.end_with?('ら', 'り', 'れ', 'ろ', 'よ')
+        stem(token[0...-1] + 'る', output)
 
       when token.end_with?('ば', 'び', 'べ')
-        output << token[0...-1] + 'ぶ'
+        stem(token[0...-1] + 'ぶ', output)
 
       when token.end_with?('ま', 'み', 'め')
-        output << token[0...-1] + 'む'
+        stem(token[0...-1] + 'む', output)
 
       when token.end_with?('さ', 'し', 'せ')
-        output << token[0...-1] + 'す'
+        stem(token[0...-1] + 'す', output)
 
       when token.end_with?('な', 'に', 'ね')
-        output << token[0...-1] + 'ぬ'
+        stem(token[0...-1] + 'ぬ', output)
 
       when token.end_with?('ち')
-        output << token[0...-1] + 'つ'
+        stem(token[0...-1] + 'つ', output)
 
       when token.end_with?('た', 'て')
-        output << token[0...-1] + 'つ'
+        stem(token[0...-1] + 'つ', output)
+        stem(token[0...-1] + 'る', output)
+    end
 
-        # Handle Ichidan verb, 寝た or 寝て → 寝る
-        output << token[0...-1] + 'る'
+    case
+      when IRREGULAR_する_BASES.include?(token)
+        output << 'する'
+
+      when IRREGULAR_くる_BASES.include?(token)
+        output << 'くる'
     end
 
     output << token
