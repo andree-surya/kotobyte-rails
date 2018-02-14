@@ -70,7 +70,7 @@ describe WordsHelper, type: :helper do
 
       sense.categories.each do |category|
         expect(string).to include(category)
-        expect(string).to include(t("labels.#{category}"))
+        expect(string).to include(t("labels.#{category}").capitalize)
       end
     end
   end

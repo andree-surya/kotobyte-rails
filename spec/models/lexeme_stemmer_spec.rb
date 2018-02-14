@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-describe TokenStemmer do
-  let(:stemmer) { TokenStemmer.new }
+describe LexemeStemmer do
+  let(:stemmer) { LexemeStemmer.new }
 
   it 'keep original input as one possible stem' do
     expect(stem('くう')).to include('くう')

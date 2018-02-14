@@ -1,5 +1,5 @@
 
-class TokenStemmer
+class LexemeStemmer
 
   IRREGULAR_する_BASES = %w(します しない しよう させる される した して しろ せよ さす)
   IRREGULAR_くる_BASES = %w(こさせる きます こない こさす こよう きた きて こい こる)
