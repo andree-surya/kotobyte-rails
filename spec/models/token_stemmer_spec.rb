@@ -3,7 +3,7 @@ require 'rails_helper'
 describe TokenStemmer do
   let(:stemmer) { TokenStemmer.new }
 
-  it 'keep verbs in present plain form' do
+  it 'keep original input as one possible stem' do
     expect(stem('くう')).to include('くう')
     expect(stem('解く')).to include('解く')
     expect(stem('たつ')).to include('たつ')
@@ -374,6 +374,42 @@ describe TokenStemmer do
     expect(stem('こよう')).to include('くる')
     expect(stem('これない')).to include('くる')
     expect(stem('こさせられる')).to include('くる')
+  end
+
+  it 'stem negated adjectives in present form' do
+    expect(stem('広くない')).to include('広い')
+    expect(stem('わるくない')).to include('わるい')
+  end
+
+  it 'stem adjectives in past form' do
+    expect(stem('良かった')).to include('良い')
+    expect(stem('おそくなかった')).to include('おそい')
+  end
+
+  it 'stem adjectives in -te forms' do
+    expect(stem('酷くて')).to include('酷い')
+    expect(stem('赤くなくて')).to include('赤い')
+  end
+
+  it 'stem adjectives in conditional forms' do
+    expect(stem('優しければ')).to include('優しい')
+    expect(stem('ちかくなければ')).to include('ちかい')
+    expect(stem('低かったら')).to include('低い')
+  end
+
+  it 'stem adjectives in volitional forms' do
+    expect(stem('高かろう')).to include('高い')
+    expect(stem('からかろう')).to include('からい')
+  end
+
+  it 'stem adjectives in causative forms' do
+    expect(stem('悲しくさせる')).to include('悲しい')
+    expect(stem('みじかくさせない')).to include('みじかい')
+  end
+
+  it 'stem adjectival nouns to base adjective form' do
+    expect(stem('赤さ')).to include('赤い')
+    expect(stem('広さ')).to include('広い')
   end
 
   private def stem(token)

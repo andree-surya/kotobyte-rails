@@ -16,6 +16,12 @@ class TokenStemmer
       when token.end_with?('ましょう')
         stem(token[0...-4] + 'ます', output)
 
+      when token.end_with?('くさせる')
+        stem(token[0...-4] + 'い', output)
+
+      when token.end_with?('かった', 'かろう')
+        stem(token[0...-3] + 'い', output)
+
       when token.end_with?('ません', 'ました', 'まして', 'ませば')
         stem(token[0...-3] + 'ます', output)
 
@@ -31,6 +37,9 @@ class TokenStemmer
 
       when token.end_with?('です')
         stem(token[0...-2], output)
+
+      when token.end_with?('くて')
+        stem(token[0...-2] + 'い', output)
 
       when token.end_with?('ます')
         stem(token[0...-2], output)
@@ -88,6 +97,9 @@ class TokenStemmer
       when token.end_with?('か', 'き', 'け')
         stem(token[0...-1] + 'く', output)
 
+      when token.end_with?('く')
+        stem(token[0...-1] + 'い', output)
+
       when token.end_with?('ら', 'り', 'れ', 'ろ', 'よ')
         stem(token[0...-1] + 'る', output)
 
@@ -99,6 +111,7 @@ class TokenStemmer
 
       when token.end_with?('さ', 'し', 'せ')
         stem(token[0...-1] + 'す', output)
+        stem(token[0...-1] + 'い', output)
 
       when token.end_with?('な', 'に', 'ね')
         stem(token[0...-1] + 'ぬ', output)
