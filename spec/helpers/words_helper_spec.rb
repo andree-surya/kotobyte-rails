@@ -67,7 +67,7 @@ describe WordsHelper, type: :helper do
     it 'should return lexical categories for each sense' do
       sense = Sense.new(categories: ['n', 'adj-i', 'adv'])
       string = sense_categories_text(sense)
-
+      
       expect(string).to include('n')
       expect(string).to include('Common noun')
       expect(string).to include('adj-i')

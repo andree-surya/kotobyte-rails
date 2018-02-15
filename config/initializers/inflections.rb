@@ -16,5 +16,8 @@
 # end
 #
 ActiveSupport::Inflector.inflections do |inflect|
+
+  inflect.acronym 'NGram'
+
   inflect.irregular 'kanji', 'kanji'
 end
