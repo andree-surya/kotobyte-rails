@@ -6,14 +6,14 @@ class DictionaryDatabase
     create table kanji (id integer primary key, serialized blob not null);
     create table sentences (id integer primary key, serialized blob not null);
 
-    create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed, prefix='1 2 3 4');
-    create virtual table senses_fts using fts5(text, word_id unindexed, tokenize='porter');
+    create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed);
+    create virtual table senses_fts using fts5(text, word_id unindexed, tokenize='unicode61');
     create virtual table kanji_fts using fts5(character, kanji_id unindexed);
     create virtual table sentences_fts using fts5(tokenized, sentence_id unindexed);
   EOS
 
   @@search_literals_sql = <<-EOS
-    select word_id, highlight(literals_fts, 0, '{', '}') highlight, rank * priority score
+    select word_id, highlight(literals_fts, 0, '{', '}') highlight, rank * length(text) score
       from literals_fts(?) order by score limit ?
   EOS
 
@@ -80,9 +80,7 @@ class DictionaryDatabase
     end
 
     word.senses.each do |sense|
-      sense.texts.each do |text|
-        @index_sense.execute(text, word_id) 
-      end
+      @index_sense.execute(sense.texts.join('; '), word_id)
     end
 
     # We can derive ID from table ID.
@@ -213,7 +211,17 @@ class DictionaryDatabase
     def search_words_by_literals(query, limit)
 
       query = query.chars.select { |c| c.kanji? || c.kana? }.join
-      tokens = 1.upto(query.size).map { |l| query[0...l] << '*' } << query
+
+      case
+      when query.contains_hiragana?
+        tokens = (@lexeme_stemmer ||= LexemeStemmer.new).stem(query)
+
+      when query.contains_kanji?
+        tokens = (@ngram_tokenizer ||= NGramTokenizer.new).tokenize(query)
+
+      else
+        tokens = [query]
+      end
 
       @search_literals ||= @database.prepare(@@search_words_sql % @@search_literals_sql)
       rows = @search_literals.execute(tokens.join(' OR '), limit).to_a

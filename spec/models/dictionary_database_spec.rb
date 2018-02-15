@@ -78,7 +78,7 @@ describe DictionaryDatabase do
       database.insert_word(Word.new(id: 200, literals: [{ text: '片付く' }]))
       database.insert_word(Word.new(id: 300, literals: [{ text: '関係ない事' }]))
 
-      words = database.search_words('片付けますよ')
+      words = database.search_words('片付けます')
       
       expect(words.count).to eq(2)
       expect(words[0].id).to eq(100)

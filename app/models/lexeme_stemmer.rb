@@ -4,134 +4,140 @@ class LexemeStemmer
   IRREGULAR_する_BASES = %w(します しない しよう させる される した して しろ せよ さす)
   IRREGULAR_くる_BASES = %w(こさせる きます こない こさす こよう きた きて こい こる)
 
-  def stem(token, output = SortedSet.new)
-
-    case
-      when token.end_with?('なかった', 'なくって', 'なければ', 'なくちゃ')
-        stem(token[0...-4] + 'ない', output)
-
-      when token.end_with?('なくて', 'なきゃ')
-        stem(token[0...-3] + 'ない', output)
-
-      when token.end_with?('ましょう')
-        stem(token[0...-4] + 'ます', output)
-
-      when token.end_with?('くさせる')
-        stem(token[0...-4] + 'い', output)
-
-      when token.end_with?('かった', 'かろう')
-        stem(token[0...-3] + 'い', output)
-
-      when token.end_with?('ません', 'ました', 'まして', 'ませば')
-        stem(token[0...-3] + 'ます', output)
-
-      when token.end_with?('します', 'さない')
-        stem(token[0...-3] + 'す', output)
-
-      when token.end_with?('なさい')
-        stem(token[0...-3], output)
-        stem(token[0...-3] + 'る', output)
-
-      when token.end_with?('たら', 'だら', 'たり', 'だり')
-        stem(token[0...-1], output)
-
-      when token.end_with?('です')
-        stem(token[0...-2], output)
-
-      when token.end_with?('くて')
-        stem(token[0...-2] + 'い', output)
-
-      when token.end_with?('ます')
-        stem(token[0...-2], output)
-        stem(token[0...-2] + 'る', output)
-        stem(token[0...-2] + 'む', output)
-
-      when token.end_with?('れる', 'ない')
-        stem(token[0...-2], output)
-        stem(token[0...-2] + 'る', output)
-
-      when token.end_with?('せる')
-        stem(token[0...-2] + 'す', output)
-
-      when token.end_with?('った', 'って')
-        stem(token[0...-2] + 'う', output)
-        stem(token[0...-2] + 'つ', output)
-        stem(token[0...-2] + 'る', output)
-
-      when token.end_with?('んだ', 'んで')
-        stem(token[0...-2] + 'ぶ', output)
-        stem(token[0...-2] + 'む', output)
-        stem(token[0...-2] + 'ぬ', output)
-
-      when token.end_with?('こう', 'けば', 'ける', 'かす', 'いた', 'いて')
-        stem(token[0...-2] + 'く', output)
-
-      when token.end_with?('そう', 'せば', 'した', 'して')
-        stem(token[0...-2] + 'す', output)
-
-      when token.end_with?('おう', 'えば', 'える', 'わす')
-        stem(token[0...-2] + 'う', output)
-
-      when token.end_with?('ろう', 'れば', 'よう', 'らす')
-        stem(token[0...-2] + 'る', output)
-
-      when token.end_with?('ぼう', 'べば', 'べる', 'ばす')
-        stem(token[0...-2] + 'ぶ', output)
-
-      when token.end_with?('とう', 'てば', 'てる', 'たす')
-        stem(token[0...-2] + 'つ', output)
-
-      when token.end_with?('のう', 'ねば', 'ねる', 'なす')
-        stem(token[0...-2] + 'ぬ', output)
-
-      when token.end_with?('もう', 'めば', 'める')
-        stem(token[0...-2] + 'む', output)
-
-      when token.end_with?('さす')
-        stem(token[0...-2] + 'す', output)
-        stem(token[0...-2] + 'る', output)
-
-      when token.end_with?('わ', 'い', 'え')
-        stem(token[0...-1] + 'う', output)
-
-      when token.end_with?('か', 'き', 'け')
-        stem(token[0...-1] + 'く', output)
-
-      when token.end_with?('く')
-        stem(token[0...-1] + 'い', output)
-
-      when token.end_with?('ら', 'り', 'れ', 'ろ', 'よ')
-        stem(token[0...-1] + 'る', output)
-
-      when token.end_with?('ば', 'び', 'べ')
-        stem(token[0...-1] + 'ぶ', output)
-
-      when token.end_with?('ま', 'み', 'め')
-        stem(token[0...-1] + 'む', output)
-
-      when token.end_with?('さ', 'し', 'せ')
-        stem(token[0...-1] + 'す', output)
-        stem(token[0...-1] + 'い', output)
-
-      when token.end_with?('な', 'に', 'ね')
-        stem(token[0...-1] + 'ぬ', output)
-
-      when token.end_with?('ち')
-        stem(token[0...-1] + 'つ', output)
-
-      when token.end_with?('た', 'て')
-        stem(token[0...-1] + 'つ', output)
-        stem(token[0...-1] + 'る', output)
-    end
-
-    case
-      when IRREGULAR_する_BASES.include?(token)
-        output << 'する'
-
-      when IRREGULAR_くる_BASES.include?(token)
-        output << 'くる'
-    end
-
-    output << token
+  def stem(string)
+    recursive_stem(string, SortedSet.new).to_a
   end
+
+  private 
+
+    def recursive_stem(string, output)
+
+      case
+        when string.end_with?('なかった', 'なくって', 'なければ', 'なくちゃ')
+          recursive_stem(string[0...-4] + 'ない', output)
+
+        when string.end_with?('なくて', 'なきゃ')
+          recursive_stem(string[0...-3] + 'ない', output)
+
+        when string.end_with?('ましょう')
+          recursive_stem(string[0...-4] + 'ます', output)
+
+        when string.end_with?('くさせる')
+          recursive_stem(string[0...-4] + 'い', output)
+
+        when string.end_with?('かった', 'かろう')
+          recursive_stem(string[0...-3] + 'い', output)
+
+        when string.end_with?('ません', 'ました', 'まして', 'ませば')
+          recursive_stem(string[0...-3] + 'ます', output)
+
+        when string.end_with?('します', 'さない')
+          recursive_stem(string[0...-3] + 'す', output)
+
+        when string.end_with?('なさい')
+          recursive_stem(string[0...-3], output)
+          recursive_stem(string[0...-3] + 'る', output)
+
+        when string.end_with?('たら', 'だら', 'たり', 'だり')
+          recursive_stem(string[0...-1], output)
+
+        when string.end_with?('です')
+          recursive_stem(string[0...-2], output)
+
+        when string.end_with?('くて')
+          recursive_stem(string[0...-2] + 'い', output)
+
+        when string.end_with?('ます')
+          recursive_stem(string[0...-2], output)
+          recursive_stem(string[0...-2] + 'る', output)
+          recursive_stem(string[0...-2] + 'む', output)
+
+        when string.end_with?('れる', 'ない')
+          recursive_stem(string[0...-2], output)
+          recursive_stem(string[0...-2] + 'る', output)
+
+        when string.end_with?('せる')
+          recursive_stem(string[0...-2] + 'す', output)
+
+        when string.end_with?('った', 'って')
+          recursive_stem(string[0...-2] + 'う', output)
+          recursive_stem(string[0...-2] + 'つ', output)
+          recursive_stem(string[0...-2] + 'る', output)
+
+        when string.end_with?('んだ', 'んで')
+          recursive_stem(string[0...-2] + 'ぶ', output)
+          recursive_stem(string[0...-2] + 'む', output)
+          recursive_stem(string[0...-2] + 'ぬ', output)
+
+        when string.end_with?('こう', 'けば', 'ける', 'かす', 'いた', 'いて')
+          recursive_stem(string[0...-2] + 'く', output)
+
+        when string.end_with?('そう', 'せば', 'した', 'して')
+          recursive_stem(string[0...-2] + 'す', output)
+
+        when string.end_with?('おう', 'えば', 'える', 'わす')
+          recursive_stem(string[0...-2] + 'う', output)
+
+        when string.end_with?('ろう', 'れば', 'よう', 'らす')
+          recursive_stem(string[0...-2] + 'る', output)
+
+        when string.end_with?('ぼう', 'べば', 'べる', 'ばす')
+          recursive_stem(string[0...-2] + 'ぶ', output)
+
+        when string.end_with?('とう', 'てば', 'てる', 'たす')
+          recursive_stem(string[0...-2] + 'つ', output)
+
+        when string.end_with?('のう', 'ねば', 'ねる', 'なす')
+          recursive_stem(string[0...-2] + 'ぬ', output)
+
+        when string.end_with?('もう', 'めば', 'める')
+          recursive_stem(string[0...-2] + 'む', output)
+
+        when string.end_with?('さす')
+          recursive_stem(string[0...-2] + 'す', output)
+          recursive_stem(string[0...-2] + 'る', output)
+
+        when string.end_with?('わ', 'い', 'え')
+          recursive_stem(string[0...-1] + 'う', output)
+
+        when string.end_with?('か', 'き', 'け')
+          recursive_stem(string[0...-1] + 'く', output)
+
+        when string.end_with?('く')
+          recursive_stem(string[0...-1] + 'い', output)
+
+        when string.end_with?('ら', 'り', 'れ', 'ろ', 'よ')
+          recursive_stem(string[0...-1] + 'る', output)
+
+        when string.end_with?('ば', 'び', 'べ')
+          recursive_stem(string[0...-1] + 'ぶ', output)
+
+        when string.end_with?('ま', 'み', 'め')
+          recursive_stem(string[0...-1] + 'む', output)
+
+        when string.end_with?('さ', 'し', 'せ')
+          recursive_stem(string[0...-1] + 'す', output)
+          recursive_stem(string[0...-1] + 'い', output)
+
+        when string.end_with?('な', 'に', 'ね')
+          recursive_stem(string[0...-1] + 'ぬ', output)
+
+        when string.end_with?('ち')
+          recursive_stem(string[0...-1] + 'つ', output)
+
+        when string.end_with?('た', 'て')
+          recursive_stem(string[0...-1] + 'つ', output)
+          recursive_stem(string[0...-1] + 'る', output)
+      end
+
+      case
+        when IRREGULAR_する_BASES.include?(string)
+          output << 'する'
+
+        when IRREGULAR_くる_BASES.include?(string)
+          output << 'くる'
+      end
+
+      output << string
+    end
 end
