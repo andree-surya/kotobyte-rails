@@ -12,20 +12,14 @@ class String
   alias_method :mojinizer_katakana?, :katakana?
 
   def katakana
-    normalized = gsub(DOUBLE_VOWEL_PATTERN, DOUBLE_VOWEL_REPLACEMENT)
-
-    normalized.mojinizer_katakana
+    gsub(DOUBLE_VOWEL_PATTERN, DOUBLE_VOWEL_REPLACEMENT).mojinizer_katakana
   end
 
   def hiragana
-    normalized = gsub('dzu', 'du')
-
-    normalized.mojinizer_hiragana
+    gsub('dzu', 'du').gsub('nn', "n'n").mojinizer_hiragana
   end
 
   def katakana?
-    normalized = tr('ー', '')
-    
-    normalized.mojinizer_katakana?
+    tr('ー', '').mojinizer_katakana?
   end
 end
