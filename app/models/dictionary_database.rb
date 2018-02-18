@@ -80,7 +80,7 @@ class DictionaryDatabase
     end
 
     word.senses.each do |sense|
-      @index_sense.execute(sense.texts.join('; '), word_id)
+      @index_sense.execute(sense.texts.join(';'), word_id)
     end
 
     # We can derive ID from table ID.
@@ -246,7 +246,7 @@ class DictionaryDatabase
     def search_words_by_senses(query, limit)
 
       @search_senses ||= @database.prepare(@@search_words_sql % @@search_senses_sql)
-      rows = @search_senses.execute(query, limit).to_a
+      rows = @search_senses.execute(query.gsub(/[^[[:alnum:]]]/, ' '), limit).to_a
 
       rows.map do |row|
         word = decode_word_from(row: row)
