@@ -13,7 +13,7 @@ class DictionaryDatabase
   EOS
 
   @@search_literals_sql = <<-EOS
-    select word_id, highlight(literals_fts, 0, '{', '}') highlight, rank * length(text) score
+    select word_id,  highlight(literals_fts, 0, '{', '}') highlight, rank * length(snippet(literals_fts, 0, '', '', '', 1)) score
       from literals_fts(?) order by score limit ?
   EOS
 
@@ -211,16 +211,14 @@ class DictionaryDatabase
     def search_words_by_literals(query, limit)
 
       query = query.chars.select { |c| c.kanji? || c.kana? }.join
+      tokens = [query]
 
       case
       when query.contains_hiragana?
-        tokens = (@lexeme_stemmer ||= LexemeStemmer.new).stem(query)
+        tokens += (@lexeme_stemmer ||= LexemeStemmer.new).stem(query)
 
       when query.contains_kanji?
-        tokens = (@ngram_tokenizer ||= NGramTokenizer.new).tokenize(query)
-
-      else
-        tokens = [query]
+        tokens += (@ngram_tokenizer ||= NGramTokenizer.new).tokenize(query)
       end
 
       @search_literals ||= @database.prepare(@@search_words_sql % @@search_literals_sql)
