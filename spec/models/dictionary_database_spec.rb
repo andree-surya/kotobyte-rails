@@ -188,4 +188,21 @@ describe DictionaryDatabase do
       expect(sentences3.first.original).to eq('老齢人口は、健康管理に{ますます}多くの出費が必要となるだろう。')
     end
   end
+
+  describe '#search_sentences_by_word' do
+
+    it 'should look-up sentences given a word' do
+
+      word = Word.new(
+        literals: [{ text: '{食べる}', priority: 2 }, { text: '食らう' }],
+        readings: [{ text: 'たべる', priority: 2 }, { text: '{くらう}' }]
+      )
+
+      expected_limit = 5
+      expected_query = (['食べる'] * 4 + ['食らう'] * 2 + ['たべる'] * 3 + ['くらう']).join(' OR ')
+      expect(database).to receive(:search_sentences).with(expected_query, expected_limit)
+
+      database.search_sentences_by_word(word, expected_limit)
+    end
+  end
 end

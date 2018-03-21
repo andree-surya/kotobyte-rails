@@ -1,6 +1,12 @@
 
-<div id='search_results_summary'>
-    <%= t('search_results_summary', count: @words.count) %>
-</div>
+<section>
+    <div><%= t('top_word_matches', count: @words.count) %></div>
+    <%= render partial: 'word', object: @words.first %>
+</section>
 
-<%= render partial: 'word', collection: @words %>
+<% if @words.count > 1 %>
+    <section>
+        <div><%= t('other_word_matches', count: @words.count - 1) %></div>
+        <%= render partial: 'word', collection: @words.drop(1) %>
+    </section>
+<% end %>

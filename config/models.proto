@@ -1,10 +1,5 @@
 syntax = "proto3";
 
-message SearchWordsResponse {
-
-  repeated Word words = 1;
-}
-
 message Word {
   
   uint32 id = 1;

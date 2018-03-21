@@ -4,10 +4,6 @@
 require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
-  add_message "SearchWordsResponse" do
-    repeated :words, :message, 1, "Word"
-    optional :time, :float, 2
-  end
   add_message "Word" do
     optional :id, :uint32, 1
     repeated :literals, :message, 2, "Literal"
@@ -46,7 +42,6 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
   end
 end
 
-SearchWordsResponse = Google::Protobuf::DescriptorPool.generated_pool.lookup("SearchWordsResponse").msgclass
 Word = Google::Protobuf::DescriptorPool.generated_pool.lookup("Word").msgclass
 Literal = Google::Protobuf::DescriptorPool.generated_pool.lookup("Literal").msgclass
 Sense = Google::Protobuf::DescriptorPool.generated_pool.lookup("Sense").msgclass

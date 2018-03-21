@@ -165,8 +165,7 @@ class DictionaryDatabase
     end
   end
 
-  def search_sentences(query, limit = 20) 
-
+  def search_sentences(query, limit = 5)
     @search_sentences ||= @database.prepare(@@search_sentences_sql)
     
     rows = @search_sentences.execute(query, limit).to_a
@@ -204,6 +203,16 @@ class DictionaryDatabase
 
       sentence
     end
+  end
+
+  def search_sentences_by_word(word, limit = 5)
+    
+    tokens = []
+
+    tokens += word.literals.flat_map { |l| [l.text] *  (2 + l.priority) }
+    tokens += word.readings.flat_map { |r| [r.text] *  (1 + r.priority) }
+
+    search_sentences(tokens.join(' OR ').tr('{}', ''), limit)
   end
 
   private

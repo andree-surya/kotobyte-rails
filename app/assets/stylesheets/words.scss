@@ -49,6 +49,11 @@ body.words header > div > form {
   flex-grow: 1;
 }
 
+body.words section > div:first-of-type {
+  color: $font-color-light;
+  margin: 16px 0 8px 0;
+}
+
 #search_form {
   margin: 0;
   max-width: $content-width;
@@ -61,14 +66,9 @@ body.words header > div > form {
   text-align: center;
 }
 
-#search_results_summary {
-  color: $font-color-light;
-  margin: 16px 0 8px 0;
-}
-
 .word {
   padding: 8px 0;
-  border-top: thin dashed #ddd;
+  border-top: $entry-border;
 }
 
 .word .readings, 
