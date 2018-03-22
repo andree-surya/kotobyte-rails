@@ -69,6 +69,9 @@ class LexemeStemmer
           recursive_stem(string[0...-2] + 'む', output)
           recursive_stem(string[0...-2] + 'ぬ', output)
 
+        when string.end_with?('いだ', 'いで')
+          recursive_stem(string[0...-2] + 'ぐ', output)
+
         when string.end_with?('こう', 'けば', 'ける', 'かす', 'いた', 'いて')
           recursive_stem(string[0...-2] + 'く', output)
 
