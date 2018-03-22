@@ -1,7 +1,7 @@
 
 <section>
     <div><%= t('top_word_matches', count: @words.count) %></div>
-    <%= render partial: 'word', object: @words.first %>
+    <%= render partial: 'word', collection: @words.first(1) %>
 </section>
 
 <% if @words.count > 1 %>
