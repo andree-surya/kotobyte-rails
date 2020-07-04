@@ -12,8 +12,8 @@ namespace :dict do
     :download_words_source,
     :download_kanji_source,
     :download_kanji_strokes,
-    :download_sentences_source,
-    :download_sentences_idx
+    # :download_sentences_source,
+    # :download_sentences_idx
   ]
 
   desc 'Download words source file'
@@ -65,16 +65,16 @@ namespace :dict do
         strokes_xml: IO.read(kanji_strokes_file)
     )
     
-    sentences_source_reader = SentencesSourceReader.new(
-        source_csv: IO.read(sentences_file),
-        indices_csv: IO.read(sentences_idx_file)
-    )
+    # sentences_source_reader = SentencesSourceReader.new(
+    #     source_csv: IO.read(sentences_file),
+    #     indices_csv: IO.read(sentences_idx_file)
+    # )
     
     database.transaction do |db|
     
       words_source_reader.read_each { |w| db.insert_word(w) }
       kanji_source_reader.read_all.each { |k| db.insert_kanji(k) }
-      sentences_source_reader.read_all.each { |s| db.insert_sentence(s) }
+      # sentences_source_reader.read_all.each { |s| db.insert_sentence(s) }
     end
     
     database.optimize
