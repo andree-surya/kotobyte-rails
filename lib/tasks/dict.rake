@@ -26,7 +26,7 @@ namespace :dict do
   desc 'Download Kanji source file'
   task download_kanji_source: :environment do
 
-    `curl -sL http://nihongo.monash.edu/kanjidic2/kanjidic2.xml.gz \
+    `curl -sL http://www.edrdg.org/kanjidic/kanjidic2.xml.gz \
       | gunzip -c > #{kanji_source_file}`
   end
 
