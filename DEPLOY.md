@@ -44,9 +44,9 @@ After=network.target
 
 [Service]
 Type=simple
-User=ang
+User=<username>
 WorkingDirectory=<app-dir>
-ExecStart=<home-dir>/.rbenv/shims/ruby <app-dir>/bin/puma -S <app-dir>/tmp/pids/puma.state -b unix:///home/ang/kotobyte-rails/tmp/sockets/puma.sock
+ExecStart=<home-dir>/.rbenv/shims/ruby <app-dir>/bin/puma -S <app-dir>/tmp/pids/puma.state -b unix://<app-dir>/tmp/sockets/puma.sock
 ExecStop=<home-dir>/.rbenv/shims/ruby <app-dir>/bin/pumactl -S <app-dir>/tmp/pids/puma.state stop
 Restart=on-abort
 
