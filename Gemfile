@@ -9,7 +9,7 @@ gem 'uglifier', '~> 2.0'
 gem 'jbuilder', '~> 2.0'
 gem 'nokogiri', '~> 1.8'
 gem 'mojinizer', '~> 0.2'
-gem 'google-protobuf', '~> 3.0'
+gem 'google-protobuf', '~> 3.19'
 gem 'jquery-rails'
 gem 'dotenv-rails'
 
