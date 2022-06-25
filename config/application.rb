@@ -13,5 +13,7 @@ module Kotobyte
     # -- all .rb files in that directory are automatically loaded.
     
     config.app = config_for(:application).with_indifferent_access
+
+    Rails.application.config.active_record.sqlite3.represent_boolean_as_integer = true
   end
 end

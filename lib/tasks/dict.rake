@@ -19,7 +19,7 @@ namespace :dict do
   desc 'Download words source file'
   task download_words_source: :environment do
     
-    `curl -sL http://ftp.monash.edu.au/pub/nihongo/JMdict_e.gz \
+    `curl -sL ftp://ftp.edrdg.org/pub/Nihongo//JMdict_e.gz \
       | gunzip -c > #{words_source_file}`
   end
 
@@ -33,7 +33,7 @@ namespace :dict do
   desc 'Download Kanji strokes file'
   task download_kanji_strokes: :environment do
 
-    `curl -sL https://github.com/KanjiVG/kanjivg/releases/download/r20160426/kanjivg-20160426.xml.gz \
+    `curl -sL https://github.com/KanjiVG/kanjivg/releases/download/r20220427/kanjivg-20220427.xml.gz \
       | gunzip -c > #{kanji_strokes_file}`
   end
 
