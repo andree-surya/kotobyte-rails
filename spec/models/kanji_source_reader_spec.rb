@@ -30,28 +30,28 @@ describe KanjiSourceReader do
     EOS
 
     reader = KanjiSourceReader.new(source_xml: xml)
-    expect(reader.read_one.id).to eq(ID.to_i(16))
+    expect(reader.read_all.first.id).to eq(ID.to_i(16))
   end
 
   it 'should parse character' do
     xml = '<character><literal>豚</literal></character>'
 
     reader = KanjiSourceReader.new(source_xml: xml)
-    expect(reader.read_one.character).to eq('豚')
+    expect(reader.read_all.first.character).to eq('豚')
   end
 
   it 'should parse grade' do
     xml = '<character><misc><grade>5</grade></misc></character>'
 
     reader = KanjiSourceReader.new(source_xml: xml)
-    expect(reader.read_one.grade).to eq(5)
+    expect(reader.read_all.first.grade).to eq(5)
   end
 
   it 'should parse JLPT' do
     xml = '<character><misc><jlpt>3</jlpt></misc></character>'
 
     reader = KanjiSourceReader.new(source_xml: xml)
-    expect(reader.read_one.jlpt).to eq(3)
+    expect(reader.read_all.first.jlpt).to eq(3)
   end
 
   it 'should parse on and kun readings' do
@@ -73,7 +73,7 @@ describe KanjiSourceReader do
     EOS
 
 
-    kanji = KanjiSourceReader.new(source_xml: xml).read_one
+    kanji = KanjiSourceReader.new(source_xml: xml).read_all.first
 
     expect(kanji.readings.count).to eq(4)
     expect(kanji.readings[0]).to eq('ア')
@@ -97,7 +97,7 @@ describe KanjiSourceReader do
       </character>
     EOS
 
-    kanji = KanjiSourceReader.new(source_xml: xml).read_one
+    kanji = KanjiSourceReader.new(source_xml: xml).read_all.first
 
     expect(kanji.meanings.count).to eq(3)
     expect(kanji.meanings[0]).to eq('mute')
@@ -131,6 +131,6 @@ describe KanjiSourceReader do
         strokes_xml: strokes_xml
     )
 
-    expect(reader.read_one.strokes).to eq(strokes)
+    expect(reader.read_all.first.strokes).to eq(strokes)
   end
 end

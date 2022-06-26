@@ -1,4 +1,7 @@
-
+# KANJIDIC2 and KanjiVG XML reader
+#
+# @see http://nihongo.monash.edu/kanjidic2 KANJIDIC2
+# @see https://kanjivg.tagaini.net KanjiVG
 class KanjiSourceReader
 
   def initialize(source_xml: '<kanjidic2 />', strokes_xml: '<kanjivg />')
@@ -6,10 +9,9 @@ class KanjiSourceReader
     @strokes_xml = strokes_xml
   end
 
-  def read_one
-    read_all.first
-  end
-
+  # Read all Kanji entries.
+  #
+  # @return [Array<Kanji>]
   def read_all
     kanji_hash = {}
 

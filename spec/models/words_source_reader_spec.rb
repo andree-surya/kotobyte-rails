@@ -19,7 +19,7 @@ describe WordsSourceReader do
     id = 1234
 
     xml = "<entry><ent_seq>#{id}</ent_seq></entry>"
-    word = WordsSourceReader.new(source_xml: xml).read_one
+    word = WordsSourceReader.new(source_xml: xml).read_all.first
 
     expect(word.id).to eq(id)
   end
@@ -40,7 +40,7 @@ describe WordsSourceReader do
       </JMdict>
     EOS
 
-    literals = WordsSourceReader.new(source_xml: xml).read_one.literals
+    literals = WordsSourceReader.new(source_xml: xml).read_all.first.literals
 
     expect(literals.count).to eq(3)
     expect(literals[0].text).to eq('冗談')
@@ -67,7 +67,7 @@ describe WordsSourceReader do
       </JMdict>
     EOS
 
-    readings = WordsSourceReader.new(source_xml: xml).read_one.readings
+    readings = WordsSourceReader.new(source_xml: xml).read_all.first.readings
 
     expect(readings.count).to eq(3)
     expect(readings[0].text).to eq('ノート')
@@ -96,7 +96,7 @@ describe WordsSourceReader do
       </entry>
     EOS
 
-    senses = WordsSourceReader.new(source_xml: xml).read_one.senses
+    senses = WordsSourceReader.new(source_xml: xml).read_all.first.senses
 
     expect(senses.size).to eq(3)
     expect(senses[0].texts).to eq(['declaration', 'hearsay'])
@@ -128,7 +128,7 @@ describe WordsSourceReader do
       </JMdict>
     EOS
 
-    senses = WordsSourceReader.new(source_xml: xml).read_one.senses
+    senses = WordsSourceReader.new(source_xml: xml).read_all.first.senses
 
     expect(senses.size).to eq(3)
     expect(senses[0].categories).to eq(['n', 'adj-i'])
@@ -150,7 +150,7 @@ describe WordsSourceReader do
       </entry>
     EOS
 
-    senses = WordsSourceReader.new(source_xml: xml).read_one.senses
+    senses = WordsSourceReader.new(source_xml: xml).read_all.first.senses
 
     expect(senses.size).to eq(2)
     expect(senses[0].origins[0]).to eq(Origin.new(lang: 'ger', text: 'Abend'))
@@ -184,7 +184,7 @@ describe WordsSourceReader do
       </JMdict>
     EOS
 
-    senses = WordsSourceReader.new(source_xml: xml).read_one.senses
+    senses = WordsSourceReader.new(source_xml: xml).read_all.first.senses
 
     expect(senses.size).to eq(2)
     expect(senses[0].labels).to eq(['comp', 'col', 'on-mim'])
@@ -205,7 +205,7 @@ describe WordsSourceReader do
       </entry>
     EOS
 
-    senses = WordsSourceReader.new(source_xml: xml).read_one.senses
+    senses = WordsSourceReader.new(source_xml: xml).read_all.first.senses
 
     expect(senses.size).to eq(2)
     expect(senses[0].notes).to eq(['A'])
@@ -224,7 +224,7 @@ describe WordsSourceReader do
       </JMdict>
     EOS
 
-    senses = WordsSourceReader.new(source_xml: xml).read_one.senses
+    senses = WordsSourceReader.new(source_xml: xml).read_all.first.senses
     expect(senses[0].categories).to eq(['n'])
   end
 
@@ -252,7 +252,7 @@ describe WordsSourceReader do
       </JMdict>
     EOS
 
-    senses = WordsSourceReader.new(source_xml: xml).read_one.senses
+    senses = WordsSourceReader.new(source_xml: xml).read_all.first.senses
 
     expect(senses.size).to eq(3)
     expect(senses[0].labels).to eq(['surname', 'place'])
