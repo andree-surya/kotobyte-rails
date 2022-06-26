@@ -4,6 +4,13 @@ class LexemeStemmer
   IRREGULAR_する_BASES = %w(します しない しよう させる される した して しろ せよ さす)
   IRREGULAR_くる_BASES = %w(こさせる きます こない こさす こよう きた きて こい こる)
 
+  #
+  # Stem a Japanese lexeme into a set of possible stems.
+  # e.g. 帰りなさい can be stemmed into 帰り and 帰る
+  #
+  # @param [<String>] string a Japanese lexeme
+  # @return [<Set<String>>] Set of possible stems
+  #
   def stem(string)
     recursive_stem(string, SortedSet.new).to_a
   end

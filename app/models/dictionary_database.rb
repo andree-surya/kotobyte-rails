@@ -1,35 +1,44 @@
 
+CREATE_TABLES_SQL = <<-EOS
+create table words (id integer primary key, serialized blob not null);
+create table kanji (id integer primary key, serialized blob not null);
+
+create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed);
+create virtual table senses_fts using fts5(text, word_id unindexed, tokenize='unicode61');
+create virtual table kanji_fts using fts5(character, kanji_id unindexed);
+EOS
+
+SEARCH_WORDS_SQL = <<-EOS
+with search_results as (%s)
+  select id, serialized, group_concat(highlight, ';') highlights, min(score) score
+  from words join search_results on (id = word_id) group by id order by score;
+EOS
+
+SEARCH_LITERALS_SQL = SEARCH_WORDS_SQL % <<-EOS
+select word_id,  highlight(literals_fts, 0, '{', '}') highlight, rank * length(snippet(literals_fts, 0, '', '', '', 1)) score
+  from literals_fts(?) order by score, rank * priority limit ?
+EOS
+
+SEARCH_SENSES_SQL = SEARCH_WORDS_SQL % <<-EOS
+select word_id, highlight(senses_fts, 0, '{', '}') highlight, rank score
+  from senses_fts(?) order by score limit ?
+EOS
+
+SEARCH_KANJI_SQL = <<-EOS
+select id, character, serialized from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
+EOS
+
+#
+# Dictionary SQLite3 database interface
+#
 class DictionaryDatabase
 
-  @@create_tables_sql = <<-EOS
-    create table words (id integer primary key, serialized blob not null);
-    create table kanji (id integer primary key, serialized blob not null);
-
-    create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed);
-    create virtual table senses_fts using fts5(text, word_id unindexed, tokenize='unicode61');
-    create virtual table kanji_fts using fts5(character, kanji_id unindexed);
-  EOS
-
-  @@search_literals_sql = <<-EOS
-    select word_id,  highlight(literals_fts, 0, '{', '}') highlight, rank * length(snippet(literals_fts, 0, '', '', '', 1)) score
-      from literals_fts(?) order by score, rank * priority limit ?
-  EOS
-
-  @@search_senses_sql = <<-EOS
-    select word_id, highlight(senses_fts, 0, '{', '}') highlight, rank score
-      from senses_fts(?) order by score limit ?
-  EOS
-
-  @@search_words_sql = <<-EOS
-    with search_results as (%s)
-      select id, serialized, group_concat(highlight, ';') highlights, min(score) score
-      from words join search_results on (id = word_id) group by id order by score;
-  EOS
-
-  @@search_kanji_sql = <<-EOS
-    select id, character, serialized from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
-  EOS
-
+  #
+  # Create new dictionary database instance
+  #
+  # @param [<String>] file Database file path
+  # @param [<Boolean>] reset Destroy and reinitialize database structure?
+  #
   def initialize(file: Rails.configuration.app[:database_file], reset: false)
 
     should_reset_structures = true
@@ -45,17 +54,30 @@ class DictionaryDatabase
     @database = SQLite3::Database.new(file)
     @database.results_as_hash = true
 
-    @database.execute_batch @@create_tables_sql if should_reset_structures
+    @database.execute_batch CREATE_TABLES_SQL if should_reset_structures
   end
 
+  #
+  # Execute a database transaction
+  #
+  # @yield [<DictionaryDatabase>]
+  #
   def transaction
     @database.transaction { yield self }
   end
 
+  #
+  # Optimize database internal structure
+  #
   def optimize
     @database.execute 'VACUUM'
   end
 
+  #
+  # Register a new Word entry
+  #
+  # @param [<Word>]
+  #
   def insert_word(word)
     word = word.clone
     word_id = word.id
@@ -82,6 +104,11 @@ class DictionaryDatabase
     @insert_word.execute(word_id, Word.encode(word))
   end
 
+  #
+  # Register a new Kanji entry
+  #
+  # @param [<Kanji>]
+  #
   def insert_kanji(kanji)
     kanji = kanji.clone
     kanji_id = kanji.id
@@ -98,6 +125,11 @@ class DictionaryDatabase
     @insert_kanji.execute(kanji_id, Kanji.encode(kanji))
   end
 
+  #
+  # Search Word entries matching the given query string
+  #
+  # @param [<String>] query Query string
+  #
   def search_words(query)
     query = query.downcase
 
@@ -121,13 +153,19 @@ class DictionaryDatabase
     words
   end
 
+  #
+  # Search Kanji entries matching the given query string
+  #
+  # @param [<String>] query Query string
+  # @param [<Integer>] limit Limit number of entries returned
+  #
   def search_kanji(query, limit = 10)
     
     tokens = query.chars.select { |c| c.kanji? }
     results = []
 
     if tokens.present?
-      @search_kanji ||= @database.prepare(@@search_kanji_sql)
+      @search_kanji ||= @database.prepare(SEARCH_KANJI_SQL)
 
       rows = @search_kanji.execute(tokens.join(' OR '), limit).to_a
     end
@@ -157,7 +195,7 @@ class DictionaryDatabase
         tokens += (@ngram_tokenizer ||= NGramTokenizer.new).tokenize(query)
       end
 
-      @search_literals ||= @database.prepare(@@search_words_sql % @@search_literals_sql)
+      @search_literals ||= @database.prepare(SEARCH_LITERALS_SQL)
       rows = @search_literals.execute(tokens.join(' OR '), limit).to_a
 
       rows.map do |row|
@@ -181,7 +219,7 @@ class DictionaryDatabase
 
     def search_words_by_senses(query, limit)
 
-      @search_senses ||= @database.prepare(@@search_words_sql % @@search_senses_sql)
+      @search_senses ||= @database.prepare(SEARCH_SENSES_SQL)
       rows = @search_senses.execute(query.gsub(/[^[[:alnum:]]]/, ' '), limit).to_a
 
       rows.map do |row|

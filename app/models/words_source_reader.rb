@@ -1,6 +1,8 @@
-# JMDict XML reader/parser
 #
+# JMDict XML reader/parser
+
 # @see https://www.edrdg.org/jmdict/j_jmdict.html JMDict
+#
 class WordsSourceReader
   HIGH_PRIORITY_CODES = %w(ichi1 news1 spec1 gai1)
   MEDIUM_PRIORITY_CODES = %w(ichi2 news2 spec2 gai2)
@@ -10,9 +12,11 @@ class WordsSourceReader
     @xml = source_xml
   end
 
+  #
   # Read all Word entries
   #
   # @return [Array<Word>]
+  #
   def read_all
     words = []
 
@@ -23,9 +27,11 @@ class WordsSourceReader
     words
   end
 
+  #
   # Read all Word entries, passing each to the given handler.
   #
-  # @yield [Word] Word entry handler
+  # @yield [<Word>]
+  #
   def read_each(&word_handler)
 
     Nokogiri::XML::Reader(@xml).each do |node|

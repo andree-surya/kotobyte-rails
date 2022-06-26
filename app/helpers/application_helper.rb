@@ -2,6 +2,9 @@ module ApplicationHelper
   TOUCH_ICON_SIZES = [60, 76, 120, 152, 180].freeze
   TOUCH_ICON_RELS = ['apple-touch-icon', 'icon'].freeze
 
+  #
+  # @return [<String>] Generic + iOS favicon HTML texts
+  #
   def favicon_tags
     tags = []
 

@@ -1,5 +1,10 @@
 class KanjiController < ApplicationController
 
+  #
+  # Search for a single Kanji entry matching the given literal
+  #
+  # @return [<Kanji>]
+  #
   def show
     @kanji = DictionaryDatabase.new.search_kanji(params[:literal]).first
 

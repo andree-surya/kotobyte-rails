@@ -1,6 +1,12 @@
 
 module KanjiHelper
 
+  #
+  # @param [<Kanji>]
+  # @return [<String>] Kanji character HTML text
+  #
+  # @todo Factor-out common Kanji determination logic
+  #
   def kanji_character_text(kanji)
     tag_classes = []
     
@@ -11,6 +17,10 @@ module KanjiHelper
     content_tag :span, kanji.character, class: tag_classes
   end
 
+  #
+  # @param [<Kanji>]
+  # @return [<String>] Kanji meanings HTML text
+  #
   def kanji_meanings_text(kanji)
     meanings = kanji.meanings.to_a
 
@@ -19,6 +29,10 @@ module KanjiHelper
     meanings.join(', ')
   end
 
+  #
+  # @param [<Kanji>]
+  # @return [<String>] Kanji readings HTML text
+  #
   def kanji_readings_text(kanji)
     readings_text = []
 
@@ -35,18 +49,10 @@ module KanjiHelper
     readings_text.join('、 ')
   end
 
-  def kanji_extras(kanji)
-    jlpt_label = t("kanji.jlpt_#{kanji.jlpt}", default: '')
-    grade_label = t("kanji.grade_#{kanji.grade}", default: '')
-
-    metadata_labels = []
-    
-    metadata_labels << jlpt_label if jlpt_label.present?
-    metadata_labels << grade_label if grade_label.present?
-
-    metadata_labels
-  end
-
+  #
+  # @param [<Kanji>]
+  # @return [<String>] Kanji extra info HTML text
+  #
   def kanji_extras_text(kanji)
 
     metadata_text = kanji_extras(kanji).compact.join(', ')
@@ -55,6 +61,11 @@ module KanjiHelper
     metadata_text
   end
 
+  #
+  # @param [<Kanji>]
+  # @param [<Integer>] upto_strokes_count Display only up to a certain number of strokes
+  # @return [<String>] Kanji strokes SVG display
+  #
   def kanji_strokes_svg(kanji, upto_strokes_count:)
 
     strokes = kanji.strokes[0...upto_strokes_count]
@@ -82,4 +93,17 @@ module KanjiHelper
       concat tag(:circle, cx: marker_cx, cy: marker_cy, r: 5)
     end
   end
+
+  private
+    def kanji_extras(kanji)
+      jlpt_label = t("kanji.jlpt_#{kanji.jlpt}", default: '')
+      grade_label = t("kanji.grade_#{kanji.grade}", default: '')
+
+      metadata_labels = []
+      
+      metadata_labels << jlpt_label if jlpt_label.present?
+      metadata_labels << grade_label if grade_label.present?
+
+      metadata_labels
+    end
 end

@@ -1,5 +1,10 @@
 class WordsController < ApplicationController
 
+  #
+  # Search Word dictionary entries matching the given query
+  #
+  # @return [Array<Word>]
+  #
   def index 
     @query = params[:query]
     
