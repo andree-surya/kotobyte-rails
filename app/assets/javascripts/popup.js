@@ -34,7 +34,7 @@ Popup.attachListeners = function() {
     }
   };
 
-  var handleClick = function(event) {
+  var handleClick = function(_event) {
     
     var popup = new Popup(this);
    
@@ -80,6 +80,9 @@ Popup.hideAll = function() {
   $('.popup:visible').hide();
 };
 
+/**
+ * Show this popup node, populate popup body, and update position
+ */
 Popup.prototype.show = function() {
 
   if (this.anchorNode.data('popup-text')) {
@@ -93,10 +96,17 @@ Popup.prototype.show = function() {
   this.updatePosition();
 };
 
+/**
+ * Hide this popup node
+ */
 Popup.prototype.hide = function() {
   this.popupNode.hide();
 };
 
+/**
+ * Whether this popup node is visible
+ * @return {Boolean}
+ */
 Popup.prototype.isVisible = function() {
   return this.popupNode.is(':visible');
 };
@@ -105,6 +115,10 @@ Popup.prototype.hasEqualAnchor = function(anotherPopup) {
   return this.anchorNode.is(anotherPopup.anchorNode);
 };
 
+/**
+ * Load an HTML page into popup body and display
+ * @param {String} src HTML source
+ */
 Popup.prototype.load = function(src) {
   var popupNode = this.popupNode;
 
@@ -130,10 +144,17 @@ Popup.prototype.load = function(src) {
   }
 };
 
+/**
+ * Set an HTML text into popup body and display
+ * @param {String} text HTML text
+ */
 Popup.prototype.text = function(text) {
   this.popupNode.html(text);
 };
 
+/**
+ * Update popup position relative to its anchor
+ */
 Popup.prototype.updatePosition = function() {
 
   var documentWidth = $(document).innerWidth();
