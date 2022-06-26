@@ -39,11 +39,3 @@ message Kanji {
   uint32 jlpt = 6;
   uint32 grade = 7;
 }
-
-message Sentence {
-
-  uint32 id = 1;
-  string original = 2;
-  string tokenized = 3;
-  string translated = 4;
-}

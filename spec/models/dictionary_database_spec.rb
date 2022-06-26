@@ -56,21 +56,6 @@ describe DictionaryDatabase do
     end
   end
 
-  describe '#insert_sentence' do
-
-    it 'should insert all sentences in the test source file without error' do
-
-      sentence_source_reader = SentencesSourceReader.new(
-          source_csv: IO.read(SENTENCES_SOURCE_FILE),
-          indices_csv: IO.read(SENTENCES_INDICES_FILE)
-      )
-
-      database.transaction do |db|
-        sentence_source_reader.read_all.map { |sentence| db.insert_sentence(sentence) }
-      end
-    end
-  end
-
   describe '#search_words' do
 
     it 'should look-up words by literals' do
@@ -147,63 +132,6 @@ describe DictionaryDatabase do
       expect(kanji_list[1].id).to eq(200)
       expect(kanji_list[0].character).to eq('空')
       expect(kanji_list[1].character).to eq('飛')
-    end
-  end
-
-  describe '#search_sentences' do
-
-    it 'should look-up and highlight sentences' do
-      
-      database.insert_sentence(Sentence.new(
-        id: 100, 
-        original: '「道」という漢字の総画数は何画ですか。',
-        tokenized: '道 という|と言う 漢字 総画数 何 画 ですか')
-      )
-
-      database.insert_sentence(Sentence.new(
-        id: 200, 
-        original: '老齢人口は、健康管理にますます多くの出費が必要となるだろう。',
-        tokenized: '老齢 人口 健康管理 ますます|益々 多く 出費 必要 となる だろう')
-      )
-
-      database.insert_sentence(Sentence.new(
-        id: 300, 
-        original: '彼らはおおいに努力したが結局失敗した。',
-        tokenized: '彼ら おおいに|大いに 努力 した|為る 結局 失敗 した|為る')
-      )
-
-      sentences1 = database.search_sentences('大いに')
-      sentences2 = database.search_sentences('道')
-      sentences3 = database.search_sentences('ますます')
-
-      expect(sentences1.count).to eq(1)
-      expect(sentences1.first.id).to eq(300)
-      expect(sentences1.first.original).to eq('彼らは{おおいに}努力したが結局失敗した。')
-
-      expect(sentences2.count).to eq(1)
-      expect(sentences2.first.id).to eq(100)
-      expect(sentences2.first.original).to eq('「{道}」という漢字の総画数は何画ですか。')
-
-      expect(sentences3.count).to eq(1)
-      expect(sentences3.first.id).to eq(200)
-      expect(sentences3.first.original).to eq('老齢人口は、健康管理に{ますます}多くの出費が必要となるだろう。')
-    end
-  end
-
-  describe '#search_sentences_by_word' do
-
-    it 'should look-up sentences given a word' do
-
-      word = Word.new(
-        literals: [{ text: '{食べる}', priority: 2 }, { text: '食らう' }],
-        readings: [{ text: 'たべる', priority: 2 }, { text: '{くらう}' }]
-      )
-
-      expected_limit = 5
-      expected_query = (['食べる'] * 4 + ['食らう'] * 2 + ['たべる'] * 3 + ['くらう']).join(' OR ')
-      expect(database).to receive(:search_sentences).with(expected_query, expected_limit)
-
-      database.search_sentences_by_word(word, expected_limit)
     end
   end
 end

@@ -31,10 +31,6 @@ en:
     one: "Possible match"
     other: "%{count} possible matches"
 
-  sentence_matches:
-    one: "Sample usage"
-    other: "Sample usages"
-
   kanji:
     jlpt_1: "JLPT N1"
     jlpt_2: "JLPT N2/N3"

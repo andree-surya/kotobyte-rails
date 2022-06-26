@@ -4,12 +4,10 @@ class DictionaryDatabase
   @@create_tables_sql = <<-EOS
     create table words (id integer primary key, serialized blob not null);
     create table kanji (id integer primary key, serialized blob not null);
-    create table sentences (id integer primary key, serialized blob not null);
 
     create virtual table literals_fts using fts5(text, word_id unindexed, priority unindexed);
     create virtual table senses_fts using fts5(text, word_id unindexed, tokenize='unicode61');
     create virtual table kanji_fts using fts5(character, kanji_id unindexed);
-    create virtual table sentences_fts using fts5(tokenized, sentence_id unindexed);
   EOS
 
   @@search_literals_sql = <<-EOS
@@ -30,11 +28,6 @@ class DictionaryDatabase
 
   @@search_kanji_sql = <<-EOS
     select id, character, serialized from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
-  EOS
-
-  @@search_sentences_sql = <<-EOS
-    select id, serialized, highlight(sentences_fts, 0, '{', '}') highlight 
-      from sentences join sentences_fts(?) on (id = sentence_id) limit ?;
   EOS
 
   def initialize(file: Rails.configuration.app[:database_file], reset: false)
@@ -105,22 +98,6 @@ class DictionaryDatabase
     @insert_kanji.execute(kanji_id, Kanji.encode(kanji))
   end
 
-  def insert_sentence(sentence)
-    sentence = sentence.clone
-    sentence_id = sentence.id
-
-    @index_sentence ||= @database.prepare('insert into sentences_fts values (?, ?)')
-    @insert_sentence ||= @database.prepare('insert into sentences values (?, ?)')
-
-    @index_sentence.execute(sentence.tokenized, sentence_id)
-
-    # We can derive these data from FTS table.
-    sentence.id = 0
-    sentence.tokenized = ''
-
-    @insert_sentence.execute(sentence_id, Sentence.encode(sentence))
-  end
-
   def search_words(query)
     query = query.downcase
 
@@ -163,56 +140,6 @@ class DictionaryDatabase
 
       kanji
     end
-  end
-
-  def search_sentences(query, limit = 5)
-    @search_sentences ||= @database.prepare(@@search_sentences_sql)
-    
-    rows = @search_sentences.execute(query, limit).to_a
-
-    rows.map do |row| 
-      sentence = Sentence.decode(row['serialized'])
-
-      sentence.tokenized = row['highlight']
-      sentence.id = row['id'].to_i
-
-      token_lookup_offset = 0
-      text = sentence.original.dup
-
-      sentence.tokenized.split.each do |token|
-
-        is_highlighted = token.include? '{'
-
-        token.gsub!(/[{}]/, '') # Remove highlight markers {, }
-        token.gsub!(/\|.*$/, '') # Remove lemma form 為る in する|為る
-
-        token_start_index = text.index(token, token_lookup_offset)
-
-        if token_start_index.present?
-          token_end_index = token_start_index + token.length
-
-          if is_highlighted
-            text[token_start_index...token_end_index] = "{#{token}}"
-          end
-
-          token_lookup_offset = token_end_index
-        end
-      end
-
-      sentence.original = text
-
-      sentence
-    end
-  end
-
-  def search_sentences_by_word(word, limit = 5)
-    
-    tokens = []
-
-    tokens += word.literals.flat_map { |l| [l.text] *  (2 + l.priority) }
-    tokens += word.readings.flat_map { |r| [r.text] *  (1 + r.priority) }
-
-    search_sentences(tokens.join(' OR ').tr('{}', ''), limit)
   end
 
   private

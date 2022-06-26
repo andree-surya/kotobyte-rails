@@ -23,8 +23,6 @@ require 'rspec/rails'
 WORDS_SOURCE_FILE = File.expand_path('fixtures/jmdict_test.xml', __dir__)
 KANJI_SOURCE_FILE = File.expand_path('fixtures/kanjidic2_test.xml', __dir__)
 KANJI_STROKES_FILE = File.expand_path('fixtures/kanjivg_test.xml', __dir__)
-SENTENCES_SOURCE_FILE = File.expand_path('fixtures/sentences_test.csv', __dir__)
-SENTENCES_INDICES_FILE = File.expand_path('fixtures/sentences_idx_test.csv', __dir__)
 
 RSpec.configure do |config|
 

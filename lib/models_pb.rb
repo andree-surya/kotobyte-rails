@@ -35,12 +35,6 @@ Google::Protobuf::DescriptorPool.generated_pool.build do
       optional :jlpt, :uint32, 6
       optional :grade, :uint32, 7
     end
-    add_message "Sentence" do
-      optional :id, :uint32, 1
-      optional :original, :string, 2
-      optional :tokenized, :string, 3
-      optional :translated, :string, 4
-    end
   end
 end
 
@@ -49,4 +43,3 @@ Literal = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Literal").ms
 Sense = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Sense").msgclass
 Origin = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Origin").msgclass
 Kanji = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Kanji").msgclass
-Sentence = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Sentence").msgclass
