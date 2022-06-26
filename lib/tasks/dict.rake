@@ -6,7 +6,7 @@ kanji_strokes_file = 'vendor/data/kanjivg.xml'
 namespace :dict do
 
   desc 'Download all data source files'
-  task prepare: [
+  task download: [
     :download_words_source,
     :download_kanji_source,
     :download_kanji_strokes
