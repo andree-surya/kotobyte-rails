@@ -22,13 +22,11 @@ group :development, :test do
   gem 'debase'
   gem 'rb-readline'
   gem 'rspec-rails'
-
   gem 'ruby-debug-ide'
 end
 
 group :development do
   gem 'listen', '~> 3.0.5'
-  gem 'rubocop'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'web-console'
