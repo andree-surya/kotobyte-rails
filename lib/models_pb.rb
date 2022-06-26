@@ -4,47 +4,49 @@
 require 'google/protobuf'
 
 Google::Protobuf::DescriptorPool.generated_pool.build do
-  add_message "Word" do
-    optional :id, :uint32, 1
-    repeated :literals, :message, 2, "Literal"
-    repeated :readings, :message, 3, "Literal"
-    repeated :senses, :message, 4, "Sense"
-  end
-  add_message "Literal" do
-    optional :text, :string, 1
-    optional :priority, :sint32, 2
-  end
-  add_message "Sense" do
-    repeated :texts, :string, 1
-    repeated :categories, :string, 2
-    repeated :labels, :string, 3
-    repeated :notes, :string, 4
-    repeated :origins, :message, 5, "Origin"
-  end
-  add_message "Origin" do
-    optional :lang, :string, 1
-    optional :text, :string, 2
-  end
-  add_message "Kanji" do
-    optional :id, :uint32, 1
-    optional :character, :string, 2
-    repeated :readings, :string, 3
-    repeated :meanings, :string, 4
-    repeated :strokes, :string, 5
-    optional :jlpt, :uint32, 6
-    optional :grade, :uint32, 7
-  end
-  add_message "Sentence" do
-    optional :id, :uint32, 1
-    optional :original, :string, 2
-    optional :tokenized, :string, 3
-    optional :translated, :string, 4
+  add_file("models.proto", :syntax => :proto3) do
+    add_message "Word" do
+      optional :id, :uint32, 1
+      repeated :literals, :message, 2, "Literal"
+      repeated :readings, :message, 3, "Literal"
+      repeated :senses, :message, 4, "Sense"
+    end
+    add_message "Literal" do
+      optional :text, :string, 1
+      optional :priority, :sint32, 2
+    end
+    add_message "Sense" do
+      repeated :texts, :string, 1
+      repeated :categories, :string, 2
+      repeated :labels, :string, 3
+      repeated :notes, :string, 4
+      repeated :origins, :message, 5, "Origin"
+    end
+    add_message "Origin" do
+      optional :lang, :string, 1
+      optional :text, :string, 2
+    end
+    add_message "Kanji" do
+      optional :id, :uint32, 1
+      optional :character, :string, 2
+      repeated :readings, :string, 3
+      repeated :meanings, :string, 4
+      repeated :strokes, :string, 5
+      optional :jlpt, :uint32, 6
+      optional :grade, :uint32, 7
+    end
+    add_message "Sentence" do
+      optional :id, :uint32, 1
+      optional :original, :string, 2
+      optional :tokenized, :string, 3
+      optional :translated, :string, 4
+    end
   end
 end
 
-Word = Google::Protobuf::DescriptorPool.generated_pool.lookup("Word").msgclass
-Literal = Google::Protobuf::DescriptorPool.generated_pool.lookup("Literal").msgclass
-Sense = Google::Protobuf::DescriptorPool.generated_pool.lookup("Sense").msgclass
-Origin = Google::Protobuf::DescriptorPool.generated_pool.lookup("Origin").msgclass
-Kanji = Google::Protobuf::DescriptorPool.generated_pool.lookup("Kanji").msgclass
-Sentence = Google::Protobuf::DescriptorPool.generated_pool.lookup("Sentence").msgclass
+Word = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Word").msgclass
+Literal = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Literal").msgclass
+Sense = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Sense").msgclass
+Origin = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Origin").msgclass
+Kanji = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Kanji").msgclass
+Sentence = ::Google::Protobuf::DescriptorPool.generated_pool.lookup("Sentence").msgclass
