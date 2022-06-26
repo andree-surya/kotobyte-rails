@@ -10,22 +10,45 @@ EOS
 
 SEARCH_WORDS_SQL = <<-EOS
 with search_results as (%s)
-  select id, serialized, group_concat(highlight, ';') highlights, min(score) score
-  from words join search_results on (id = word_id) group by id order by score;
+  select
+    id,
+    serialized,
+    group_concat(highlight, ';') highlights, 
+    min(score) score
+  from words 
+  join search_results on (id = word_id)
+  group by id
+  order by score;
 EOS
 
 SEARCH_LITERALS_SQL = SEARCH_WORDS_SQL % <<-EOS
-select word_id,  highlight(literals_fts, 0, '{', '}') highlight, rank * length(snippet(literals_fts, 0, '', '', '', 1)) score
-  from literals_fts(?) order by score, rank * priority limit ?
+select
+  word_id,
+  highlight(literals_fts, 0, '{', '}') highlight,
+  rank * length(snippet(literals_fts, 0, '', '', '', 1)) score
+from literals_fts(?) 
+order by score,rank * priority
+limit ?
 EOS
 
 SEARCH_SENSES_SQL = SEARCH_WORDS_SQL % <<-EOS
-select word_id, highlight(senses_fts, 0, '{', '}') highlight, rank score
-  from senses_fts(?) order by score limit ?
+select
+  word_id,
+  highlight(senses_fts, 0, '{', '}') highlight,
+  rank score
+from senses_fts(?)
+order by score
+limit ?
 EOS
 
 SEARCH_KANJI_SQL = <<-EOS
-select id, character, serialized from kanji join kanji_fts(?) on (id = kanji_id) limit ?;
+select
+  id,
+  character,
+  serialized
+from kanji
+join kanji_fts(?) on (id = kanji_id)
+limit ?;
 EOS
 
 #
