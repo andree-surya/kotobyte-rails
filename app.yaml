@@ -1,0 +1,3 @@
+entrypoint: bin/rake dict:create && bin/rails server --port $PORT
+env: flex
+runtime: ruby
