@@ -1,5 +1,4 @@
 #!/bin/sh
 
-bin/rake assets:precompile && \
-  bin/rake dict:create  && \
+bin/rake dict:create  && \
   bin/rails server --port ${PORT:-8080}
