@@ -1,2 +1,2 @@
-entrypoint: bin/rails server --port $PORT
+entrypoint: bin/rake dict:create && bin/rails server --port $PORT
 runtime: ruby27
