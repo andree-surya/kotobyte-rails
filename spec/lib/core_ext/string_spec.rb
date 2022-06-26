@@ -1,3 +1,4 @@
+require 'rails_helper'
 require 'core_ext/string'
 
 describe String do

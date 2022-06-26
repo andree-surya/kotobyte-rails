@@ -1,3 +1,4 @@
+require 'rails_helper'
 
 describe DictionaryDatabase do
   let(:database) { DictionaryDatabase.new(file: ':memory:') }
