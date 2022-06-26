@@ -1,6 +1,6 @@
 
 default: &default
-  database_file: 'db/dictionary.sqlite3'
+  database_file: '/tmp/kotobyte_db.sqlite3'
 
 development:
   <<: *default
@@ -10,6 +10,6 @@ production:
 
 test:
   <<: *default
-  database_file: 'db/dictionary_test.sqlite3'
+  database_file: '/tmp/kotobyte_test_db.sqlite3'
   
 
