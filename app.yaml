@@ -1,2 +1,4 @@
 entrypoint: bin/start
 runtime: ruby27
+manual_scaling:
+  instances: 1
