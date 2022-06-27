@@ -30,13 +30,13 @@ jobs:
         with:
           lfs: true
       - name: Prepare secrets
-        run: |
-          echo "$GCLOUD_CREDENTIALS" > credentials.json
-          echo "SECRET_KEY_BASE=$SECRET_KEY_BASE" > .env
-          cat credentials.json | base64
+        run: echo "SECRET_KEY_BASE=$SECRET_KEY_BASE" > .env
         env:
-          GCLOUD_CREDENTIALS: ${{ secrets.GCLOUD_CREDENTIALS }}
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: 'Authenticate GCloud'
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCLOUD_CREDENTIALS }}'
       - name: Deploy to App Engine
         uses: google-github-actions/deploy-appengine@v0.8.0
         with:
