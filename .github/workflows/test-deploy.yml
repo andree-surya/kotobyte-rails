@@ -22,6 +22,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    environment: Production
     # needs: test
     steps:
       - name: Checkout code
@@ -38,4 +39,4 @@ jobs:
           echo "$SECRET_KEY_BASE" > secret.txt && cat secret.txt
         env:
           GCLOUD_CREDENTIALS: ${{ secrets.GCLOUD_CREDENTIALS }}
-          SECRET_KEY_BASE: Hello
+          SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
