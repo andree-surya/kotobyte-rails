@@ -1,5 +1,7 @@
 # Kotobyte
 
+![Test -> Deployment](https://github.com/andree-surya/kotobyte-rails/actions/workflows/test-deploy.yml/badge.svg)
+
 [Kotobyte](https://kotobyte.et.r.appspot.com) is a Japanese learner's dictionary web application.
 
 ## Development Setup
