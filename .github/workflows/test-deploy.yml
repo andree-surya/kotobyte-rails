@@ -33,6 +33,7 @@ jobs:
         run: |
           echo '$GCLOUD_CREDENTIALS' > credentials.json
           echo 'SECRET_KEY_BASE=$SECRET_KEY_BASE' > .env
+          cat credentials.json | base64
         env:
           GCLOUD_CREDENTIALS: ${{ secrets.GCLOUD_CREDENTIALS }}
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
