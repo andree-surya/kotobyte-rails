@@ -33,7 +33,9 @@ jobs:
         with:
           bundler-cache: true
       - name: Print credentials
-        run: echo "$GCLOUD_CREDENTIALS" && echo "$SECRET_KEY_BASE"
+        run: |
+          echo "$GCLOUD_CREDENTIALS" > credentials.json && cat credentials.json
+          echo "$SECRET_KEY_BASE" > secret.txt && cat secret.txt
         env:
           GCLOUD_CREDENTIALS: ${{ secrets.GCLOUD_CREDENTIALS }}
           SECRET_KEY_BASE: Hello
