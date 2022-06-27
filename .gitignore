@@ -30,4 +30,3 @@
 .DS_Store
 *.swp
 .env
-credentials.json
