@@ -39,5 +39,3 @@ jobs:
           credentials_json: '${{ secrets.GCLOUD_CREDENTIALS }}'
       - name: Deploy to App Engine
         uses: google-github-actions/deploy-appengine@v0.8.0
-        with:
-          credentials: credentials.json
