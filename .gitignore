@@ -11,6 +11,7 @@
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
+!/db/dictionary.sqlite3
 
 # Ignore all logfiles and tempfiles.
 /log/*
@@ -29,3 +30,4 @@
 .DS_Store
 *.swp
 .env
+credentials.json
