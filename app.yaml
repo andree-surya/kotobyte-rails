@@ -1,5 +1,2 @@
-entrypoint: bin/start
+entrypoint: bin/rails server --port ${PORT:-8080}
 runtime: ruby27
-instance_class: B2
-manual_scaling:
-  instances: 1

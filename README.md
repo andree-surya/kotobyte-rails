@@ -1,6 +1,6 @@
 # Kotobyte
 
-Kotobyte is a Japanese learner's dictionary webapp built Ruby on Rails and JavaScript.
+[Kotobyte](https://kotobyte.et.r.appspot.com) is a Japanese learner's dictionary web application.
 
 ## Development Setup
 
@@ -9,9 +9,6 @@ Kotobyte is a Japanese learner's dictionary webapp built Ruby on Rails and JavaS
 ```
 // Install dependencies
 $ bundle install
-
-// Create dictionary file
-$ bin/rake dict:create
 
 // Precompile assets file
 $ bin/rake assets:precompile
