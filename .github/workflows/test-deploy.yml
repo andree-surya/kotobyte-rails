@@ -29,14 +29,14 @@ jobs:
         uses: actions/checkout@v3
         with:
           lfs: true
-      - name: Install Ruby and gems
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-      - name: Print credentials
+      - name: Prepare secrets
         run: |
-          echo "$GCLOUD_CREDENTIALS" > credentials.json && cat credentials.json
-          echo "$SECRET_KEY_BASE" > secret.txt && cat secret.txt
+          echo "$GCLOUD_CREDENTIALS" > credentials.json
+          echo "SECRET_KEY_BASE=$SECRET_KEY_BASE" > .env
         env:
           GCLOUD_CREDENTIALS: ${{ secrets.GCLOUD_CREDENTIALS }}
           SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+      - name: Deploy to App Engine
+        uses: google-github-actions/deploy-appengine@v0.8.0
+        with:
+          credentials: credentials.json
