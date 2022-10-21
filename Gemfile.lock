@@ -98,7 +98,7 @@ GEM
     mojinizer (0.2.2)
       moji (~> 1.6)
     nio4r (2.5.8)
-    nokogiri (1.13.6)
+    nokogiri (1.13.9)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     parallel (1.22.1)
@@ -246,7 +246,7 @@ DEPENDENCIES
   jquery-rails
   listen (~> 3.0.5)
   mojinizer (~> 0.2)
-  nokogiri (~> 1.8)
+  nokogiri (~> 1.13)
   puma (~> 4.3)
   rails (~> 5.2)
   rb-readline
